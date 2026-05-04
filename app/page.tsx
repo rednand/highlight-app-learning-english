@@ -1,63 +1,150 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "./utils/supabase/client";
+import styles from "./Home.module.css";
 
 export default function Home() {
+  const router = useRouter();
+  const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
+
+  if (loading)
+    return (
+      <div
+        className={styles.container}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ color: "#facc15" }}>Carregando...</div>
+      </div>
+    );
+
+  const userName = user?.user_metadata?.full_name || user?.email;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.container}>
+      <nav className={styles.nav}>
+        <div className={styles.logoArea}>
+          <span className={styles.badge}>EN</span>
+          <span className={styles.logoText}>Lumen.</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className={styles.navLinks}>
+          <button className={styles.navLink} onClick={() => router.push("/")}>
+            Home
+          </button>
+          <button
+            className={styles.navLink}
+            onClick={() => router.push("/lessons")}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Dashboard
+          </button>
+          <button
+            className={styles.navLink}
+            onClick={() => router.push("/flashcard")}
           >
-            Documentation
-          </a>
+            Flashcards
+          </button>
+        </div>
+
+        {user ? (
+          <div className={styles.userSection}>
+            <span className={styles.userName}>{userName}</span>
+            <button onClick={handleLogout} className={styles.signOutBtn}>
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => router.push("/login")}
+            className={styles.signOutBtn}
+          >
+            Sign in
+          </button>
+        )}
+      </nav>
+
+      <main className={styles.hero}>
+        <p className={styles.subHeader}>ENGLISH • STUDY • REPEAT</p>
+
+        <h1 className={styles.title}>
+          Learn English in a <br />
+          <span className={styles.highlight}>quiet, focused</span> space.
+        </h1>
+
+        <p className={styles.description}>
+          {user
+            ? `Welcome back, ${userName}. `
+            : "A quiet place for loud progress. "}
+          Take notes, record your voice, and drill flashcards with native
+          pronunciation.
+        </p>
+
+        {user && (
+          <div className={styles.actions}>
+            <button
+              className={styles.primaryBtn}
+              onClick={() => router.push("/lessons")}
+            >
+              Start studying <span>→</span>
+            </button>
+          </div>
+        )}
+
+        <div className={styles.grid}>
+          <div className={styles.card}>
+            <div className={styles.cardIcon}>📖</div>
+            <h3 className={styles.cardTitle}>Dashboard</h3>
+            <p className={styles.cardText}>
+              Structured chapters you write or import. Track your own
+              curriculum.
+            </p>
+          </div>
+          <div className={styles.card}>
+            <div className={styles.cardIcon}>🎤</div>
+            <h3 className={styles.cardTitle}>Voice notes</h3>
+            <p className={styles.cardText}>
+              Type a thought, record yourself saying it. Build pronunciation
+              muscle.
+            </p>
+          </div>
+          <div className={styles.card}>
+            <div className={styles.cardIcon}>📚</div>
+            <h3 className={styles.cardTitle}>Flashcards</h3>
+            <p className={styles.cardText}>
+              Spaced repetition with one-tap text-to-speech for every term.
+            </p>
+          </div>
         </div>
       </main>
     </div>
