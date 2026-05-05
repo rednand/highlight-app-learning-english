@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import AddItemForm from "./add-item-form"
+import TranscriptExtractor from "./transcript-extractor"
 import { DeleteLessonButton, DeleteItemButton } from "./delete-buttons"
 
 const TYPE_LABEL: Record<string, string> = {
@@ -113,7 +114,10 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           </div>
         )}
 
-        <AddItemForm lessonId={id} />
+        <div className="space-y-2">
+          <AddItemForm lessonId={id} />
+          <TranscriptExtractor lessonId={id} />
+        </div>
       </div>
     </div>
   )

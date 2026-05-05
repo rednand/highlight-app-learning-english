@@ -49,7 +49,6 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-white">Olá, {firstName}</h1>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-[#111] border border-white/5 rounded-xl p-4">
           <p className="text-2xl font-bold text-white">{totalLessons ?? 0}</p>
@@ -66,7 +65,6 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {/* Review card */}
         <div className="bg-[#111] border border-white/5 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
@@ -108,7 +106,6 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Recent lessons */}
         <div className="bg-[#111] border border-white/5 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
@@ -153,7 +150,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Last added words */}
       {recentItems.length > 0 && (
         <div className="mt-6 bg-[#111] border border-white/5 rounded-xl p-5">
           <h2 className="text-sm font-bold text-white mb-4">Últimas palavras anotadas</h2>
