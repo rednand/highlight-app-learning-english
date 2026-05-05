@@ -135,7 +135,6 @@ export default function ReviewClient() {
 
   return (
     <div className="max-w-md mx-auto">
-      {/* Progress */}
       <div className="flex items-center gap-3 mb-6">
         <span className="text-xs text-gray-500 tabular-nums">{index + 1}/{cards.length}</span>
         <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
@@ -146,7 +145,6 @@ export default function ReviewClient() {
         </div>
       </div>
 
-      {/* Card */}
       <div className="bg-[#111] border border-white/5 rounded-2xl p-8 mb-4">
         <div className="text-center mb-6">
           <span className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase">inglês</span>
@@ -172,7 +170,6 @@ export default function ReviewClient() {
         )}
       </div>
 
-      {/* Grade buttons */}
       {flipped && (
         <div className="grid grid-cols-3 gap-3">
           {GRADES.map(({ grade, label, color }, i) => {

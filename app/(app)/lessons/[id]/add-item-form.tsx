@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react"
 import { Plus, X, Wand2 } from "lucide-react"
 import { addLessonItem } from "../../../actions/items"
+import { fetchExampleSentence } from "../../../actions/examples"
 
 export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [open, setOpen] = useState(false)
@@ -11,6 +12,9 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [term, setTerm] = useState("")
   const [translation, setTranslation] = useState("")
   const [isSuggesting, setIsSuggesting] = useState(false)
+  const [context, setContext] = useState("")
+  const [isFetchingExample, setIsFetchingExample] = useState(false)
+  const [exampleError, setExampleError] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   async function suggestTranslation() {
@@ -25,9 +29,25 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
       const suggested = json?.responseData?.translatedText
       if (suggested) setTranslation(suggested)
     } catch {
-      // silently fail — user can type manually
     } finally {
       setIsSuggesting(false)
+    }
+  }
+
+  async function fetchExample() {
+    if (!term.trim()) return
+    setContext("")
+    setExampleError(false)
+    setIsFetchingExample(true)
+    try {
+      const example = await fetchExampleSentence(term)
+      if (example) {
+        setContext(example)
+      } else {
+        setExampleError(true)
+      }
+    } finally {
+      setIsFetchingExample(false)
     }
   }
 
@@ -41,6 +61,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
         formRef.current?.reset()
         setTerm("")
         setTranslation("")
+        setContext("")
+        setExampleError(false)
         setOpen(false)
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Erro ao salvar")
@@ -75,6 +97,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
             setError(null)
             setTerm("")
             setTranslation("")
+            setContext("")
+            setExampleError(false)
           }}
           className="text-gray-600 hover:text-white transition-colors"
         >
@@ -123,13 +147,29 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
           <option value="expression">Expressão</option>
           <option value="phrase">Frase</option>
         </select>
-        <input
-          name="context"
-          placeholder="Contexto (opcional)"
-          className="bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
-        />
+        <div className="relative">
+          <input
+            name="context"
+            placeholder="Exemplo de uso"
+            value={context}
+            onChange={e => setContext(e.target.value)}
+            className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 pr-9 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
+          />
+          <button
+            type="button"
+            onClick={fetchExample}
+            disabled={isFetchingExample || !term.trim()}
+            title="Buscar exemplo de uso"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors"
+          >
+            <Wand2 size={14} className={isFetchingExample ? "animate-pulse" : ""} />
+          </button>
+        </div>
       </div>
 
+      {exampleError && (
+        <p className="text-xs text-gray-500">Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.</p>
+      )}
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       <button
