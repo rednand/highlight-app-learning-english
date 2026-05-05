@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "English Notes",
-  description: "A simple English learning app.",
+  title: "Highlight",
+  description: "Registre suas aulas e aprenda inglês com flashcards.",
 };
 
 export default function RootLayout({
