@@ -45,27 +45,27 @@ export default async function DashboardPage() {
   return (
     <div className="p-4 md:p-8 max-w-4xl">
       <div className="mb-8">
-        <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-400 mb-1">DASHBOARD</p>
+        <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">DASHBOARD</p>
         <h1 className="text-2xl font-bold text-white">Olá, {firstName}</h1>
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#111] border border-white/5 rounded-xl p-4">
+        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
           <p className="text-2xl font-bold text-white">{totalLessons ?? 0}</p>
           <p className="text-xs text-gray-500 mt-1">Aulas registradas</p>
         </div>
-        <div className="bg-[#111] border border-white/5 rounded-xl p-4">
+        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
           <p className="text-2xl font-bold text-white">{totalWords ?? 0}</p>
           <p className="text-xs text-gray-500 mt-1">Palavras anotadas</p>
         </div>
-        <div className={`border rounded-xl p-4 ${dueCount > 0 ? "bg-yellow-400/5 border-yellow-400/20" : "bg-[#111] border-white/5"}`}>
+        <div className={`border rounded-xl p-4 ${dueCount > 0 ? "bg-yellow-400/5 border-yellow-400/20" : "bg-[#0f0f0f] border-white/5"}`}>
           <p className={`text-2xl font-bold ${dueCount > 0 ? "text-yellow-400" : "text-white"}`}>{dueCount}</p>
           <p className="text-xs text-gray-500 mt-1">Para revisar hoje</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="bg-[#111] border border-white/5 rounded-xl p-5">
+        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
               <RotateCcw size={15} className="text-yellow-400" />
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-[#111] border border-white/5 rounded-xl p-5">
+        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
               <BookOpen size={15} className="text-yellow-400" />
@@ -151,7 +151,7 @@ export default async function DashboardPage() {
       </div>
 
       {recentItems.length > 0 && (
-        <div className="mt-6 bg-[#111] border border-white/5 rounded-xl p-5">
+        <div className="mt-6 bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
           <h2 className="text-sm font-bold text-white mb-4">Últimas palavras anotadas</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {recentItems.map((item) => (

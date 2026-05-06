@@ -16,7 +16,7 @@ export default function NewLessonPage() {
         Aulas
       </Link>
 
-      <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-400 mb-2">NOVA AULA</p>
+      <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-2">NOVA AULA</p>
       <h1 className="text-2xl font-bold text-white mb-8">Registrar aula</h1>
 
       <form action={createLesson} className="space-y-5">
@@ -28,7 +28,7 @@ export default function NewLessonPage() {
             name="title"
             required
             placeholder="Ex: Phrasal verbs com &ldquo;up&rdquo;"
-            className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
+            className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
           />
         </div>
 
@@ -40,7 +40,7 @@ export default function NewLessonPage() {
             name="lesson_date"
             type="date"
             defaultValue={today}
-            className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-yellow-400/50 transition-colors text-sm"
+            className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-yellow-400/50 transition-colors text-sm"
           />
         </div>
 
@@ -53,7 +53,7 @@ export default function NewLessonPage() {
             name="notes"
             rows={4}
             placeholder="Contexto, tema da aula, observações..."
-            className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none text-sm"
+            className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none text-sm"
           />
         </div>
 

@@ -24,7 +24,7 @@ export default function RoadmapPicker() {
     setSession("")
   }
 
-  const selectClass = "w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-yellow-400/50 transition-colors"
+  const selectClass = "w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-yellow-400/50 transition-colors"
 
   return (
     <div className="space-y-3">

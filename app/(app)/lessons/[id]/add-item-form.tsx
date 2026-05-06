@@ -15,6 +15,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [context, setContext] = useState("")
   const [isFetchingExample, setIsFetchingExample] = useState(false)
   const [exampleError, setExampleError] = useState(false)
+  const [phonetic, setPhonetic] = useState("")
+  const [mySentence, setMySentence] = useState("")
   const [isListening, setIsListening] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -69,12 +71,10 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     setExampleError(false)
     setIsFetchingExample(true)
     try {
-      const example = await fetchExampleSentence(term)
-      if (example) {
-        setContext(example)
-      } else {
-        setExampleError(true)
-      }
+      const { example, phonetic: ipa } = await fetchExampleSentence(term)
+      if (example) setContext(example)
+      else setExampleError(true)
+      if (ipa) setPhonetic(ipa)
     } finally {
       setIsFetchingExample(false)
     }
@@ -91,6 +91,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
         setTerm("")
         setTranslation("")
         setContext("")
+        setPhonetic("")
+        setMySentence("")
         setExampleError(false)
         setOpen(false)
       } catch (err: unknown) {
@@ -115,7 +117,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="bg-[#111] border border-white/10 rounded-xl p-5 space-y-3"
+      className="bg-[#0f0f0f] border border-white/10 rounded-xl p-5 space-y-3"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Adicionar</span>
@@ -127,6 +129,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
             setTerm("")
             setTranslation("")
             setContext("")
+            setPhonetic("")
+            setMySentence("")
             setExampleError(false)
           }}
           className="text-gray-600 hover:text-white transition-colors"
@@ -208,9 +212,24 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
         </div>
       </div>
 
+      <input type="hidden" name="phonetic" value={phonetic} />
+
+      {phonetic && (
+        <p className="text-xs font-mono text-gray-500">{phonetic}</p>
+      )}
       {exampleError && (
         <p className="text-xs text-gray-500">Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.</p>
       )}
+
+      <textarea
+        name="my_sentence"
+        rows={2}
+        placeholder="Minha frase (opcional) — escreva uma frase sua usando essa palavra"
+        value={mySentence}
+        onChange={e => setMySentence(e.target.value)}
+        className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none"
+      />
+
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       <button

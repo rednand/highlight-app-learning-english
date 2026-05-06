@@ -26,11 +26,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-10 justify-center">
-          <span className="bg-yellow-400 text-black text-xs font-bold px-1.5 py-0.5 rounded">HL</span>
+          <img src="/icon.svg" alt="Highlight" className="w-8 h-8 rounded-lg" />
           <span className="font-bold text-white tracking-tight text-lg">Highlight</span>
         </div>
 
-        <div className="bg-[#111] border border-white/5 rounded-2xl p-8">
+        <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-8">
           <h1 className="text-xl font-bold text-white mb-1">Entrar</h1>
           <p className="text-gray-500 text-sm mb-8">Acesse para registrar suas aulas.</p>
 
