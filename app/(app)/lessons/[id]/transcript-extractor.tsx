@@ -112,7 +112,7 @@ export default function TranscriptExtractor({ lessonId }: { lessonId: string }) 
   }
 
   return (
-    <div className="bg-[#111] border border-white/10 rounded-xl p-5 space-y-4">
+    <div className="bg-[#0f0f0f] border border-white/10 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
           {step === "input"

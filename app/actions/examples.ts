@@ -1,17 +1,20 @@
 "use server"
 
-export async function fetchExampleSentence(term: string): Promise<string | null> {
+export async function fetchExampleSentence(term: string): Promise<{ example: string | null; phonetic: string | null }> {
   const isExpression = term.trim().includes(" ")
+  let phonetic: string | null = null
+  let example: string | null = null
 
   if (!isExpression) {
     try {
       const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(term.trim())}`)
       if (res.ok) {
         const json = await res.json()
-        const example = json?.[0]?.meanings
+        phonetic = json?.[0]?.phonetic ?? json?.[0]?.phonetics?.find((p: { text?: string }) => p.text)?.text ?? null
+        example = json?.[0]?.meanings
           ?.flatMap((m: { definitions: { example?: string }[] }) => m.definitions)
-          ?.find((d: { example?: string }) => d.example)?.example
-        if (example) return example
+          ?.find((d: { example?: string }) => d.example)?.example ?? null
+        if (example) return { example, phonetic }
       }
     } catch {
     }
@@ -26,11 +29,11 @@ export async function fetchExampleSentence(term: string): Promise<string | null>
       const json = await res.json()
       const sentence = json?.results?.find((r: { text: string }) =>
         r.text.toLowerCase().includes(term.toLowerCase().split(" ")[0])
-      )?.text
-      if (sentence) return sentence
+      )?.text ?? null
+      return { example: sentence, phonetic }
     }
   } catch {
   }
 
-  return null
+  return { example: null, phonetic }
 }

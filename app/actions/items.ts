@@ -13,6 +13,8 @@ export async function addLessonItem(formData: FormData) {
   const translation = formData.get("translation") as string
   const type = (formData.get("type") as string) || "word"
   const context = formData.get("context") as string
+  const phonetic = formData.get("phonetic") as string
+  const my_sentence = formData.get("my_sentence") as string
 
   const { data: item, error } = await supabase
     .from("lesson_items")
@@ -23,6 +25,8 @@ export async function addLessonItem(formData: FormData) {
       translation: translation || null,
       type,
       context: context || null,
+      phonetic: phonetic || null,
+      my_sentence: my_sentence || null,
     })
     .select()
     .single()
@@ -53,10 +57,12 @@ export async function updateLessonItem(formData: FormData) {
   const translation = formData.get("translation") as string
   const type = (formData.get("type") as string) || "word"
   const context = formData.get("context") as string
+  const phonetic = formData.get("phonetic") as string
+  const my_sentence = formData.get("my_sentence") as string
 
   await supabase
     .from("lesson_items")
-    .update({ term, translation: translation || null, type, context: context || null })
+    .update({ term, translation: translation || null, type, context: context || null, phonetic: phonetic || null, my_sentence: my_sentence || null })
     .eq("id", id)
     .eq("user_id", user.id)
 

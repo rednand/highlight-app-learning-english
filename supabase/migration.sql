@@ -31,7 +31,14 @@ CREATE POLICY "Users can manage their own lesson items"
   USING  (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
--- 3. Add roadmap_key to lessons
+-- 3. Add phonetic and my_sentence to lesson_items
+ALTER TABLE lesson_items
+  ADD COLUMN IF NOT EXISTS phonetic TEXT;
+
+ALTER TABLE lesson_items
+  ADD COLUMN IF NOT EXISTS my_sentence TEXT;
+
+-- 4. Add roadmap_key to lessons
 ALTER TABLE lessons
   ADD COLUMN IF NOT EXISTS roadmap_key TEXT;
 

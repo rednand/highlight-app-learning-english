@@ -92,7 +92,7 @@ export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: 
           const temaPct = temaTotal > 0 ? Math.round((temaDone / temaTotal) * 100) : 0
 
           return (
-            <div key={tema} className="bg-[#111] border border-white/5 rounded-xl p-4">
+            <div key={tema} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{tema}</span>
                 <span className="text-[10px] text-gray-600">{temaDone}/{temaTotal} — {temaPct}%</span>

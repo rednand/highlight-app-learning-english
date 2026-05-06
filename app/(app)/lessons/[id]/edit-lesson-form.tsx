@@ -66,7 +66,7 @@ export default function EditLessonForm({ lesson }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 bg-[#111] border border-white/10 rounded-xl p-5 space-y-4">
+    <form onSubmit={handleSubmit} className="mb-8 bg-[#0f0f0f] border border-white/10 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Editar aula</span>
         <button type="button" onClick={() => setOpen(false)} className="text-gray-600 hover:text-white transition-colors">

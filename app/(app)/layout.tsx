@@ -20,7 +20,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <aside className="hidden md:flex w-56 border-r border-white/5 flex-col shrink-0">
         <div className="px-5 py-5 border-b border-white/5">
           <div className="flex items-center gap-2">
-            <span className="bg-yellow-400 text-black text-xs font-bold px-1.5 py-0.5 rounded">HL</span>
+            <img src="/icon.svg" alt="Highlight" className="w-6 h-6 rounded" />
             <span className="font-bold tracking-tight">Highlight</span>
           </div>
         </div>

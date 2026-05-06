@@ -54,7 +54,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
       <div className="mb-8">
         {lessonDate && (
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-400 mb-2 uppercase">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-2 uppercase">
             {lessonDate}
           </p>
         )}
@@ -70,7 +70,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           )
         })()}
         {lesson.notes && (
-          <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-wrap bg-[#111] border border-white/5 rounded-xl px-4 py-3">
+          <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-wrap bg-[#0f0f0f] border border-white/5 rounded-xl px-4 py-3">
             {lesson.notes}
           </p>
         )}
@@ -93,7 +93,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
             {items.map((item) => (
               <ItemCard
                 key={item.id}
-                item={{ id: item.id, lesson_id: id, term: item.term, translation: item.translation, type: item.type, context: item.context }}
+                item={{ id: item.id, lesson_id: id, term: item.term, translation: item.translation, type: item.type, context: item.context, phonetic: item.phonetic ?? null, my_sentence: item.my_sentence ?? null }}
               />
             ))}
           </div>

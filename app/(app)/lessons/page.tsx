@@ -33,7 +33,7 @@ export default async function LessonsPage() {
     <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-400 mb-1">HIGHLIGHT</p>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
           <h1 className="text-2xl font-bold text-white">Minhas Aulas</h1>
         </div>
         <Link
@@ -78,7 +78,7 @@ export default async function LessonsPage() {
               <Link
                 key={lesson.id}
                 href={`/lessons/${lesson.id}`}
-                className="block p-5 bg-[#111] border border-white/5 rounded-xl hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
+                className="block p-5 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
               >
                 <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-2">
                   {date}
