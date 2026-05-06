@@ -19,7 +19,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleListening() {
-    type SRConstructor = new () => { lang: string; interimResults: boolean; maxAlternatives: number; onstart: (() => void) | null; onend: (() => void) | null; onerror: (() => void) | null; onresult: ((e: SpeechRecognitionEvent) => void) | null; start: () => void }
+    type SREvent = { results: { 0: { 0: { transcript: string } } } }
+    type SRConstructor = new () => { lang: string; interimResults: boolean; maxAlternatives: number; onstart: (() => void) | null; onend: (() => void) | null; onerror: (() => void) | null; onresult: ((e: SREvent) => void) | null; start: () => void }
     const w = window as typeof window & { SpeechRecognition?: SRConstructor; webkitSpeechRecognition?: SRConstructor }
     const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition
     if (!SR) return
@@ -37,7 +38,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     recognition.onstart = () => setIsListening(true)
     recognition.onend = () => setIsListening(false)
     recognition.onerror = () => setIsListening(false)
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event) => {
       const spoken = event.results[0][0].transcript
       setTerm(spoken)
     }
