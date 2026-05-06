@@ -42,7 +42,26 @@ ALTER TABLE lesson_items
 ALTER TABLE lessons
   ADD COLUMN IF NOT EXISTS roadmap_key TEXT;
 
--- 4. Add lesson_item_id column to flashcards
+-- 5. Push subscriptions for web push notifications
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  endpoint   TEXT        NOT NULL,
+  p256dh     TEXT        NOT NULL,
+  auth       TEXT        NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, endpoint)
+);
+
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own push subscriptions"
+  ON push_subscriptions FOR ALL
+  TO authenticated
+  USING  (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- 6. Add lesson_item_id column to flashcards
 ALTER TABLE flashcards
   ADD COLUMN IF NOT EXISTS lesson_item_id UUID
     REFERENCES lesson_items(id) ON DELETE SET NULL;

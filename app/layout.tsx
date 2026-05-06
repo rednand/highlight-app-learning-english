@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SwRegister from "./sw-register";
 
 export const metadata: Metadata = {
   title: "Highlight",
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="app-html">
-      <body className="app-body">{children}</body>
+      <body className="app-body" suppressHydrationWarning>
+        <SwRegister />
+        {children}
+      </body>
     </html>
   );
 }
