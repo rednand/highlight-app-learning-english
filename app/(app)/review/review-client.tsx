@@ -13,7 +13,7 @@ type Flashcard = {
   ease_factor: number
   interval_days: number
   next_review_at: string
-  lesson_items: { phonetic: string | null; my_sentence: string | null } | null
+  lesson_items: { phonetic: string | null; my_sentence: string | null }[] | null
 }
 
 type Lesson = { id: string; title: string }
@@ -179,8 +179,8 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
 
   const card = cards[index]
   const progress = Math.round((index / cards.length) * 100)
-  const phonetic = card.lesson_items?.phonetic
-  const mySentence = card.lesson_items?.my_sentence
+  const phonetic = card.lesson_items?.[0]?.phonetic
+  const mySentence = card.lesson_items?.[0]?.my_sentence
 
   return (
     <div className="max-w-md mx-auto">
