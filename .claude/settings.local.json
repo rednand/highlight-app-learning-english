@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Remove-Item \"c:\\\\english-notes-saas\\\\middleware.ts\")"
-    ]
-  }
-}
