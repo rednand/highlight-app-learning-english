@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState, useTransition } from "react"
-import { Plus, X, Wand2 } from "lucide-react"
+import { Plus, X, Wand2, Mic, MicOff } from "lucide-react"
 import { addLessonItem } from "../../../actions/items"
 import { fetchExampleSentence } from "../../../actions/examples"
 
@@ -15,7 +15,34 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [context, setContext] = useState("")
   const [isFetchingExample, setIsFetchingExample] = useState(false)
   const [exampleError, setExampleError] = useState(false)
+  const [isListening, setIsListening] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
+
+  function toggleListening() {
+    const SR = (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition
+      ?? (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition
+    if (!SR) return
+
+    if (isListening) {
+      setIsListening(false)
+      return
+    }
+
+    const recognition = new SR()
+    recognition.lang = "en-US"
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => setIsListening(true)
+    recognition.onend = () => setIsListening(false)
+    recognition.onerror = () => setIsListening(false)
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const spoken = event.results[0][0].transcript
+      setTerm(spoken)
+    }
+
+    recognition.start()
+  }
 
   async function suggestTranslation() {
     if (!term.trim()) return
@@ -109,14 +136,26 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
       <input type="hidden" name="lesson_id" value={lessonId} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <input
-          name="term"
-          required
-          placeholder="Palavra / expressão"
-          value={term}
-          onChange={e => setTerm(e.target.value)}
-          className="bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
-        />
+        <div className="relative">
+          <input
+            name="term"
+            required
+            placeholder="Palavra / expressão"
+            value={term}
+            onChange={e => setTerm(e.target.value)}
+            className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 pr-9 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
+          />
+          <button
+            type="button"
+            onClick={toggleListening}
+            title={isListening ? "Parar gravação" : "Falar palavra"}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 transition-colors disabled:opacity-30 ${
+              isListening ? "text-red-400 animate-pulse" : "text-gray-500 hover:text-yellow-400"
+            }`}
+          >
+            {isListening ? <MicOff size={14} /> : <Mic size={14} />}
+          </button>
+        </div>
         <div className="relative">
           <input
             name="translation"

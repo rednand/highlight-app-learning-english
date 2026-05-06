@@ -31,7 +31,11 @@ CREATE POLICY "Users can manage their own lesson items"
   USING  (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
--- 3. Add lesson_item_id column to flashcards
+-- 3. Add roadmap_key to lessons
+ALTER TABLE lessons
+  ADD COLUMN IF NOT EXISTS roadmap_key TEXT;
+
+-- 4. Add lesson_item_id column to flashcards
 ALTER TABLE flashcards
   ADD COLUMN IF NOT EXISTS lesson_item_id UUID
     REFERENCES lesson_items(id) ON DELETE SET NULL;

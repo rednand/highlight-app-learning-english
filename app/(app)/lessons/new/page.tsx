@@ -1,6 +1,7 @@
 import { createLesson } from "../../../actions/lessons"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import RoadmapPicker from "./roadmap-picker"
 
 export default function NewLessonPage() {
   const today = new Date().toISOString().split("T")[0]
@@ -55,6 +56,8 @@ export default function NewLessonPage() {
             className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none text-sm"
           />
         </div>
+
+        <RoadmapPicker />
 
         <button
           type="submit"

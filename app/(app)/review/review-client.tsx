@@ -4,6 +4,7 @@ import { fetchFlashcards, updateFlashcard } from "../../actions/review"
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import SpeakButton from "../speak-button"
 
 type Flashcard = {
   id: string
@@ -148,7 +149,10 @@ export default function ReviewClient() {
       <div className="bg-[#111] border border-white/5 rounded-2xl p-8 mb-4">
         <div className="text-center mb-6">
           <span className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase">inglês</span>
-          <p className="text-3xl font-semibold text-white mt-2 leading-snug">{card.front}</p>
+          <div className="flex items-center justify-center gap-3 mt-2">
+            <p className="text-3xl font-semibold text-white leading-snug">{card.front}</p>
+            <SpeakButton text={card.front} className="text-gray-600 hover:text-yellow-400 transition-colors mt-1" />
+          </div>
         </div>
 
         {!flipped ? (

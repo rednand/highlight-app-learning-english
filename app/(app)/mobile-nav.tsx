@@ -2,12 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, BookOpen, RotateCcw } from "lucide-react"
+import { LayoutDashboard, BookOpen, RotateCcw, Map, LogOut } from "lucide-react"
+import { signOut } from "../actions/lessons"
 
 const links = [
   { href: "/", icon: LayoutDashboard, label: "Início", exact: true },
   { href: "/lessons", icon: BookOpen, label: "Aulas", exact: false },
   { href: "/review", icon: RotateCcw, label: "Revisar", exact: false },
+  { href: "/roadmap", icon: Map, label: "Trilha", exact: false },
 ]
 
 export default function MobileNav() {
@@ -30,6 +32,12 @@ export default function MobileNav() {
           </Link>
         )
       })}
+      <form action={signOut} className="flex-1">
+        <button className="w-full h-full flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold tracking-wide text-gray-600 hover:text-white transition-colors">
+          <LogOut size={20} />
+          Sair
+        </button>
+      </form>
     </nav>
   )
 }
