@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Highlight
 
-## Getting Started
+App para estudantes de inglês anotarem vocabulário de aulas, revisarem com flashcards e acompanharem seu progresso em uma trilha de aprendizado.
 
-First, run the development server:
+## Funcionalidades
+
+- **Aulas** — registre aulas com título, data, notas e associação ao roadmap
+- **Vocabulário** — adicione palavras, expressões e frases com tradução, exemplo de uso, fonética (IPA) e sua própria frase
+- **Tradução automática** — sugestão via MyMemory API (sem chave)
+- **Exemplo de uso** — busca automática na Free Dictionary API e Tatoeba
+- **Fonética (IPA)** — buscada automaticamente da Free Dictionary API
+- **Gravador de voz** — fale a palavra em inglês para preencher o campo (Web Speech API)
+- **Áudio** — ouça a pronúncia de qualquer palavra com um clique (Web Speech API)
+- **Extração de transcript** — cole um texto em inglês e o app extrai o vocabulário incomum com tradução automática
+- **Flashcards SM-2** — revisão espaçada com algoritmo SM-2, filtro por aula
+- **Trilha de aprendizado** — roadmap Basic / Intermediate / Advanced com progresso por sessão
+- **PWA** — instalável como app no celular via browser
+
+## Stack
+
+- [Next.js 16](https://nextjs.org) (App Router, Server Actions)
+- [Supabase](https://supabase.com) (Auth, PostgreSQL, RLS)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Sonner](https://sonner.emilkowal.ski) (toasts)
+
+## Configuração
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/rednand/english-notes-saas.git
+cd english-notes-saas
+npm install
+```
+
+### 2. Variáveis de ambiente
+
+Crie um arquivo `.env.local` na raiz:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key
+```
+
+### 3. Banco de dados
+
+No **Supabase → SQL Editor**, execute o conteúdo de `supabase/migration.sql`.
+
+O projeto assume que você já tem as tabelas `lessons`, `flashcards` e `auth.users` criadas. A migration adiciona as colunas e tabelas necessárias.
+
+### 4. Autenticação
+
+No **Supabase → Authentication → URL Configuration**:
+
+- **Site URL**: URL de produção (ex: `https://seu-app.vercel.app`)
+- **Redirect URLs**: adicione `https://seu-app.vercel.app/**` e `http://localhost:3000/**`
+
+### 5. Rodar localmente
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O projeto está configurado para deploy na [Vercel](https://vercel.com). Adicione as variáveis de ambiente `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` nas configurações do projeto.
