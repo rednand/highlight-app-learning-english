@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/push-review",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}

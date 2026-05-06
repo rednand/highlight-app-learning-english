@@ -5,6 +5,7 @@ import Link from "next/link"
 import { LayoutDashboard, BookOpen, RotateCcw, Map } from "lucide-react"
 import NavLink from "./nav-link"
 import MobileNav from "./mobile-nav"
+import PushToggle from "./push-toggle"
 import { Toaster } from "sonner"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -39,11 +40,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </div>
             <p className="text-xs text-gray-500 truncate">{user.email}</p>
           </div>
-          <form action={signOut}>
-            <button className="text-xs text-gray-600 hover:text-white transition-colors">
-              Sair
-            </button>
-          </form>
+          <div className="flex items-center gap-3">
+            <PushToggle />
+            <form action={signOut}>
+              <button className="text-xs text-gray-600 hover:text-white transition-colors">
+                Sair
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
 
