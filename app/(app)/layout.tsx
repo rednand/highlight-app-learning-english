@@ -2,7 +2,7 @@ import { createClient } from "../utils/supabase/server"
 import { redirect } from "next/navigation"
 import { signOut } from "../actions/lessons"
 import Link from "next/link"
-import { LayoutDashboard, BookOpen, RotateCcw } from "lucide-react"
+import { LayoutDashboard, BookOpen, RotateCcw, Map } from "lucide-react"
 import NavLink from "./nav-link"
 import MobileNav from "./mobile-nav"
 import { Toaster } from "sonner"
@@ -29,6 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <NavLink href="/" icon={<LayoutDashboard size={16} />} label="Início" exact />
           <NavLink href="/lessons" icon={<BookOpen size={16} />} label="Aulas" />
           <NavLink href="/review" icon={<RotateCcw size={16} />} label="Revisar" />
+          <NavLink href="/roadmap" icon={<Map size={16} />} label="Trilha" />
         </nav>
 
         <div className="p-4 border-t border-white/5">
