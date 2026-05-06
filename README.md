@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Highlight
 
-## Getting Started
+**Transforme suas aulas de inglês em vocabulário que você realmente aprende.**
 
-First, run the development server:
+Highlight é um app para estudantes de inglês anotarem palavras e expressões das aulas, revisarem com flashcards inteligentes e acompanharem o progresso em uma trilha estruturada de aprendizado.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Por que Highlight?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A maioria dos estudantes anota vocabulário e nunca revisa. Highlight resolve isso combinando anotação rápida com revisão espaçada (SM-2) — o mesmo algoritmo usado pelo Anki, direto no browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Principais recursos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Registre aulas e adicione vocabulário com tradução, fonética e exemplos de uso automáticos
+- Extraia palavras incomuns de qualquer texto em inglês com um clique
+- Revise com flashcards usando o algoritmo SM-2, filtrando por aula
+- Acompanhe seu progresso em um roadmap estruturado (Basic → Intermediate → Advanced)
+- Ouça a pronúncia e grave palavras pelo microfone
+- Funciona como app no celular (PWA)
 
-## Learn More
+## Tecnologia
 
-To learn more about Next.js, take a look at the following resources:
+Next.js · Supabase · Tailwind CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© Highlight
