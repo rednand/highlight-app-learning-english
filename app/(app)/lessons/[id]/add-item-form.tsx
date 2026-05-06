@@ -19,8 +19,9 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const formRef = useRef<HTMLFormElement>(null)
 
   function toggleListening() {
-    const SR = (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition
-      ?? (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition
+    type SRConstructor = new () => { lang: string; interimResults: boolean; maxAlternatives: number; onstart: (() => void) | null; onend: (() => void) | null; onerror: (() => void) | null; onresult: ((e: SpeechRecognitionEvent) => void) | null; start: () => void }
+    const w = window as typeof window & { SpeechRecognition?: SRConstructor; webkitSpeechRecognition?: SRConstructor }
+    const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition
     if (!SR) return
 
     if (isListening) {
