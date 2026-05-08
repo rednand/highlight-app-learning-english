@@ -65,3 +65,20 @@ CREATE POLICY "Users can manage their own push subscriptions"
 ALTER TABLE flashcards
   ADD COLUMN IF NOT EXISTS lesson_item_id UUID
     REFERENCES lesson_items(id) ON DELETE SET NULL;
+
+-- 7. Roadmap progress (migrating from localStorage)
+CREATE TABLE IF NOT EXISTS roadmap_progress (
+  id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id     UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  session_key TEXT        NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, session_key)
+);
+
+ALTER TABLE roadmap_progress ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own roadmap progress"
+  ON roadmap_progress FOR ALL
+  TO authenticated
+  USING  (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);

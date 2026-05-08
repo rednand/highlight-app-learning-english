@@ -2,17 +2,17 @@ import { createClient } from "../../utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Plus, BookOpen } from "lucide-react"
+import LessonsClient from "./lessons-client"
 
 export default async function LessonsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect("/login")
 
   const { data: lessons } = await supabase
     .from("lessons")
     .select("id, title, lesson_date, created_at")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("lesson_date", { ascending: false, nullsFirst: false })
 
   const lessonIds = (lessons ?? []).map((l) => l.id)
@@ -32,9 +32,19 @@ export default async function LessonsPage() {
     )
   }
 
+  const { count: totalWords } = await supabase
+    .from("lesson_items")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+
+  const lessonsWithCounts = (lessons ?? []).map((l) => ({
+    ...l,
+    itemCount: countMap[l.id] ?? 0,
+  }))
+
   return (
     <div className="p-4 md:p-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
           <h1 className="text-2xl font-bold text-white">Minhas Aulas</h1>
@@ -48,7 +58,11 @@ export default async function LessonsPage() {
         </Link>
       </div>
 
-      {!lessons || lessons.length === 0 ? (
+      <p className="text-sm text-gray-600 mb-6">
+        {lessonsWithCounts.length} aulas&nbsp; · &nbsp;{totalWords ?? 0} palavras no total
+      </p>
+
+      {lessonsWithCounts.length === 0 ? (
         <div className="text-center py-20">
           <BookOpen size={36} className="text-gray-700 mx-auto mb-4" />
           <p className="text-gray-400 font-medium mb-1">Nenhuma aula ainda</p>
@@ -62,40 +76,7 @@ export default async function LessonsPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {lessons.map((lesson) => {
-            const date = lesson.lesson_date
-              ? new Date(lesson.lesson_date + "T12:00:00").toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })
-              : new Date(lesson.created_at).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })
-            const count = countMap[lesson.id] || 0
-
-            return (
-              <Link
-                key={lesson.id}
-                href={`/lessons/${lesson.id}`}
-                className="block p-5 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
-              >
-                <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-2">
-                  {date}
-                </p>
-                <h2 className="text-white font-semibold text-base mb-3 group-hover:text-yellow-400 transition-colors line-clamp-2">
-                  {lesson.title}
-                </h2>
-                <p className="text-gray-600 text-xs">
-                  {count} {count === 1 ? "item" : "itens"}
-                </p>
-              </Link>
-            )
-          })}
-        </div>
+        <LessonsClient lessons={lessonsWithCounts} />
       )}
     </div>
   )

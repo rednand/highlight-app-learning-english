@@ -1,22 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useTransition } from "react"
+import { Trophy, CheckCircle, Circle, Lock } from "lucide-react"
 import { ROADMAP, totalSessions, sessionKey, type RoadmapLevel } from "./roadmap-data"
-
-const STORAGE_KEY = "hl_roadmap_done"
-
-function loadDone(): Set<string> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return new Set(raw ? JSON.parse(raw) : [])
-  } catch {
-    return new Set()
-  }
-}
-
-function saveDone(done: Set<string>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...done]))
-}
+import { toggleRoadmapSession } from "../../actions/roadmap"
 
 const LEVEL_COLOR: Record<RoadmapLevel, string> = {
   Basic: "text-green-400 border-green-400/30 bg-green-400/10",
@@ -24,34 +11,38 @@ const LEVEL_COLOR: Record<RoadmapLevel, string> = {
   Advanced: "text-red-400 border-red-400/30 bg-red-400/10",
 }
 
-const LEVEL_BAR: Record<RoadmapLevel, string> = {
-  Basic: "bg-green-400",
-  Intermediate: "bg-yellow-400",
-  Advanced: "bg-red-400",
-}
-
-export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: Record<string, number> }) {
+export default function RoadmapClient({
+  lessonCountByKey,
+  initialDone,
+}: {
+  lessonCountByKey: Record<string, number>
+  initialDone: string[]
+}) {
   const [activeLevel, setActiveLevel] = useState<RoadmapLevel>("Basic")
-  const [done, setDone] = useState<Set<string>>(new Set())
-
-  useEffect(() => {
-    const id = setTimeout(() => setDone(loadDone()), 0)
-    return () => clearTimeout(id)
-  }, [])
+  const [done, setDone] = useState<Set<string>>(() => new Set(initialDone))
+  const [, startTransition] = useTransition()
 
   function toggle(key: string) {
-    setDone(prev => {
+    const willBeDone = !done.has(key)
+    setDone((prev) => {
       const next = new Set(prev)
-      if (next.has(key)) { next.delete(key) } else { next.add(key) }
-      saveDone(next)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
       return next
+    })
+    startTransition(() => {
+      toggleRoadmapSession(key, willBeDone)
     })
   }
 
-  const levelData = ROADMAP.find(r => r.level === activeLevel)!
+  const levelData = ROADMAP.find((r) => r.level === activeLevel)!
   const total = totalSessions(levelData)
-  const completed = levelData.temas.reduce((acc, t) =>
-    acc + t.sessions.filter(s => s && done.has(sessionKey(activeLevel, t.tema, s))).length, 0
+  const completed = levelData.temas.reduce(
+    (acc, t) => acc + t.sessions.filter((s) => s && done.has(sessionKey(activeLevel, t.tema, s))).length,
+    0,
   )
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0
 
@@ -73,30 +64,47 @@ export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: 
         ))}
       </div>
 
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-gray-500">
-          <span>{completed} de {total} sessões concluídas</span>
-          <span>{pct}%</span>
+      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-yellow-400/10 flex items-center justify-center">
+              <Trophy size={17} className="text-yellow-400" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Progresso Geral</p>
+              <p className="text-xs text-gray-500 mt-0.5">{completed} de {total} sessões concluídas</p>
+            </div>
+          </div>
+          <span className="text-2xl font-bold text-yellow-400">{pct}%</span>
         </div>
-        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+        <div className="mt-4 h-2 bg-white/5 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ${LEVEL_BAR[activeLevel]}`}
+            className="h-full bg-yellow-400 rounded-full transition-all duration-500"
             style={{ width: `${pct}%` }}
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        {levelData.temas.map(({ tema, sessions }) => {
+        {levelData.temas.map(({ tema, label, sessions }) => {
           const temaTotal = sessions.filter(Boolean).length
-          const temaDone = sessions.filter(s => s && done.has(sessionKey(activeLevel, tema, s))).length
+          const temaDone = sessions.filter((s) => s && done.has(sessionKey(activeLevel, tema, s))).length
           const temaPct = temaTotal > 0 ? Math.round((temaDone / temaTotal) * 100) : 0
 
           return (
             <div key={tema} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{tema}</span>
-                <span className="text-[10px] text-gray-600">{temaDone}/{temaTotal} — {temaPct}%</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{label}</span>
+                <span className="text-[10px] text-gray-500">
+                  {temaDone}/{temaTotal}&nbsp;
+                  <span className="text-yellow-400 font-bold">{temaPct}%</span>
+                </span>
+              </div>
+              <div className="h-1 bg-white/5 rounded-full overflow-hidden mb-3">
+                <div
+                  className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                  style={{ width: `${temaPct}%` }}
+                />
               </div>
               <div className="flex flex-wrap gap-2">
                 {sessions.map((session, i) => {
@@ -107,12 +115,17 @@ export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: 
                     <button
                       key={i}
                       onClick={() => toggle(key)}
-                      className={`relative px-3 py-1.5 rounded-lg text-xs border transition-colors ${
+                      className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-colors ${
                         isDone
-                          ? `${LEVEL_COLOR[activeLevel]} line-through`
+                          ? "text-green-400 border-green-400/30 bg-green-400/10"
                           : "text-gray-400 border-white/10 hover:text-white hover:border-white/20"
                       }`}
                     >
+                      {isDone ? (
+                        <CheckCircle size={11} className="shrink-0" />
+                      ) : (
+                        <Circle size={11} className="shrink-0 opacity-50" />
+                      )}
                       {session}
                       {lessonCountByKey[key] > 0 && (
                         <span className="group/badge absolute -top-1.5 -right-1.5">
@@ -131,6 +144,24 @@ export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: 
             </div>
           )
         })}
+      </div>
+
+      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+        <p className="text-xs font-bold text-gray-400 mb-3">Legenda</p>
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <CheckCircle size={13} className="text-green-400" />
+            Concluído
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <Circle size={13} className="opacity-50" />
+            Disponível
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <Lock size={13} className="opacity-30" />
+            Bloqueado
+          </div>
+        </div>
       </div>
     </div>
   )
