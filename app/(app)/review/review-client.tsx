@@ -1,8 +1,7 @@
 "use client"
 
 import { fetchFlashcards, updateFlashcard } from "../../actions/review"
-import { useState, useEffect, useCallback } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import { ArrowRight, BookOpen } from "lucide-react"
 import SpeakButton from "../speak-button"
 
@@ -43,7 +42,7 @@ const GRADES = [
   { grade: 5 as Grade, label: "Fácil", color: "text-green-400 border-green-400/20 bg-green-400/5 hover:bg-green-400/15 hover:border-green-400/40" },
 ]
 
-export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
+export default function ReviewClient({ lessons, totalDue }: { lessons: Lesson[]; totalDue: number }) {
   const [step, setStep] = useState<"filter" | "review">("filter")
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const [cards, setCards] = useState<Flashcard[]>([])
@@ -67,6 +66,19 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
     })
   }
 
+  async function handleGrade(grade: Grade) {
+    const card = cards[index]
+    const update = sm2(card, grade)
+    await updateFlashcard(card.id, update)
+    setReviewed((r) => r + 1)
+    if (index + 1 >= cards.length) {
+      setDone(true)
+    } else {
+      setFlipped(false)
+      setIndex((i) => i + 1)
+    }
+  }
+
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (step !== "review") return
@@ -82,37 +94,23 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
     }
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-  }, [flipped, index, step])
-
-  const handleGrade = useCallback(
-    async (grade: Grade) => {
-      const card = cards[index]
-      const update = sm2(card, grade)
-      await updateFlashcard(card.id, update)
-      setReviewed((r) => r + 1)
-      if (index + 1 >= cards.length) {
-        setDone(true)
-      } else {
-        setFlipped(false)
-        setIndex((i) => i + 1)
-      }
-    },
-    [cards, index],
-  )
+  }, [flipped, index, step, handleGrade])
 
   if (step === "filter") {
     return (
       <div className="max-w-md mx-auto space-y-3">
-        <button
-          onClick={() => startReview(null)}
-          className="w-full flex items-center gap-3 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl hover:bg-yellow-400/15 transition-colors text-left"
-        >
-          <span className="text-yellow-400 shrink-0"><BookOpen size={18} /></span>
-          <div>
-            <p className="text-white text-sm font-semibold">Todos os flashcards</p>
-            <p className="text-gray-500 text-xs mt-0.5">Revisar tudo que está pendente</p>
-          </div>
-        </button>
+        {totalDue > 1 && (
+          <button
+            onClick={() => startReview(null)}
+            className="w-full flex items-center gap-3 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl hover:bg-yellow-400/15 transition-colors text-left"
+          >
+            <span className="text-yellow-400 shrink-0"><BookOpen size={18} /></span>
+            <div>
+              <p className="text-white text-sm font-semibold">Todos os flashcards</p>
+              <p className="text-gray-500 text-xs mt-0.5">Revisar tudo que está pendente</p>
+            </div>
+          </button>
+        )}
 
         {lessons.length > 0 && (
           <>

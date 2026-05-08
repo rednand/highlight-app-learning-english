@@ -18,9 +18,11 @@ export default function PushToggle() {
 
   useEffect(() => {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
-    setSupported(true)
     navigator.serviceWorker.ready.then(reg =>
-      reg.pushManager.getSubscription().then(sub => setSubscribed(!!sub))
+      reg.pushManager.getSubscription().then(sub => {
+        setSupported(true)
+        setSubscribed(!!sub)
+      })
     )
   }, [])
 
@@ -42,10 +44,8 @@ export default function PushToggle() {
         if (permission !== "granted") return
 
         const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-        if (!vapidKey) {
-          console.error("NEXT_PUBLIC_VAPID_PUBLIC_KEY não definida")
-          return
-        }
+        if (!vapidKey) return
+
         const sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(vapidKey),

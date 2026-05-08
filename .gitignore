@@ -43,3 +43,7 @@ next-env.d.ts
 
 /.claude/
 /.copilot/
+CLAUDE.md
+AGENTS.md
+# Sentry Config File
+.env.sentry-build-plugin

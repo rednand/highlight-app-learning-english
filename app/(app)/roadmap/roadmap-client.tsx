@@ -35,13 +35,14 @@ export default function RoadmapClient({ lessonCountByKey }: { lessonCountByKey: 
   const [done, setDone] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    setDone(loadDone())
+    const id = setTimeout(() => setDone(loadDone()), 0)
+    return () => clearTimeout(id)
   }, [])
 
   function toggle(key: string) {
     setDone(prev => {
       const next = new Set(prev)
-      next.has(key) ? next.delete(key) : next.add(key)
+      if (next.has(key)) { next.delete(key) } else { next.add(key) }
       saveDone(next)
       return next
     })

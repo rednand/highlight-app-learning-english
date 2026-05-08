@@ -1,46 +1,49 @@
 import { createClient } from "../utils/supabase/server"
+import { redirect } from "next/navigation"
 import Link from "next/link"
-import { BookOpen, RotateCcw, Plus, ArrowRight } from "lucide-react"
+import { BookOpen, RotateCcw, Plus, ArrowRight, TrendingUp } from "lucide-react"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
 
-  const [lessonsResult, flashcardsResult, recentItemsResult] = await Promise.all([
-    supabase
-      .from("lessons")
-      .select("id, title, lesson_date, created_at")
-      .eq("user_id", user!.id)
-      .order("lesson_date", { ascending: false, nullsFirst: false })
-      .limit(4),
-    supabase
-      .from("flashcards")
-      .select("id", { count: "exact" })
-      .eq("user_id", user!.id)
-      .lte("next_review_at", new Date().toISOString()),
-    supabase
-      .from("lesson_items")
-      .select("id, term, translation, type, created_at")
-      .eq("user_id", user!.id)
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ])
+  const [lessonsResult, flashcardsResult, recentItemsResult, totalLessonsResult, totalWordsResult] =
+    await Promise.all([
+      supabase
+        .from("lessons")
+        .select("id, title, lesson_date, created_at")
+        .eq("user_id", user.id)
+        .order("lesson_date", { ascending: false, nullsFirst: false })
+        .limit(4),
+      supabase
+        .from("flashcards")
+        .select("id", { count: "exact" })
+        .eq("user_id", user.id)
+        .lte("next_review_at", new Date().toISOString()),
+      supabase
+        .from("lesson_items")
+        .select("id, term, translation, type, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("lessons")
+        .select("id", { count: "exact" })
+        .eq("user_id", user.id),
+      supabase
+        .from("lesson_items")
+        .select("id", { count: "exact" })
+        .eq("user_id", user.id),
+    ])
 
   const lessons = lessonsResult.data ?? []
   const dueCount = flashcardsResult.count ?? 0
   const recentItems = recentItemsResult.data ?? []
+  const totalLessons = totalLessonsResult.count ?? 0
+  const totalWords = totalWordsResult.count ?? 0
 
-  const { count: totalLessons } = await supabase
-    .from("lessons")
-    .select("id", { count: "exact" })
-    .eq("user_id", user!.id)
-
-  const { count: totalWords } = await supabase
-    .from("lesson_items")
-    .select("id", { count: "exact" })
-    .eq("user_id", user!.id)
-
-  const firstName = user!.email?.split("@")[0] ?? "você"
+  const firstName = user.email?.split("@")[0] ?? "você"
 
   return (
     <div className="p-4 md:p-8 max-w-4xl">
@@ -50,18 +53,19 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">{totalLessons ?? 0}</p>
-          <p className="text-xs text-gray-500 mt-1">Aulas registradas</p>
-        </div>
-        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">{totalWords ?? 0}</p>
-          <p className="text-xs text-gray-500 mt-1">Palavras anotadas</p>
-        </div>
-        <div className={`border rounded-xl p-4 ${dueCount > 0 ? "bg-yellow-400/5 border-yellow-400/20" : "bg-[#0f0f0f] border-white/5"}`}>
-          <p className={`text-2xl font-bold ${dueCount > 0 ? "text-yellow-400" : "text-white"}`}>{dueCount}</p>
-          <p className="text-xs text-gray-500 mt-1">Para revisar hoje</p>
-        </div>
+        {[
+          { label: "Aulas registradas", value: totalLessons },
+          { label: "Palavras anotadas", value: totalWords },
+          { label: "Para revisar hoje", value: dueCount, accent: dueCount > 0 },
+        ].map(({ label, value, accent }) => (
+          <div key={label} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs text-gray-400">{label}</p>
+              <TrendingUp size={13} className="text-yellow-400/60" />
+            </div>
+            <p className={`text-3xl font-bold ${accent ? "text-yellow-400" : "text-white"}`}>{value}</p>
+          </div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -79,7 +83,7 @@ export default async function DashboardPage() {
           </div>
 
           {dueCount === 0 ? (
-            <p className="text-sm text-gray-600">Nenhum flashcard para revisar hoje. Volte amanhã!</p>
+            <p className="text-sm text-gray-500">Nenhum flashcard para revisar hoje. Volte amanhã!</p>
           ) : (
             <>
               <div className="space-y-2 mb-4">
@@ -87,12 +91,12 @@ export default async function DashboardPage() {
                   <div key={item.id} className="flex items-center gap-2">
                     <span className="text-white text-sm font-medium">{item.term}</span>
                     {item.translation && (
-                      <span className="text-gray-600 text-xs">— {item.translation}</span>
+                      <span className="text-gray-400 text-xs">— {item.translation}</span>
                     )}
                   </div>
                 ))}
                 {dueCount > 3 && (
-                  <p className="text-xs text-gray-600">+ {dueCount - 3} outros</p>
+                  <p className="text-xs text-gray-500">+ {dueCount - 3} outros</p>
                 )}
               </div>
               <Link
@@ -118,7 +122,7 @@ export default async function DashboardPage() {
           </div>
 
           {lessons.length === 0 ? (
-            <p className="text-sm text-gray-600">Nenhuma aula ainda.</p>
+            <p className="text-sm text-gray-500">Nenhuma aula ainda.</p>
           ) : (
             <div className="space-y-2">
               {lessons.map((lesson) => {
@@ -131,7 +135,7 @@ export default async function DashboardPage() {
                     href={`/lessons/${lesson.id}`}
                     className="flex items-center gap-3 py-1.5 group"
                   >
-                    <span className="text-[10px] text-gray-600 w-14 shrink-0">{date}</span>
+                    <span className="text-[10px] text-gray-500 w-14 shrink-0">{date}</span>
                     <span className="text-sm text-gray-300 group-hover:text-white transition-colors truncate">
                       {lesson.title}
                     </span>
@@ -140,7 +144,7 @@ export default async function DashboardPage() {
               })}
               <Link
                 href="/lessons"
-                className="flex items-center gap-1 text-xs text-gray-600 hover:text-yellow-400 transition-colors mt-2"
+                className="flex items-center gap-1 text-xs text-gray-500 hover:text-yellow-400 transition-colors mt-2"
               >
                 Ver todas
                 <ArrowRight size={12} />
@@ -158,7 +162,7 @@ export default async function DashboardPage() {
               <div key={item.id} className="bg-[#0a0a0a] border border-white/5 rounded-lg p-3">
                 <p className="text-white text-sm font-medium truncate">{item.term}</p>
                 {item.translation && (
-                  <p className="text-gray-600 text-xs mt-0.5 truncate">{item.translation}</p>
+                  <p className="text-gray-400 text-xs mt-0.5 truncate">{item.translation}</p>
                 )}
               </div>
             ))}

@@ -1,10 +1,13 @@
 import { createClient } from "../../utils/supabase/server"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Plus, BookOpen } from "lucide-react"
 
 export default async function LessonsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect("/login")
 
   const { data: lessons } = await supabase
     .from("lessons")
