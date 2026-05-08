@@ -130,7 +130,7 @@ export default function ItemCard({ item }: { item: Item }) {
             <button type="button" onClick={() => setEditing(false)} className="text-xs text-gray-600 hover:text-white transition-colors flex items-center gap-1">
               <X size={12} /> Cancelar
             </button>
-            <button type="submit" disabled={isPending} className="bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors">
+            <button type="submit" disabled={isPending} className="bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-full transition-colors">
               {isPending ? "Salvando…" : "Salvar"}
             </button>
           </div>
@@ -146,9 +146,9 @@ export default function ItemCard({ item }: { item: Item }) {
           <p className="text-white font-medium text-sm">{item.term}</p>
           <SpeakButton text={item.term} />
         </div>
-        {item.phonetic && <p className="text-gray-600 text-xs font-mono mt-0.5">{item.phonetic}</p>}
-        {item.translation && <p className="text-gray-500 text-xs mt-0.5">{item.translation}</p>}
-        {item.context && <p className="text-gray-600 text-xs mt-1.5 italic">&ldquo;{item.context}&rdquo;</p>}
+        {item.phonetic && <p className="text-gray-400 text-xs font-mono mt-0.5">{item.phonetic}</p>}
+        {item.translation && <p className="text-gray-300 text-xs mt-0.5">{item.translation}</p>}
+        {item.context && <p className="text-gray-400 text-xs mt-1.5 italic">&ldquo;{item.context}&rdquo;</p>}
         {item.my_sentence && (
           <p className="text-amber-300/70 text-xs mt-1.5 italic">&ldquo;{item.my_sentence}&rdquo; <span className="not-italic text-gray-700">— minha frase</span></p>
         )}

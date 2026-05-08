@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SwRegister from "./sw-register";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Highlight",
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="app-html">
       <body className="app-body" suppressHydrationWarning>
+        <NextTopLoader color="#facc15" shadow="0 0 10px #facc15,0 0 5px #facc15" showSpinner={false} />
         <SwRegister />
         {children}
       </body>

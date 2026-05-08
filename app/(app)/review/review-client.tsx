@@ -2,8 +2,7 @@
 
 import { fetchFlashcards, updateFlashcard } from "../../actions/review"
 import { useState, useEffect, useCallback } from "react"
-import Link from "next/link"
-import { ArrowRight, BookOpen } from "lucide-react"
+import { ArrowRight, BookOpen, Play, Zap, CheckCircle } from "lucide-react"
 import SpeakButton from "../speak-button"
 
 type Flashcard = {
@@ -17,6 +16,13 @@ type Flashcard = {
 }
 
 type Lesson = { id: string; title: string }
+
+type LessonStat = {
+  totalCount: number
+  dueCount: number
+  minNextReview: string | null
+  dominio: number
+}
 
 type Grade = 0 | 1 | 2 | 3 | 4 | 5
 
@@ -43,7 +49,42 @@ const GRADES = [
   { grade: 5 as Grade, label: "Fácil", color: "text-green-400 border-green-400/20 bg-green-400/5 hover:bg-green-400/15 hover:border-green-400/40" },
 ]
 
-export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
+function formatNextReview(dateStr: string | null): string {
+  if (!dateStr) return "—"
+  const now = new Date()
+  const next = new Date(dateStr)
+  if (next <= now) return "Agora"
+  const diffMs = next.getTime() - now.getTime()
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+  if (diffDays <= 1) return "Amanhã"
+  return `Em ${diffDays} dias`
+}
+
+function urgencyLabel(stat: LessonStat | undefined): { label: string; color: string } | null {
+  if (!stat) return null
+  if (stat.dueCount > 0) return { label: "Urgente", color: "bg-red-500/20 text-red-400" }
+  if (!stat.minNextReview) return null
+  const diffMs = new Date(stat.minNextReview).getTime() - Date.now()
+  const diffDays = diffMs / (1000 * 60 * 60 * 24)
+  if (diffDays <= 2) return { label: "Moderado", color: "bg-yellow-500/20 text-yellow-400" }
+  return { label: "Tranquilo", color: "bg-green-500/20 text-green-400" }
+}
+
+type FilterTab = "todas" | "urgentes" | "concluidas"
+
+export default function ReviewClient({
+  lessons,
+  totalDue,
+  totalFlashcards,
+  avgDominio,
+  lessonStats,
+}: {
+  lessons: Lesson[]
+  totalDue: number
+  totalFlashcards: number
+  avgDominio: number
+  lessonStats: Record<string, LessonStat>
+}) {
   const [step, setStep] = useState<"filter" | "review">("filter")
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const [cards, setCards] = useState<Flashcard[]>([])
@@ -52,12 +93,31 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [reviewed, setReviewed] = useState(0)
+  const [tab, setTab] = useState<FilterTab>("todas")
+  const [streak, setStreak] = useState(0)
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem("hl_streak")
+        if (raw) {
+          const { days, lastDate } = JSON.parse(raw) as { days: number; lastDate: string }
+          const today = new Date().toDateString()
+          const yesterday = new Date(Date.now() - 86400000).toDateString()
+          if (lastDate === today || lastDate === yesterday) setStreak(days)
+        }
+      } catch {
+        //
+      }
+    }, 0)
+    return () => clearTimeout(id)
+  }, [])
 
   function startReview(lessonId: string | null) {
     setSelectedLesson(lessonId)
     setLoading(true)
-    fetchFlashcards(lessonId ?? undefined).then(({ cards }) => {
-      setCards(cards ?? [])
+    fetchFlashcards(lessonId ?? undefined).then(({ cards: fetched }) => {
+      setCards(fetched ?? [])
       setLoading(false)
       setStep("review")
       setIndex(0)
@@ -66,6 +126,45 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
       setReviewed(0)
     })
   }
+
+  const handleGrade = useCallback(
+    async (grade: Grade) => {
+      const card = cards[index]
+      const update = sm2(card, grade)
+      await updateFlashcard(card.id, update)
+      setReviewed((r) => r + 1)
+      if (index + 1 >= cards.length) {
+        setDone(true)
+        try {
+          const today = new Date().toDateString()
+          const raw = localStorage.getItem("hl_streak")
+          if (raw) {
+            const { days, lastDate } = JSON.parse(raw) as { days: number; lastDate: string }
+            const yesterday = new Date(Date.now() - 86400000).toDateString()
+            if (lastDate === today) {
+              // already counted today
+            } else if (lastDate === yesterday) {
+              const next = { days: days + 1, lastDate: today }
+              localStorage.setItem("hl_streak", JSON.stringify(next))
+              setStreak(next.days)
+            } else {
+              localStorage.setItem("hl_streak", JSON.stringify({ days: 1, lastDate: today }))
+              setStreak(1)
+            }
+          } else {
+            localStorage.setItem("hl_streak", JSON.stringify({ days: 1, lastDate: today }))
+            setStreak(1)
+          }
+        } catch {
+          //
+        }
+      } else {
+        setFlipped(false)
+        setIndex((i) => i + 1)
+      }
+    },
+    [cards, index],
+  )
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -82,53 +181,127 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
     }
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-  }, [flipped, index, step])
-
-  const handleGrade = useCallback(
-    async (grade: Grade) => {
-      const card = cards[index]
-      const update = sm2(card, grade)
-      await updateFlashcard(card.id, update)
-      setReviewed((r) => r + 1)
-      if (index + 1 >= cards.length) {
-        setDone(true)
-      } else {
-        setFlipped(false)
-        setIndex((i) => i + 1)
-      }
-    },
-    [cards, index],
-  )
+  }, [flipped, step, handleGrade])
 
   if (step === "filter") {
-    return (
-      <div className="max-w-md mx-auto space-y-3">
-        <button
-          onClick={() => startReview(null)}
-          className="w-full flex items-center gap-3 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl hover:bg-yellow-400/15 transition-colors text-left"
-        >
-          <span className="text-yellow-400 shrink-0"><BookOpen size={18} /></span>
-          <div>
-            <p className="text-white text-sm font-semibold">Todos os flashcards</p>
-            <p className="text-gray-500 text-xs mt-0.5">Revisar tudo que está pendente</p>
-          </div>
-        </button>
+    const lessonsWithCards = lessons.filter((l) => lessonStats[l.id])
+    const filteredLessons = lessonsWithCards.filter((l) => {
+      const stat = lessonStats[l.id]
+      if (tab === "urgentes") return stat?.dueCount > 0
+      if (tab === "concluidas") return stat?.dueCount === 0
+      return true
+    })
 
-        {lessons.length > 0 && (
-          <>
-            <p className="text-xs text-gray-600 uppercase tracking-wider font-bold pt-2">Por aula</p>
-            {lessons.map(lesson => (
-              <button
-                key={lesson.id}
-                onClick={() => startReview(lesson.id)}
-                className="w-full flex items-center gap-3 p-4 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-white/10 transition-colors text-left"
-              >
-                <span className="text-gray-600 shrink-0"><BookOpen size={16} /></span>
-                <p className="text-gray-300 text-sm truncate">{lesson.title}</p>
-              </button>
-            ))}
-          </>
+    return (
+      <div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          {[
+            { icon: <Zap size={15} className="text-yellow-400" />, value: totalDue, label: "Para revisar" },
+            { icon: <BookOpen size={15} className="text-yellow-400" />, value: totalFlashcards, label: "Total flashcards" },
+            { icon: <CheckCircle size={15} className="text-green-400" />, value: `${avgDominio}%`, label: "Domínio médio" },
+            { icon: <span className="text-base leading-none">🔥</span>, value: streak, label: "Dias seguidos" },
+          ].map(({ icon, value, label }) => (
+            <div key={label} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">{icon}</div>
+              <p className="text-2xl font-bold text-white">{value}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        {totalDue > 0 && (
+          <button
+            onClick={() => startReview(null)}
+            className="w-full flex items-center justify-between gap-3 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl hover:bg-yellow-400/15 transition-colors mb-6"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center shrink-0">
+                <Play size={16} className="text-black fill-black" />
+              </div>
+              <div className="text-left min-w-0">
+                <p className="text-white text-sm font-semibold">Revisão Rápida</p>
+                <p className="text-gray-500 text-xs mt-0.5 truncate">{totalDue} palavras aguardando revisão</p>
+              </div>
+            </div>
+            <span className="hidden sm:flex items-center gap-1.5 bg-yellow-400 text-black text-sm font-bold px-4 py-2 rounded-full shrink-0">
+              Começar <ArrowRight size={14} />
+            </span>
+            <ArrowRight size={18} className="sm:hidden text-yellow-400 shrink-0" />
+          </button>
         )}
+
+        <div className="flex gap-1 mb-4">
+          {(["todas", "urgentes", "concluidas"] as FilterTab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-colors capitalize ${
+                tab === t
+                  ? "bg-yellow-400/10 text-yellow-400 border-yellow-400/20"
+                  : "text-gray-500 border-white/10 hover:text-white hover:border-white/20"
+              }`}
+            >
+              {t === "todas" ? "Todas" : t === "urgentes" ? "Urgentes" : "Concluídas"}
+            </button>
+          ))}
+        </div>
+
+        {lessonsWithCards.length > 0 && (
+          <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-3">Por aula</p>
+        )}
+
+        <div className="space-y-2">
+          {filteredLessons.map((lesson) => {
+            const stat = lessonStats[lesson.id]
+            const urgency = urgencyLabel(stat)
+            const next = formatNextReview(stat?.minNextReview ?? null)
+            return (
+              <div
+                key={lesson.id}
+                className="flex items-center gap-3 p-3 sm:p-4 bg-[#0f0f0f] border border-white/5 rounded-xl"
+              >
+                <div className="hidden sm:flex w-8 h-8 rounded-lg bg-yellow-400/10 items-center justify-center shrink-0">
+                  <BookOpen size={14} className="text-yellow-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5 min-w-0">
+                    <span className="text-white text-sm font-semibold truncate flex-1 min-w-0">{lesson.title}</span>
+                    {urgency && (
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${urgency.color}`}>
+                        {urgency.label}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {stat?.totalCount ?? 0} palavras&nbsp; · &nbsp;Próxima: {next}
+                  </p>
+                </div>
+                <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 w-24">
+                  <span className="text-xs text-gray-400 font-semibold">{stat?.dominio ?? 0}%</span>
+                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-yellow-400 rounded-full"
+                      style={{ width: `${stat?.dominio ?? 0}%` }}
+                    />
+                  </div>
+                  <span className="text-[9px] text-gray-600">domínio</span>
+                </div>
+                <button
+                  onClick={() => startReview(lesson.id)}
+                  className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-full transition-colors shrink-0"
+                >
+                  <Play size={11} />
+                  Revisar
+                </button>
+              </div>
+            )
+          })}
+          {filteredLessons.length === 0 && (
+            <p className="text-sm text-gray-500 py-6 text-center">
+              {tab === "urgentes" ? "Nenhuma aula urgente. Tudo em dia!" : "Nenhuma aula concluída ainda."}
+            </p>
+          )}
+        </div>
       </div>
     )
   }
@@ -147,7 +320,10 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
         <p className="text-4xl mb-4">🎉</p>
         <p className="text-white font-semibold text-lg mb-2">Nada para revisar!</p>
         <p className="text-gray-500 text-sm">Todos os flashcards estão em dia.</p>
-        <button onClick={() => setStep("filter")} className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
+        <button
+          onClick={() => setStep("filter")}
+          className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+        >
           Voltar ao filtro <ArrowRight size={14} />
         </button>
       </div>
@@ -169,8 +345,11 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
           >
             Revisar novamente
           </button>
-          <button onClick={() => setStep("filter")} className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
-            Trocar filtro <ArrowRight size={14} />
+          <button
+            onClick={() => setStep("filter")}
+            className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+          >
+            Voltar <ArrowRight size={14} />
           </button>
         </div>
       </div>
@@ -204,9 +383,7 @@ export default function ReviewClient({ lessons }: { lessons: Lesson[] }) {
             <p className="text-3xl font-semibold text-white leading-snug">{card.front}</p>
             <SpeakButton text={card.front} className="text-gray-600 hover:text-yellow-400 transition-colors mt-1" />
           </div>
-          {phonetic && (
-            <p className="text-gray-600 text-sm mt-1 font-mono">{phonetic}</p>
-          )}
+          {phonetic && <p className="text-gray-600 text-sm mt-1 font-mono">{phonetic}</p>}
         </div>
 
         {!flipped ? (

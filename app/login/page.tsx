@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "../utils/supabase/client"
+import Image from "next/image"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-10 justify-center">
-          <img src="/icon.svg" alt="Highlight" className="w-8 h-8 rounded-lg" />
+          <Image src="/icon.svg" alt="Highlight" width={32} height={32} className="rounded-lg" />
           <span className="font-bold text-white tracking-tight text-lg">Highlight</span>
         </div>
 

@@ -103,7 +103,7 @@ export default function EditLessonForm({ lesson }: Props) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+        className="w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-white text-sm font-bold py-2.5 rounded-full transition-colors"
       >
         {isPending ? "Salvando…" : "Salvar"}
       </button>
