@@ -1,7 +1,8 @@
 import { createClient } from "../../../utils/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import Image from "next/image"
+import { ArrowLeft, Film, Tv, Music } from "lucide-react"
 import AddItemForm from "./add-item-form"
 import TranscriptExtractor from "./transcript-extractor"
 import EditLessonForm from "./edit-lesson-form"
@@ -39,11 +40,11 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
     <div className="max-w-2xl mx-auto p-4 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <Link
-          href="/lessons"
+          href={lesson.source_type === "movie" ? "/movies" : lesson.source_type === "music" ? "/music" : "/lessons"}
           className="flex items-center gap-2 text-gray-500 hover:text-white text-sm transition-colors"
         >
           <ArrowLeft size={15} />
-          Aulas
+          {lesson.source_type === "movie" ? "Filmes & Séries" : lesson.source_type === "music" ? "Música" : "Aulas"}
         </Link>
         <div className="flex items-center gap-3">
           <DeleteLessonButton lessonId={id} />
@@ -51,6 +52,47 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       </div>
 
       <EditLessonForm lesson={{ id, title: lesson.title, lesson_date: lesson.lesson_date, notes: lesson.notes, roadmap_key: lesson.roadmap_key }} />
+
+      {lesson.source_type === "music" && lesson.music_artist && (
+        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+          {lesson.music_thumbnail_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={lesson.music_thumbnail_url} alt={lesson.title} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+          ) : (
+            <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+              <Music size={18} className="text-gray-600" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
+            <p className="text-gray-500 text-xs mt-0.5 truncate">{lesson.music_artist}</p>
+          </div>
+        </div>
+      )}
+
+      {lesson.tmdb_poster_path && (
+        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+          <Image
+            src={`https://image.tmdb.org/t/p/w92${lesson.tmdb_poster_path}`}
+            alt={lesson.title}
+            width={40}
+            height={60}
+            className="rounded-lg object-cover shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
+            <div className="flex items-center gap-1.5 mt-1">
+              {lesson.tmdb_type === "movie"
+                ? <Film size={11} className="text-gray-500" />
+                : <Tv size={11} className="text-gray-500" />}
+              <p className="text-gray-500 text-xs">
+                {lesson.tmdb_type === "movie" ? "Filme" : "Série"}
+                {lesson.tmdb_season ? ` · Temporada ${lesson.tmdb_season}` : ""}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="mb-8">
         {lessonDate && (

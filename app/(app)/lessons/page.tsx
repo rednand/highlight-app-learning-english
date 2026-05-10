@@ -13,6 +13,7 @@ export default async function LessonsPage() {
     .from("lessons")
     .select("id, title, lesson_date, created_at")
     .eq("user_id", user.id)
+    .or("source_type.eq.lesson,source_type.is.null")
     .order("lesson_date", { ascending: false, nullsFirst: false })
 
   const lessonIds = (lessons ?? []).map((l) => l.id)

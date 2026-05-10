@@ -2,7 +2,7 @@
 
 import { createClient } from "../utils/supabase/server"
 
-export async function fetchFlashcards(lessonId?: string) {
+export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { cards: null }
@@ -19,11 +19,11 @@ export async function fetchFlashcards(lessonId?: string) {
 
   let query = supabase
     .from("flashcards")
-    .select("id, front, back, ease_factor, interval_days, next_review_at, lesson_items(phonetic, my_sentence)")
+    .select("id, front, back, ease_factor, interval_days, next_review_at, lesson_items(phonetic, my_sentence, context, lessons(title, tmdb_poster_path, tmdb_type, tmdb_season, source_type, music_thumbnail_url, music_artist))")
     .eq("user_id", user.id)
-    .lte("next_review_at", new Date().toISOString())
     .order("next_review_at", { ascending: true })
 
+  if (!skipDueFilter) query = query.lte("next_review_at", new Date().toISOString())
   if (itemIds) query = query.in("lesson_item_id", itemIds)
 
   const { data, error } = await query
