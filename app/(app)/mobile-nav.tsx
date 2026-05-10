@@ -2,15 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, BookOpen, RotateCcw, Map, LogOut } from "lucide-react"
-import { signOut } from "../actions/lessons"
-import PushToggle from "./push-toggle"
+import { LayoutDashboard, BookOpen, Film, Music, RotateCcw } from "lucide-react"
 
 const links = [
   { href: "/", icon: LayoutDashboard, label: "Início", exact: true },
   { href: "/lessons", icon: BookOpen, label: "Aulas", exact: false },
+  { href: "/movies", icon: Film, label: "Filmes", exact: false },
+  { href: "/music", icon: Music, label: "Música", exact: false },
   { href: "/review", icon: RotateCcw, label: "Revisar", exact: false },
-  { href: "/roadmap", icon: Map, label: "Trilha", exact: false },
 ]
 
 export default function MobileNav() {
@@ -33,16 +32,6 @@ export default function MobileNav() {
           </Link>
         )
       })}
-      <div className="flex-1 flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold tracking-wide text-gray-600">
-        <PushToggle />
-        Alertas
-      </div>
-      <form action={signOut} className="flex-1">
-        <button className="w-full h-full flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold tracking-wide text-gray-600 hover:text-white transition-colors">
-          <LogOut size={20} />
-          Sair
-        </button>
-      </form>
     </nav>
   )
 }

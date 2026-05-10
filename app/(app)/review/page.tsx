@@ -17,7 +17,7 @@ export default async function ReviewPage() {
     await Promise.all([
       supabase
         .from("lessons")
-        .select("id, title")
+        .select("id, title, source_type")
         .eq("user_id", user!.id)
         .order("lesson_date", { ascending: false, nullsFirst: false }),
       supabase
@@ -73,6 +73,10 @@ export default async function ReviewPage() {
       ? Math.round(Math.max(0, Math.min(100, ((globalEaseSum / globalEaseCount - 1.3) / (2.5 - 1.3)) * 100)))
       : 0
 
+  const cinemaTotal = (lessons ?? [])
+    .filter((l) => l.source_type === "movie" || l.source_type === "music")
+    .reduce((sum, l) => sum + (lessonStats[l.id]?.totalCount ?? 0), 0)
+
   return (
     <div className="p-4 md:p-8">
       <div className="mb-8">
@@ -86,6 +90,7 @@ export default async function ReviewPage() {
         totalFlashcards={totalFlashcards ?? 0}
         avgDominio={avgDominio}
         lessonStats={lessonStats}
+        cinemaTotal={cinemaTotal}
       />
     </div>
   )
