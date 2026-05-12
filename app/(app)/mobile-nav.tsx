@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, BookOpen, Film, Music, RotateCcw } from "lucide-react"
+import { LayoutDashboard, BookOpen, Film, Music, RotateCcw, Map } from "lucide-react"
 
 const links = [
   { href: "/", icon: LayoutDashboard, label: "Início", exact: true },
@@ -10,6 +10,7 @@ const links = [
   { href: "/movies", icon: Film, label: "Filmes", exact: false },
   { href: "/music", icon: Music, label: "Música", exact: false },
   { href: "/review", icon: RotateCcw, label: "Revisar", exact: false },
+  { href: "/roadmap", icon: Map, label: "Trilha", exact: false },
 ]
 
 export default function MobileNav() {

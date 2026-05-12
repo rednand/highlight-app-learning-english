@@ -2,6 +2,7 @@
 
 import { fetchFlashcards, updateFlashcard } from "../../actions/review"
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { ArrowRight, BookOpen, Play, Zap, CheckCircle, Film, Tv, Music } from "lucide-react"
 import Image from "next/image"
 import SpeakButton from "../speak-button"
@@ -28,7 +29,7 @@ type Flashcard = {
     my_sentence: string | null
     context: string | null
     lessons: MediaContext | null
-  }[] | null
+  } | null
 }
 
 type Lesson = { id: string; title: string; source_type: string | null }
@@ -109,6 +110,7 @@ export default function ReviewClient({
   lessonStats: Record<string, LessonStat>
   cinemaTotal: number
 }) {
+  const router = useRouter()
   const [step, setStep] = useState<"filter" | "review">("filter")
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const [cards, setCards] = useState<Flashcard[]>([])
@@ -157,10 +159,10 @@ export default function ReviewClient({
     setCardMode("cinema")
     setSelectedLesson(null)
     setLoading(true)
-    fetchFlashcards(undefined, true).then(({ cards: fetched }) => {
+    fetchFlashcards(undefined).then(({ cards: fetched }) => {
       const all = (fetched ?? []) as unknown as Flashcard[]
       const filtered = all.filter((c) => {
-        const st = c.lesson_items?.[0]?.lessons?.source_type
+        const st = c.lesson_items?.lessons?.source_type
         return st === "movie" || st === "music"
       })
       setCards(filtered)
@@ -387,7 +389,7 @@ export default function ReviewClient({
         <p className="text-white font-semibold text-lg mb-2">Nada para revisar!</p>
         <p className="text-gray-500 text-sm">Todos os flashcards estão em dia.</p>
         <button
-          onClick={() => setStep("filter")}
+          onClick={() => { router.refresh(); setStep("filter") }}
           className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
         >
           Voltar ao filtro <ArrowRight size={14} />
@@ -412,7 +414,7 @@ export default function ReviewClient({
             Revisar novamente
           </button>
           <button
-            onClick={() => setStep("filter")}
+            onClick={() => { router.refresh(); setStep("filter") }}
             className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
           >
             Voltar <ArrowRight size={14} />
@@ -424,17 +426,17 @@ export default function ReviewClient({
 
   const card = cards[index]
   const progress = Math.round((index / cards.length) * 100)
-  const phonetic = card.lesson_items?.[0]?.phonetic
-  const mySentence = card.lesson_items?.[0]?.my_sentence
-  const context = card.lesson_items?.[0]?.context
-  const media = card.lesson_items?.[0]?.lessons ?? null
+  const phonetic = card.lesson_items?.phonetic
+  const mySentence = card.lesson_items?.my_sentence
+  const context = card.lesson_items?.context
+  const media = card.lesson_items?.lessons ?? null
   const isMusic = media?.source_type === "music"
   const activeGrades = cardMode === "cinema" ? CINEMA_GRADES : GRADES
 
   return (
     <div className="max-w-md mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => setStep("filter")} className="text-xs text-gray-600 hover:text-white transition-colors shrink-0">
+        <button onClick={() => { router.refresh(); setStep("filter") }} className="text-xs text-gray-600 hover:text-white transition-colors shrink-0">
           ← filtro
         </button>
         <span className="text-xs text-gray-500 tabular-nums">{index + 1}/{cards.length}</span>
