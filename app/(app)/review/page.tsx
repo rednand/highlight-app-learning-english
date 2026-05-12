@@ -4,7 +4,7 @@ import ReviewClient from "./review-client"
 type RawCard = {
   ease_factor: number
   next_review_at: string
-  lesson_items: { lesson_id: string }[] | null
+  lesson_items: { lesson_id: string } | null
 }
 
 export default async function ReviewPage() {
@@ -42,7 +42,7 @@ export default async function ReviewPage() {
   let globalEaseCount = 0
 
   for (const card of (allCards as RawCard[] | null) ?? []) {
-    const lessonId = card.lesson_items?.[0]?.lesson_id
+    const lessonId = card.lesson_items?.lesson_id
     globalEaseSum += card.ease_factor
     globalEaseCount++
 
@@ -75,7 +75,7 @@ export default async function ReviewPage() {
 
   const cinemaTotal = (lessons ?? [])
     .filter((l) => l.source_type === "movie" || l.source_type === "music")
-    .reduce((sum, l) => sum + (lessonStats[l.id]?.totalCount ?? 0), 0)
+    .reduce((sum, l) => sum + (lessonStats[l.id]?.dueCount ?? 0), 0)
 
   return (
     <div className="p-4 md:p-8">
