@@ -45,7 +45,7 @@ export default function RoadmapPicker() {
         <select value={tema} onChange={e => handleTemaChange(e.target.value)} disabled={!level} className={selectClass}>
           <option value="">Tema</option>
           {temas.map(t => (
-            <option key={t.tema} value={t.tema}>{t.tema}</option>
+            <option key={t.tema} value={t.tema}>{t.label}</option>
           ))}
         </select>
 
@@ -59,7 +59,7 @@ export default function RoadmapPicker() {
 
       {key && (
         <p className="text-xs text-yellow-400/70">
-          ✓ {level} › {tema} › {session}
+          ✓ {level} › {temas.find(t => t.tema === tema)?.label ?? tema} › {session}
         </p>
       )}
     </div>
