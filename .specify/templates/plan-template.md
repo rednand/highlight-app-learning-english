@@ -40,7 +40,18 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with `.specify/memory/constitution.md` before proceeding:
+
+| Principle | Gate Question | Status |
+|-----------|--------------|--------|
+| I. Code Quality | Does the plan avoid `any`, `console.log`, and direct Supabase access from Client Components? | [ ] |
+| II. Testing Standards | Does the plan include automated tests with ≥ 80% coverage and no live DB dependency? | [ ] |
+| III. UX Consistency | Does the plan preserve keyboard shortcuts, mobile compatibility, and pt-BR text? | [ ] |
+| IV. Performance | Does the plan respect API cache TTLs and keep SM-2 synchronous? | [ ] |
+| Stack Constraints | Does the plan stay within Next.js 16 App Router, Tailwind v4, Supabase, and Vercel? | [ ] |
+| Quality Gates | Will `lint`, `test:coverage`, and `build` all pass after implementation? | [ ] |
+
+Any unchecked gate MUST be justified in the Complexity Tracking table or resolved before Phase 1.
 
 ## Project Structure
 

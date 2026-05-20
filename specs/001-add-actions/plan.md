@@ -32,7 +32,14 @@ Extract pure business-logic functions from server actions into isolated utility 
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Status**: No project constitution has been established (`.specify/memory/constitution.md` is a blank template). No gates to evaluate. Proceeding without constitution constraints.
+| Principle | Gate Question | Status |
+|-----------|--------------|--------|
+| I. Code Quality | Does the plan avoid `any`, `console.log`, and direct Supabase access from Client Components? | ✅ Pass — pure utils and mocked tests have no client-side DB calls |
+| II. Testing Standards | Does the plan include automated tests with ≥ 80% coverage and no live DB dependency? | ✅ Pass — this feature IS the testing infrastructure |
+| III. UX Consistency | Does the plan preserve keyboard shortcuts, mobile compatibility, and pt-BR text? | ✅ N/A — no user-facing surfaces introduced |
+| IV. Performance | Does the plan respect API cache TTLs and keep SM-2 synchronous? | ✅ Pass — `sm2()` remains a pure synchronous function |
+| Stack Constraints | Does the plan stay within Next.js 16 App Router, Tailwind v4, Supabase, and Vercel? | ✅ Pass — no stack changes |
+| Quality Gates | Will `lint`, `test:coverage`, and `build` all pass after implementation? | ✅ Required — lint + coverage are the explicit acceptance criteria |
 
 ## Project Structure
 
@@ -84,14 +91,14 @@ vitest.setup.ts          # @testing-library/jest-dom setup
 
 ## Phase 0: Research
 
-*All unknowns resolved from the existing codebase — no external research required.*
+*All unknowns resolved directly from the existing codebase — no external research required.*
 
 ### Decisions
 
 | Topic | Decision | Rationale |
 |-------|----------|-----------|
 | Test runner | Vitest 2.x | Already integrated; compatible with Next.js via `vi.mock` for `next/cache`, `next/navigation`, Supabase client |
-| Test environment | jsdom | Required for React component tests; pure action tests run without DOM |
+| Test environment | jsdom 25 | Required for React component tests; pure action tests run without DOM |
 | Mocking strategy | `vi.mock` at module level | Intercepts `createClient` before any test; each test configures mock chains |
 | Coverage provider | v8 (built-in Node.js) | No instrumentation overhead; native Vitest support |
 | Coverage scope | `app/lib/**`, `app/actions/**`, specific UI components | Excludes push and tmdb actions (external service wrappers) |
@@ -110,10 +117,10 @@ Builder factories replicate the Supabase query chain (`.from().select().eq().sin
 
 Business logic previously inline in actions is extracted to `app/lib/`:
 
-- `sm2(card, grade)` → `app/lib/review-utils.ts` (pure, no dependencies)
+- `sm2(card, grade)` → `app/lib/review-utils.ts` (pure, no dependencies — satisfies Constitution Principle IV)
 - `computeStreak(data, today, yesterday)` → `app/lib/streak-utils.ts` (pure, no dependencies)
 
-Allows testing all branches without any mocking.
+Allows testing all branches without any mocking (satisfies Constitution Principle II).
 
 ## Phase 1: Design & Contracts
 
@@ -123,7 +130,7 @@ No new database tables. TypeScript type contracts exported from `app/lib/` serve
 
 ### CI Contract
 
-`.github/workflows/ci.yml` — two jobs:
+`.github/workflows/ci.yml` — two jobs enforcing Constitution Quality Gates:
 
 1. **lint-and-test**: `npm run lint` + `npm run test:coverage` (80% threshold gate)
 2. **build**: `npm run build` (runs only after lint-and-test passes)
