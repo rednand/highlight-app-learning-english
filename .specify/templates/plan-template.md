@@ -48,6 +48,10 @@ Verify compliance with `.specify/memory/constitution.md` before proceeding:
 | II. Testing Standards | Does the plan include automated tests with ≥ 80% coverage and no live DB dependency? | [ ] |
 | III. UX Consistency | Does the plan preserve keyboard shortcuts, mobile compatibility, and pt-BR text? | [ ] |
 | IV. Performance | Does the plan respect API cache TTLs and keep SM-2 synchronous? | [ ] |
+| V. Clean Code | Are all new functions single-purpose, self-named, and free of dead code or premature abstractions? | [ ] |
+| VI. Simple UX | Does every new screen/button serve a documented user need and reach primary actions in ≤ 2 taps? | [ ] |
+| VII. Responsible Design | Is data collection minimal, opt-in for push, and free of dark patterns? | [ ] |
+| VIII. Minimal Dependencies | Are all new packages justified with alternatives evaluated and no unused deps introduced? | [ ] |
 | Stack Constraints | Does the plan stay within Next.js 16 App Router, Tailwind v4, Supabase, and Vercel? | [ ] |
 | Quality Gates | Will `lint`, `test:coverage`, and `build` all pass after implementation? | [ ] |
 
