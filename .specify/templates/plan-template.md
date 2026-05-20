@@ -53,7 +53,7 @@ Verify compliance with `.specify/memory/constitution.md` before proceeding:
 | VII. Responsible Design | Is data collection minimal, opt-in for push, and free of dark patterns? | [ ] |
 | VIII. Minimal Dependencies | Are all new packages justified with alternatives evaluated and no unused deps introduced? | [ ] |
 | Stack Constraints | Does the plan stay within Next.js 16 App Router, Tailwind v4, Supabase, and Vercel? | [ ] |
-| Quality Gates | Will `lint`, `test:coverage`, and `build` all pass after implementation? | [ ] |
+| Quality Gates | Will `lint`, `test:coverage`, `build`, and `/review` all pass before PR creation? | [ ] |
 
 Any unchecked gate MUST be justified in the Complexity Tracking table or resolved before Phase 1.
 

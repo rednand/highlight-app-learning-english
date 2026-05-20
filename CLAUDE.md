@@ -53,5 +53,5 @@ Server Components fetch Supabase directly → render. Mutations go through Serve
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/001-add-actions/plan.md`.
+at `specs/002-responsive-audit/plan.md`.
 <!-- SPECKIT END -->

@@ -1,15 +1,13 @@
 <!--
   SYNC IMPACT REPORT
-  Version change: 1.2.0 → 2.0.0
-  Added principles: none
-  Modified principles: II. Testing Standards — reverted per-type test requirements
-    (page/component/function mandatory tests removed); scope returns to coverage
-    threshold (≥ 80%) as the sole gate. MAJOR bump: removal of previously
-    ratified per-type governance rules.
+  Version change: 2.0.0 → 2.1.0
+  Added sections: Workflow (mandatory code review before PR)
+  Modified sections: Quality Gates — added gate 4 (/review before gh pr create)
+  Modified principles: none
   Removed sections: none
   Templates updated:
     ✅ .specify/memory/constitution.md — this file
-    ✅ .specify/templates/plan-template.md — Constitution Check gate II reverted
+    ✅ .specify/templates/plan-template.md — Constitution Check table updated with Review gate
     ✅ .specify/templates/spec-template.md — no structural change needed
     ✅ .specify/templates/tasks-template.md — no structural change needed
   Deferred items: none.
@@ -166,13 +164,31 @@ without a constitution amendment:
 | Hosting | Vercel with Vercel Cron for scheduled jobs. |
 | Push | Web Push API + VAPID keys. No third-party push service. |
 
+## Workflow
+
+The following steps MUST be completed in order for every pull request:
+
+1. **Implement** — write the code following the eight core principles.
+2. **Lint** — run `npm run lint` and fix all errors.
+3. **Test** — run `npm run test:coverage` and confirm all tests pass with coverage ≥ 80%.
+4. **Build** — run `npm run build` and confirm the production build succeeds.
+5. **Review** — run `/review` (the code review skill) and resolve all critical issues
+   before opening the PR. The review MUST complete without unresolved critical findings.
+6. **Create PR** — only after the review is clean, run `gh pr create` to open the
+   pull request.
+
+`/review` before `gh pr create` is NON-NEGOTIABLE. Skipping the review step to save
+time is a violation of this constitution and MUST be documented in the PR as a known
+exception with a follow-up task to address it.
+
 ## Quality Gates
 
-Every pull request MUST clear all gates before merge:
+Every pull request MUST clear all four gates before merge:
 
 1. `npm run lint` — zero ESLint errors
 2. `npm run test:coverage` — all tests pass, coverage ≥ 80% on all four metrics
 3. `npm run build` — production build succeeds
+4. `/review` — code review completed, no unresolved critical issues
 
 ## Governance
 
@@ -192,4 +208,4 @@ one follow-up PR.
 
 Runtime development guidance lives in `CLAUDE.md` and `.claude/rules/`.
 
-**Version**: 2.0.0 | **Ratified**: 2026-05-20 | **Last Amended**: 2026-05-20
+**Version**: 2.1.0 | **Ratified**: 2026-05-20 | **Last Amended**: 2026-05-20

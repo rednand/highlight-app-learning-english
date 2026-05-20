@@ -88,7 +88,7 @@ export default async function DashboardPage() {
           className="flex items-center gap-1.5 sm:gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-full transition-colors shrink-0"
         >
           <Plus size={14} />
-          <span className="hidden xs:inline">Nova </span>Aula
+          <span className="hidden sm:inline">Nova </span>Aula
         </Link>
       </div>
 
