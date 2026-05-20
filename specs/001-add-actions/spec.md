@@ -61,7 +61,7 @@ As a developer opening a pull request, I want the CI pipeline to automatically r
 ### Edge Cases
 
 - What happens when a server action is called with an empty string ID? The test must verify safe handling without crashing.
-- How does the streak logic handle timezone differences (user in UTC-3 reviewing at 11 PM local time)?
+- How does the streak logic handle timezone differences (user in UTC-3 reviewing at 11 PM local time)? → Out of scope: streak uses UTC date strings; timezone conversion is the UI layer's responsibility.
 - What happens if the database client mock is not reset between tests — can state leak between test cases?
 
 ## Requirements *(mandatory)*
@@ -70,7 +70,7 @@ As a developer opening a pull request, I want the CI pipeline to automatically r
 
 - **FR-001**: The system MUST provide pure, side-effect-free utility functions for the SM-2 scheduling algorithm that can be tested in isolation from the database.
 - **FR-002**: The system MUST provide pure, side-effect-free utility functions for streak calculation (compute streak, compute new days, today/yesterday boundaries) that can be tested in isolation.
-- **FR-003**: The test suite MUST cover all server actions: review (fetch flashcards, update flashcard, get streak, update streak), lessons (create, update, delete), items (create, update, delete), grammar (progress), roadmap (progress), and examples.
+- **FR-003**: The test suite MUST cover all server actions: review (fetch flashcards, update flashcard, get streak, update streak), lessons (create, update, delete), items (create, update, delete), grammar (progress), roadmap (progress), and examples. Any new server action added to the codebase in the future MUST include corresponding tests before it can be merged; the CI coverage threshold enforces this automatically.
 - **FR-004**: The test suite MUST cover the unauthenticated path for all server actions that require a logged-in user.
 - **FR-005**: The test suite MUST cover the database error path for all read server actions.
 - **FR-006**: The CI pipeline MUST automatically execute the full test suite on every pull request opened against the main branch.
@@ -93,6 +93,13 @@ As a developer opening a pull request, I want the CI pipeline to automatically r
 - **SC-003**: Every server action domain (review, lessons, items, grammar, roadmap, examples) has at least one passing test for the happy path and one for the unauthenticated path.
 - **SC-004**: The CI pipeline executes the test suite and reports a result on every pull request within 3 minutes.
 - **SC-005**: Zero tests rely on a live network call or real database connection.
+
+## Clarifications
+
+### Session 2026-05-20
+
+- Q: When a new server action is added in the future, are tests required before merge? → A: Yes — any new server action MUST include tests as a merge prerequisite; CI coverage threshold enforces this automatically.
+- Q: Should the test suite explicitly verify UTC timezone behavior for streak calculations? → A: No — the UTC assumption in Assumptions is sufficient; `todayAndYesterday()` is a pure function already tested; environment timezone is out of scope.
 
 ## Assumptions
 

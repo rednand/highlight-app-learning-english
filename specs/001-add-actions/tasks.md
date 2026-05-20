@@ -21,10 +21,10 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 **Purpose**: Install test runner, configure coverage, add npm scripts.
 
-- [ ] T001 Install vitest, @vitest/coverage-v8, @testing-library/react, @testing-library/jest-dom, @vitejs/plugin-react, jsdom in package.json devDependencies
-- [ ] T002 Create `vitest.config.ts` at repo root — jsdom environment, v8 coverage, 80% thresholds, include `app/lib/**` and `app/actions/**`
-- [ ] T003 Create `vitest.setup.ts` at repo root — import `@testing-library/jest-dom`
-- [ ] T004 Add `test`, `test:run`, `test:coverage` scripts to `package.json`
+- [x] T001 Install vitest, @vitest/coverage-v8, @testing-library/react, @testing-library/jest-dom, @vitejs/plugin-react, jsdom in package.json devDependencies
+- [x] T002 Create `vitest.config.ts` at repo root — jsdom environment, v8 coverage, 80% thresholds, include `app/lib/**` and `app/actions/**`
+- [x] T003 Create `vitest.setup.ts` at repo root — import `@testing-library/jest-dom`
+- [x] T004 Add `test`, `test:run`, `test:coverage` scripts to `package.json`
 
 **Checkpoint**: `npm run test:run` should execute (even with zero test files) without errors.
 
@@ -36,10 +36,10 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 **⚠️ CRITICAL**: US1 tests depend on these modules existing. Must complete before Phase 3.
 
-- [ ] T005 Create `app/lib/review-utils.ts` — export `Grade` type, `FlashcardSM2` interface, `LessonStat` interface, `sm2()`, `formatNextReview()`, `urgencyLabel()`
-- [ ] T006 Create `app/lib/streak-utils.ts` — export `StreakRecord` interface, `computeStreak()`, `computeNewDays()`, `todayAndYesterday()`
-- [ ] T007 Update `app/actions/review.ts` — import `computeStreak`, `computeNewDays`, `todayAndYesterday` from `../lib/streak-utils` (remove inline logic)
-- [ ] T008 Update `app/(app)/review/review-client.tsx` — import `sm2`, `formatNextReview`, `urgencyLabel`, `Grade`, `LessonStat` from `../../lib/review-utils` (remove inline implementations)
+- [x] T005 Create `app/lib/review-utils.ts` — export `Grade` type, `FlashcardSM2` interface, `LessonStat` interface, `sm2()`, `formatNextReview()`, `urgencyLabel()`
+- [x] T006 Create `app/lib/streak-utils.ts` — export `StreakRecord` interface, `computeStreak()`, `computeNewDays()`, `todayAndYesterday()`
+- [x] T007 Update `app/actions/review.ts` — import `computeStreak`, `computeNewDays`, `todayAndYesterday` from `../lib/streak-utils` (remove inline logic)
+- [x] T008 Update `app/(app)/review/review-client.tsx` — import `sm2`, `formatNextReview`, `urgencyLabel`, `Grade`, `LessonStat` from `../../lib/review-utils` (remove inline implementations)
 
 **Checkpoint**: `npm run build` must still pass after extraction. No runtime behavior changes.
 
@@ -51,8 +51,8 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 **Independent Test**: Run `npm run test:run -- review-utils streak-utils`. All tests pass, no mocking required.
 
-- [ ] T009 [P] [US1] Create `__tests__/review-utils.test.ts` — test `sm2()` for grades 1, 3, 5 with interval=1 and interval>1; test `formatNextReview()` for null, past, 1-day, multi-day; test `urgencyLabel()` for dueCount>0, near review, far review
-- [ ] T010 [P] [US1] Create `__tests__/streak-utils.test.ts` — test `computeStreak()` for null record, today, yesterday, older date; test `computeNewDays()` for today (null), yesterday (+1), no record (1), broken streak (1)
+- [x] T009 [P] [US1] Create `__tests__/review-utils.test.ts` — test `sm2()` for grades 1, 3, 5 with interval=1 and interval>1; test `formatNextReview()` for null, past, 1-day, multi-day; test `urgencyLabel()` for dueCount>0, near review, far review
+- [x] T010 [P] [US1] Create `__tests__/streak-utils.test.ts` — test `computeStreak()` for null record, today, yesterday, older date; test `computeNewDays()` for today (null), yesterday (+1), no record (1), broken streak (1)
 
 **Checkpoint**: `npm run test:run -- --reporter=verbose` shows US1 tests passing with zero mocks.
 
@@ -66,23 +66,23 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 ### Review domain
 
-- [ ] T011 [P] [US2] Create `__tests__/review-actions.test.ts` — test `getStreak`, `updateStreak`, `fetchFlashcards`, `updateFlashcard`; mock `app/utils/supabase/server`; cover unauthenticated path, happy path, DB error path
+- [x] T011 [P] [US2] Create `__tests__/review-actions.test.ts` — test `getStreak`, `updateStreak`, `fetchFlashcards`, `updateFlashcard`; mock `app/utils/supabase/server`; cover unauthenticated path, happy path, DB error path
 
 ### Lessons, Items domains
 
-- [ ] T012 [P] [US2] Create `__tests__/lessons-actions.test.ts` — test `createLesson`, `updateLesson`, `deleteLesson`, `signOut`; mock supabase + `next/cache` + `next/navigation`; cover unauthenticated, happy, and error paths
-- [ ] T013 [P] [US2] Create `__tests__/items-actions.test.ts` — test `addLessonItem`, `updateLessonItem`, `deleteLessonItem`; mock supabase + `next/cache`; cover unauthenticated, happy, and error paths
+- [x] T012 [P] [US2] Create `__tests__/lessons-actions.test.ts` — test `createLesson`, `updateLesson`, `deleteLesson`, `signOut`; mock supabase + `next/cache` + `next/navigation`; cover unauthenticated, happy, and error paths
+- [x] T013 [P] [US2] Create `__tests__/items-actions.test.ts` — test `addLessonItem`, `updateLessonItem`, `deleteLessonItem`; mock supabase + `next/cache`; cover unauthenticated, happy, and error paths
 
 ### Grammar, Roadmap, Examples domains
 
-- [ ] T014 [P] [US2] Create `__tests__/grammar-actions.test.ts` — test grammar progress actions in `app/actions/grammar.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
-- [ ] T015 [P] [US2] Create `__tests__/roadmap-actions.test.ts` — test roadmap progress actions in `app/actions/roadmap.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
-- [ ] T016 [P] [US2] Create `__tests__/examples-actions.test.ts` — test example sentence actions in `app/actions/examples.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
+- [x] T014 [P] [US2] Create `__tests__/grammar-actions.test.ts` — test grammar progress actions in `app/actions/grammar.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
+- [x] T015 [P] [US2] Create `__tests__/roadmap-actions.test.ts` — test roadmap progress actions in `app/actions/roadmap.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
+- [x] T016 [P] [US2] Create `__tests__/examples-actions.test.ts` — test example sentence actions in `app/actions/examples.ts`; mock supabase + `next/cache`; cover unauthenticated and happy paths
 
 ### UI component smoke tests
 
-- [ ] T017 [P] [US2] Create `__tests__/mobile-nav.test.tsx` — render `app/(app)/mobile-nav.tsx` with Testing Library; assert nav links render without crashing
-- [ ] T018 [P] [US2] Create `__tests__/quiz-client.test.tsx` — render `app/(app)/grammar/quiz/[slug]/quiz-client.tsx` with Testing Library and minimal props; assert quiz UI renders without crashing
+- [x] T017 [P] [US2] Create `__tests__/mobile-nav.test.tsx` — render `app/(app)/mobile-nav.tsx` with Testing Library; assert nav links render without crashing
+- [x] T018 [P] [US2] Create `__tests__/quiz-client.test.tsx` — render `app/(app)/grammar/quiz/[slug]/quiz-client.tsx` with Testing Library and minimal props; assert quiz UI renders without crashing
 
 **Checkpoint**: `npm run test:run` — all 10 test files pass. No live DB or network calls.
 
@@ -94,8 +94,8 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 **Independent Test**: Open a test PR with a deliberately failing test. CI check reports failure. Merge is blocked.
 
-- [ ] T019 Create `.github/workflows/ci.yml` — define `lint-and-test` job (Node 20, `npm ci`, `npm run lint`, `npm run test:coverage`) and `build` job (depends on lint-and-test; injects placeholder env vars for Supabase and VAPID secrets)
-- [ ] T020 [P] [US3] Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as GitHub Actions secrets in repo settings (manual step — document in PR description)
+- [x] T019 Create `.github/workflows/ci.yml` — define `lint-and-test` job (Node 20, `npm ci`, `npm run lint`, `npm run test:coverage`) and `build` job (depends on lint-and-test; injects placeholder env vars for Supabase and VAPID secrets)
+- [x] T020 [P] [US3] Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as GitHub Actions secrets in repo settings (manual step — document in PR description)
 
 **Checkpoint**: Push branch to GitHub. CI workflow appears in Actions tab and runs successfully.
 
@@ -105,10 +105,10 @@ description: "Task list for Automated Test Coverage for Server Actions"
 
 **Purpose**: Verify end-to-end coverage gate, fix lint, clean up any stale references.
 
-- [ ] T021 Run `npm run test:coverage` locally — confirm all four metrics (lines, functions, branches, statements) are ≥ 80%; fix any under-covered paths
-- [ ] T022 Run `npm run lint` locally — fix all ESLint errors (no `any`, no `console.log`, no unused imports)
-- [ ] T023 [P] Update `CLAUDE.md` — change "No test suite exists" to document `npm run test:coverage` command and 80% threshold requirement
-- [ ] T024 [P] Update `CLAUDE.md` Key Systems table — add `app/lib/review-utils.ts` as the canonical location of the SM-2 algorithm
+- [x] T021 Run `npm run test:coverage` locally — confirm all four metrics (lines, functions, branches, statements) are ≥ 80%; fix any under-covered paths
+- [x] T022 Run `npm run lint` locally — fix all ESLint errors (no `any`, no `console.log`, no unused imports)
+- [x] T023 [P] Update `CLAUDE.md` — change "No test suite exists" to document `npm run test:coverage` command and 80% threshold requirement
+- [x] T024 [P] Update `CLAUDE.md` Key Systems table — add `app/lib/review-utils.ts` as the canonical location of the SM-2 algorithm
 
 ---
 
