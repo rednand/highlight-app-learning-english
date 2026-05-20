@@ -41,9 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/.claude/
-/.copilot/
-CLAUDE.md
-AGENTS.md
+.claude/cache
+.claude/tmp
+.claude/history
+
 # Sentry Config File
 .env.sentry-build-plugin
