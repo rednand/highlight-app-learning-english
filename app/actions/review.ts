@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "../utils/supabase/server"
+import { computeStreak, computeNewDays, todayAndYesterday } from "../lib/streak-utils"
 
 export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean) {
   const supabase = await createClient()
@@ -50,15 +51,8 @@ export async function getStreak(): Promise<number> {
     .eq("user_id", user.id)
     .single()
 
-  if (!data) return 0
-
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
-
-  if (data.last_review_date === today || data.last_review_date === yesterday) {
-    return data.days
-  }
-  return 0
+  const { today, yesterday } = todayAndYesterday()
+  return computeStreak(data, today, yesterday)
 }
 
 export async function updateStreak(): Promise<number> {
@@ -66,8 +60,7 @@ export async function updateStreak(): Promise<number> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return 0
 
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+  const { today, yesterday } = todayAndYesterday()
 
   const { data: existing } = await supabase
     .from("user_streaks")
@@ -75,10 +68,8 @@ export async function updateStreak(): Promise<number> {
     .eq("user_id", user.id)
     .single()
 
-  if (existing?.last_review_date === today) return existing.days
-
-  const newDays =
-    existing?.last_review_date === yesterday ? existing.days + 1 : 1
+  const newDays = computeNewDays(existing, today, yesterday)
+  if (newDays === null) return existing!.days
 
   await supabase
     .from("user_streaks")
