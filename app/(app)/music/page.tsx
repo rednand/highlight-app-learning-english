@@ -32,7 +32,9 @@ export default async function MusicPage() {
     <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
+          <Link href="/media" className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1 hover:text-yellow-200 transition-colors block">
+            ← MÍDIA
+          </Link>
           <h1 className="text-2xl font-bold text-white">Música</h1>
         </div>
         <Link

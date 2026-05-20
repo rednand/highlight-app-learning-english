@@ -1,7 +1,7 @@
 import { createClient } from "../utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { BookOpen, RotateCcw, Plus, ArrowRight, FileText, Target, Clock } from "lucide-react"
+import { BookOpen, RotateCcw, Plus, ArrowRight, FileText, Target, Clock, Film, Tv, Music, BookMarked, Library } from "lucide-react"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -11,12 +11,13 @@ export default async function DashboardPage() {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const [lessonsResult, dueFlashcardsResult, recentItemsResult, totalLessonsResult, totalWordsResult, todayWordsResult] =
+  const [lessonsResult, dueFlashcardsResult, recentItemsResult, totalLessonsResult, totalWordsResult, todayWordsResult, recentMediaResult] =
     await Promise.all([
       supabase
         .from("lessons")
         .select("id, title, lesson_date, created_at")
         .eq("user_id", user.id)
+        .eq("source_type", "lesson")
         .order("lesson_date", { ascending: false, nullsFirst: false })
         .limit(4),
       supabase
@@ -34,6 +35,13 @@ export default async function DashboardPage() {
       supabase.from("lessons").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("lesson_items").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("lesson_items").select("id", { count: "exact" }).eq("user_id", user.id).gte("created_at", today.toISOString()),
+      supabase
+        .from("lessons")
+        .select("id, title, source_type, tmdb_poster_path, tmdb_type, music_thumbnail_url, book_cover_url, created_at")
+        .eq("user_id", user.id)
+        .in("source_type", ["movie", "music", "book"])
+        .order("created_at", { ascending: false })
+        .limit(4),
     ])
 
   const lessons = lessonsResult.data ?? []
@@ -43,6 +51,7 @@ export default async function DashboardPage() {
   const totalLessons = totalLessonsResult.count ?? 0
   const totalWords = totalWordsResult.count ?? 0
   const todayWords = todayWordsResult.count ?? 0
+  const recentMedia = recentMediaResult.data ?? []
 
   const lessonIds = lessons.map((l) => l.id)
   let lessonItemCounts: Record<string, number> = {}
@@ -128,7 +137,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
@@ -217,6 +226,68 @@ export default async function DashboardPage() {
               })}
               <Link
                 href="/lessons"
+                className="flex items-center gap-1 text-xs text-gray-500 hover:text-yellow-400 transition-colors mt-1 pl-1"
+              >
+                Ver todas
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-1 bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+              <Library size={15} className="text-yellow-400" />
+              Mídias recentes
+            </h2>
+            <Link href="/media" className="text-yellow-400 hover:text-yellow-300 transition-colors">
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          {recentMedia.length === 0 ? (
+            <p className="text-sm text-gray-500">Nenhuma mídia ainda.</p>
+          ) : (
+            <div className="space-y-2">
+              {recentMedia.map((item) => {
+                const thumbnail =
+                  item.source_type === "movie" && item.tmdb_poster_path
+                    ? `https://image.tmdb.org/t/p/w92${item.tmdb_poster_path}`
+                    : item.source_type === "music" && item.music_thumbnail_url
+                      ? item.music_thumbnail_url
+                      : item.source_type === "book" && item.book_cover_url
+                        ? item.book_cover_url
+                        : null
+                const TypeIcon =
+                  item.source_type === "music"
+                    ? Music
+                    : item.source_type === "book"
+                      ? BookMarked
+                      : item.tmdb_type === "tv"
+                        ? Tv
+                        : Film
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/lessons/${item.id}`}
+                    className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-lg px-3 py-2.5 hover:border-white/10 transition-all group"
+                  >
+                    {thumbnail ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={thumbnail} alt={item.title} className="w-6 h-8 rounded object-cover shrink-0" />
+                    ) : (
+                      <TypeIcon size={12} className="text-yellow-400/50 shrink-0" />
+                    )}
+                    <span className="text-sm text-gray-300 group-hover:text-white transition-colors truncate flex-1">
+                      {item.title}
+                    </span>
+                    <TypeIcon size={10} className="text-gray-600 shrink-0" />
+                  </Link>
+                )
+              })}
+              <Link
+                href="/media"
                 className="flex items-center gap-1 text-xs text-gray-500 hover:text-yellow-400 transition-colors mt-1 pl-1"
               >
                 Ver todas

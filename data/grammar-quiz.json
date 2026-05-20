@@ -1,0 +1,1087 @@
+[
+  {
+    "slug": "simple-present",
+    "questions": [
+      {
+        "q": "Which sentence is correct?",
+        "options": ["She don't like coffee.", "She doesn't likes coffee.", "She doesn't like coffee.", "She isn't like coffee."],
+        "answer": 2,
+        "tip": "With he/she/it use 'doesn't' + base verb (no -s)."
+      },
+      {
+        "q": "Simple Present is used for:",
+        "options": ["Actions happening right now", "Habits and general truths", "Completed past actions", "Actions planned for tomorrow"],
+        "answer": 1,
+        "tip": "Use Present Continuous (is/are + -ing) for actions happening right now."
+      },
+      {
+        "q": "Choose the correct question:",
+        "options": ["Do he play football?", "Does he plays football?", "Does he play football?", "Is he play football?"],
+        "answer": 2,
+        "tip": "Questions with he/she/it: Does + subject + base verb (no -s)."
+      },
+      {
+        "q": "Which sentence uses Simple Present for a scheduled event?",
+        "options": ["The train leaves at 8pm.", "The train is leaving at 8pm.", "The train left at 8pm.", "The train will be leaving at 8pm."],
+        "answer": 0,
+        "tip": "Simple Present can express timetabled future events: 'The train leaves at 8pm.'"
+      },
+      {
+        "q": "Choose the correct negative sentence:",
+        "options": ["He not work on Sundays.", "He doesn't works on Sundays.", "He doesn't work on Sundays.", "He isn't work on Sundays."],
+        "answer": 2,
+        "tip": "Negative with he/she/it: doesn't + base verb (no -s on the main verb)."
+      }
+    ]
+  },
+  {
+    "slug": "present-continuous",
+    "questions": [
+      {
+        "q": "Which sentence is correct?",
+        "options": ["I am know the answer.", "I am knowing the answer.", "I know the answer.", "I is knowing the answer."],
+        "answer": 2,
+        "tip": "Stative verbs (know, like, love, want) are NOT used in the continuous form."
+      },
+      {
+        "q": "Present Continuous is used for:",
+        "options": ["General truths and permanent facts", "Completed past actions", "Actions happening right now or temporary situations", "Habits and routines"],
+        "answer": 2,
+        "tip": "Structure: Subject + am/is/are + verb-ing."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She is work from home today.", "She working from home today.", "She is working from home today.", "She are working from home today."],
+        "answer": 2,
+        "tip": "Subject + is/am/are + verb-ing."
+      },
+      {
+        "q": "Which shows a future arrangement using Present Continuous?",
+        "options": ["I'm seeing the doctor tomorrow.", "I see the doctor tomorrow.", "I was seeing the doctor tomorrow.", "I will be seeing the doctor right now."],
+        "answer": 0,
+        "tip": "Present Continuous can describe a future arrangement when a future time marker is given."
+      },
+      {
+        "q": "Which sentence is WRONG?",
+        "options": ["She is learning French.", "They are working late tonight.", "I am understanding the lesson.", "He is reading a book."],
+        "answer": 2,
+        "tip": "'Understand' is a stative verb — it cannot be used in the continuous form."
+      }
+    ]
+  },
+  {
+    "slug": "simple-past",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I didn't went to school.", "I didn't go to school.", "I don't went to school.", "I wasn't go to school."],
+        "answer": 1,
+        "tip": "After 'didn't', always use the base verb (no -ed, no irregular form)."
+      },
+      {
+        "q": "Simple Past is used for:",
+        "options": ["Actions still happening now", "Completed actions at a specific time in the past", "Actions that started in the past and continue", "Future plans"],
+        "answer": 1,
+        "tip": "Simple Past = completed action. Use time markers like 'yesterday', 'last week', 'in 2020'."
+      },
+      {
+        "q": "Which sentence is correct?",
+        "options": ["I have seen him yesterday.", "I seen him yesterday.", "I saw him yesterday.", "I was see him yesterday."],
+        "answer": 2,
+        "tip": "With a specific past time (yesterday), use Simple Past, not Present Perfect."
+      },
+      {
+        "q": "What is the correct past form of 'go'?",
+        "options": ["goed", "gone", "went", "was go"],
+        "answer": 2,
+        "tip": "'Go' is irregular: go → went → gone."
+      },
+      {
+        "q": "Which is correct (negative simple past)?",
+        "options": ["She didn't went to work.", "She didn't goes to work.", "She didn't go to work.", "She wasn't go to work."],
+        "answer": 2,
+        "tip": "Negative: didn't + base verb. No changes to the main verb."
+      }
+    ]
+  },
+  {
+    "slug": "past-continuous",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["They was sleeping when I called.", "They were sleeping when I called.", "They were sleep when I called.", "They are sleeping when I called."],
+        "answer": 1,
+        "tip": "Past Continuous with 'they': were + verb-ing."
+      },
+      {
+        "q": "Past Continuous is mainly used for:",
+        "options": ["Completed actions in the past", "A background action interrupted by another (Simple Past)", "Future arrangements", "General past truths"],
+        "answer": 1,
+        "tip": "I was cooking (background) when he arrived (interruption)."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["While I read, she was watching TV.", "While I was reading, she was watching TV.", "While I was read, she watched TV.", "While I reading, she was watching TV."],
+        "answer": 1,
+        "tip": "Both simultaneous past actions → both in Past Continuous."
+      },
+      {
+        "q": "Which sentence shows a background action interrupted by another?",
+        "options": ["He read when I called.", "He was reading when I called.", "He reading when I called.", "He was read when I called."],
+        "answer": 1,
+        "tip": "Past Continuous (background) + Simple Past (interruption): was/were + -ing."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I was not listening to him yesterday morning.", "I not was listening to him yesterday morning.", "I didn't listening to him yesterday morning.", "I was listen not to him yesterday morning."],
+        "answer": 0,
+        "tip": "Negative Past Continuous: was/were + not + verb-ing."
+      }
+    ]
+  },
+  {
+    "slug": "present-perfect",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I have went to Paris.", "I have go to Paris.", "I have been to Paris.", "I have being to Paris."],
+        "answer": 2,
+        "tip": "'Have been to' = visited (and came back). 'Have gone to' = went and is still there."
+      },
+      {
+        "q": "Which sentence needs Present Perfect (not Simple Past)?",
+        "options": ["She visited London in 2019.", "She visited London last summer.", "She has visited London three times.", "She visited London when she was young."],
+        "answer": 2,
+        "tip": "Life experience without a specific time → Present Perfect. Specific time → Simple Past."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I have seen him yesterday.", "I saw him yesterday.", "I have saw him yesterday.", "I seen him yesterday."],
+        "answer": 1,
+        "tip": "'Yesterday' is a specific past time, so use Simple Past, not Present Perfect."
+      },
+      {
+        "q": "Present Perfect with 'for' or 'since':",
+        "options": ["I live here for 10 years.", "I have lived here for 10 years.", "I lived here since 2015.", "I have lived here since 10 years."],
+        "answer": 1,
+        "tip": "For duration still ongoing: have/has + past participle + for. Use 'since' with a start point."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["Have you ever been to Japan?", "Did you ever go to Japan?", "Did you ever been to Japan?", "Have you ever went to Japan?"],
+        "answer": 0,
+        "tip": "Life experiences → Present Perfect. 'Have you ever + past participle?'"
+      }
+    ]
+  },
+  {
+    "slug": "present-perfect-continuous",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I have been study for two hours.", "I have been studying for two hours.", "I have studying for two hours.", "I been studying for two hours."],
+        "answer": 1,
+        "tip": "Structure: have/has + been + verb-ing."
+      },
+      {
+        "q": "Present Perfect Continuous emphasizes:",
+        "options": ["A completed action with a result", "The duration of an ongoing activity", "A past habit", "A future plan"],
+        "answer": 1,
+        "tip": "It stresses how long an activity has been in progress: 'I have been waiting for 2 hours.'"
+      },
+      {
+        "q": "Which sentence is correct?",
+        "options": ["She has been work here since 2020.", "She has been worked here since 2020.", "She has been working here since 2020.", "She is been working here since 2020."],
+        "answer": 2,
+        "tip": "have/has + been + verb-ing (not worked, not work)."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["How long has she been wait?", "How long has she been waiting?", "How long is she been waiting?", "How long she has been waiting?"],
+        "answer": 1,
+        "tip": "How long + have/has + subject + been + verb-ing?"
+      },
+      {
+        "q": "Which sentence uses Present Perfect Continuous INCORRECTLY?",
+        "options": ["I have been reading for an hour.", "She has been teaching since 2010.", "They have been knowing each other for years.", "He has been exercising every morning."],
+        "answer": 2,
+        "tip": "'Know' is a stative verb — use Present Perfect instead: 'have known'."
+      }
+    ]
+  },
+  {
+    "slug": "past-perfect",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["When I arrived, she already left.", "When I arrived, she had already left.", "When I arrived, she has already left.", "When I arrived, she already had leave."],
+        "answer": 1,
+        "tip": "Past Perfect (had + past participle) is used for the action that happened first."
+      },
+      {
+        "q": "Past Perfect is used for:",
+        "options": ["Two simultaneous past actions", "An action completed BEFORE another past action", "A current situation with past cause", "A future action from a past perspective"],
+        "answer": 1,
+        "tip": "'She had left before I arrived.' — left happened first, so Past Perfect."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She had went home before dinner.", "She had go home before dinner.", "She had gone home before dinner.", "She went home before dinner had started."],
+        "answer": 2,
+        "tip": "'Go' → irregular past participle 'gone'. Structure: had + past participle."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["By the time I arrived, the movie already started.", "By the time I arrived, the movie had already started.", "By the time I arrived, the movie has already started.", "By the time I arrive, the movie had already started."],
+        "answer": 1,
+        "tip": "For the event that happened first in the past, use Past Perfect (had + past participle)."
+      },
+      {
+        "q": "Which sentence is INCORRECT?",
+        "options": ["He had eaten before he left.", "I had never seen snow before that day.", "We didn't go because we had saw the film.", "She realized she had lost her keys."],
+        "answer": 2,
+        "tip": "'See' → irregular past participle 'seen', not 'saw'. Correct: had seen."
+      }
+    ]
+  },
+  {
+    "slug": "simple-future-will",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I will to call you later.", "I will calling you later.", "I will call you later.", "I wills call you later."],
+        "answer": 2,
+        "tip": "Will + base verb (no 'to', no -ing, no -s)."
+      },
+      {
+        "q": "'Will' is used for:",
+        "options": ["Plans decided before speaking", "Spontaneous decisions and promises", "Scheduled timetable events", "Past habits"],
+        "answer": 1,
+        "tip": "Spontaneous: 'I'll help you!' (decided now). Pre-planned → use 'going to'."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["I think it will rains tomorrow.", "I think it will to rain tomorrow.", "I think it will rain tomorrow.", "I think it wills rain tomorrow."],
+        "answer": 2,
+        "tip": "After 'will', the verb stays in its base form — no changes."
+      },
+      {
+        "q": "Which is correct for a prediction based on opinion?",
+        "options": ["I think it is going to rain.", "I think it will rain.", "I think it is raining.", "I think it rained."],
+        "answer": 1,
+        "tip": "'Will' is used for predictions based on opinion. 'Going to' is used with visible evidence."
+      },
+      {
+        "q": "Which is correct (negative with will)?",
+        "options": ["She won't to come.", "She will not come.", "She will don't come.", "She not will come."],
+        "answer": 1,
+        "tip": "Negative: will + not = won't or will not. Base verb follows (no 'to', no 'don't')."
+      }
+    ]
+  },
+  {
+    "slug": "future-going-to",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I am going study medicine.", "I am going to study medicine.", "I going to study medicine.", "I am going to studying medicine."],
+        "answer": 1,
+        "tip": "Structure: am/is/are + going to + base verb."
+      },
+      {
+        "q": "'Going to' vs 'will' — which sentence uses the right future?",
+        "options": ["Look at those clouds. It will rain. (evidence visible)", "Look at those clouds. It's going to rain. (evidence visible)", "I'm going to answer the phone. (it just rang)", "I will visit my parents next summer. (pre-planned)"],
+        "answer": 1,
+        "tip": "Visible evidence → going to. Spontaneous decision → will."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["She going to travel next month.", "She is going travel next month.", "She is going to travel next month.", "She will going to travel next month."],
+        "answer": 2,
+        "tip": "am/is/are + going to + base verb."
+      },
+      {
+        "q": "Choose the correct negative form:",
+        "options": ["I am not going to travel.", "I am going not to travel.", "I not going to travel.", "I am going to not travel."],
+        "answer": 0,
+        "tip": "Negative: am/is/are + not + going to + base verb."
+      },
+      {
+        "q": "Which is correct for a near-future evidence prediction?",
+        "options": ["Look! She will fall!", "Look! She is going to fall!", "Look! She falls!", "Look! She would fall!"],
+        "answer": 1,
+        "tip": "Visible evidence of something about to happen → going to (not will)."
+      }
+    ]
+  },
+  {
+    "slug": "future-continuous",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["At 8pm I will be have dinner.", "At 8pm I will being having dinner.", "At 8pm I will be having dinner.", "At 8pm I will having dinner."],
+        "answer": 2,
+        "tip": "Structure: will + be + verb-ing."
+      },
+      {
+        "q": "Future Continuous is used for:",
+        "options": ["A completed future action", "An action in progress at a specific future moment", "A spontaneous decision", "A past habit"],
+        "answer": 1,
+        "tip": "'This time tomorrow, I'll be flying to London.' — in progress at that future time."
+      },
+      {
+        "q": "Which is CORRECT?",
+        "options": ["Will you be working at 9am tomorrow?", "Will you working at 9am tomorrow?", "Will you be worked at 9am tomorrow?", "Will you are working at 9am tomorrow?"],
+        "answer": 0,
+        "tip": "Question form: Will + subject + be + verb-ing?"
+      },
+      {
+        "q": "Future Continuous is NOT used for:",
+        "options": ["Polite questions about plans", "An action in progress at a future time", "Completed actions", "Parallel future actions"],
+        "answer": 2,
+        "tip": "Completed actions use Future Perfect. Future Continuous = in progress at a future moment."
+      },
+      {
+        "q": "Which sentence is correct?",
+        "options": ["This time next week, I will been flying.", "This time next week, I will fly.", "This time next week, I will be flying.", "This time next week, I am going to flying."],
+        "answer": 2,
+        "tip": "Future Continuous: will + be + verb-ing. Signals an ongoing action at a future point."
+      }
+    ]
+  },
+  {
+    "slug": "future-perfect",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["By Friday, I will have finish the report.", "By Friday, I will have finished the report.", "By Friday, I will had finished the report.", "By Friday, I will finish the report."],
+        "answer": 1,
+        "tip": "Structure: will + have + past participle."
+      },
+      {
+        "q": "Future Perfect is used for:",
+        "options": ["An action in progress at a future time", "An action completed BEFORE a specific future time", "A spontaneous future decision", "A future habit"],
+        "answer": 1,
+        "tip": "'By 2030, they will have built the new bridge.' — completed before that future point."
+      },
+      {
+        "q": "Which question uses Future Perfect correctly?",
+        "options": ["Will he finish the project by Monday?", "Will he have finished the project by Monday?", "Will he had finished the project by Monday?", "Will he have finish the project by Monday?"],
+        "answer": 1,
+        "tip": "Future Perfect question: Will + subject + have + past participle?"
+      },
+      {
+        "q": "Choose the correct Future Perfect sentence:",
+        "options": ["By tomorrow, she learns everything.", "By tomorrow, she will be learning everything.", "By tomorrow, she will have learned everything.", "By tomorrow, she learned everything."],
+        "answer": 2,
+        "tip": "By + future time → Future Perfect: will + have + past participle."
+      },
+      {
+        "q": "Which is NOT a signal for Future Perfect?",
+        "options": ["By the time", "Before", "Right now", "By next year"],
+        "answer": 2,
+        "tip": "'Right now' signals Present Continuous — not Future Perfect."
+      }
+    ]
+  },
+  {
+    "slug": "zero-conditional",
+    "questions": [
+      {
+        "q": "Which sentence is a Zero Conditional?",
+        "options": ["If it rains, I will stay home.", "If you heat ice, it melts.", "If I had money, I would travel.", "If she had studied, she would have passed."],
+        "answer": 1,
+        "tip": "Zero Conditional: If + Simple Present, Simple Present. Used for scientific facts."
+      },
+      {
+        "q": "Zero Conditional structure:",
+        "options": ["If + Past Simple, would + verb", "If + Present Simple, will + verb", "If + Present Simple, Present Simple", "If + Past Perfect, would have + verb"],
+        "answer": 2,
+        "tip": "Both clauses use Simple Present. It expresses always-true facts."
+      },
+      {
+        "q": "Which Zero Conditional is correct?",
+        "options": ["If you freeze water, it becomes ice.", "If you freeze water, it will become ice.", "If you froze water, it becomes ice.", "If you freeze water, it became ice."],
+        "answer": 0,
+        "tip": "Zero Conditional: If + Present Simple, Present Simple. Both clauses are in the present."
+      },
+      {
+        "q": "The Zero Conditional expresses:",
+        "options": ["Hypothetical situations", "Personal predictions", "Universal truths and scientific facts", "Regrets about the past"],
+        "answer": 2,
+        "tip": "'If you heat water to 100°C, it boils.' — this is always true: Zero Conditional."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["If I am tired, I will go to bed.", "If I am tired, I go to bed.", "If I was tired, I go to bed.", "If I was tired, I went to bed."],
+        "answer": 1,
+        "tip": "Zero Conditional: Simple Present in both clauses. No will, no past tense."
+      }
+    ]
+  },
+  {
+    "slug": "first-conditional",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["If it will rain, I will stay home.", "If it rains, I will stay home.", "If it rains, I would stay home.", "If it rained, I will stay home."],
+        "answer": 1,
+        "tip": "First Conditional: If + Simple Present (not will), will + base verb."
+      },
+      {
+        "q": "First Conditional expresses:",
+        "options": ["Imaginary or impossible situations", "Real, possible future conditions", "Past regrets", "General truths"],
+        "answer": 1,
+        "tip": "'If it rains' is a real possibility → First Conditional."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["If she will study, she will pass.", "If she studies, she would pass.", "If she studies, she will pass.", "If she studied, she will pass."],
+        "answer": 2,
+        "tip": "If-clause: Simple Present. Result clause: will + base verb."
+      },
+      {
+        "q": "What can replace 'if' in a First Conditional?",
+        "options": ["would", "unless (if not)", "had", "were"],
+        "answer": 1,
+        "tip": "'Unless' = 'if not'. 'Unless you study, you won't pass' = 'If you don't study, you won't pass.'"
+      },
+      {
+        "q": "Which is correct (mixed clause order)?",
+        "options": ["I'll call you if I will arrive late.", "I'll call you if I arrive late.", "I'll call you if I arrived late.", "I'll call you if I had arrived late."],
+        "answer": 1,
+        "tip": "The 'if' clause always uses Simple Present (not will/would) in First Conditional."
+      }
+    ]
+  },
+  {
+    "slug": "second-conditional",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["If I was you, I would apologize.", "If I were you, I would apologize.", "If I were you, I will apologize.", "If I am you, I would apologize."],
+        "answer": 1,
+        "tip": "Second Conditional: use 'were' for ALL subjects (not 'was'), even I/he/she."
+      },
+      {
+        "q": "Second Conditional is used for:",
+        "options": ["Real, likely future situations", "Hypothetical or imaginary present/future situations", "Past regrets", "General facts"],
+        "answer": 1,
+        "tip": "'If I had more time' = I don't have it now. It's imaginary."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["If I have more money, I would travel.", "If I had more money, I will travel.", "If I had more money, I would travel.", "If I would have money, I would travel."],
+        "answer": 2,
+        "tip": "If + Past Simple, would + base verb."
+      },
+      {
+        "q": "Which is a correct Second Conditional with 'unless'?",
+        "options": ["I would tell you unless I didn't know.", "I wouldn't tell you unless I knew.", "I would tell you unless I know.", "I would tell you unless I will know."],
+        "answer": 1,
+        "tip": "Second Conditional: would + base verb in main clause, Past Simple in if/unless clause."
+      },
+      {
+        "q": "Choose the correct modal alternative to 'would' in Second Conditional:",
+        "options": ["If I had time, I might help you.", "If I had time, I must help you.", "If I had time, I will help you.", "If I had time, I should to help you."],
+        "answer": 0,
+        "tip": "In Second Conditional, 'might' or 'could' can replace 'would' to soften the certainty."
+      }
+    ]
+  },
+  {
+    "slug": "third-conditional",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["If I had studied, I would pass.", "If I had studied, I would have passed.", "If I would have studied, I would have passed.", "If I studied, I would have passed."],
+        "answer": 1,
+        "tip": "Third Conditional: If + Past Perfect, would have + past participle."
+      },
+      {
+        "q": "Third Conditional expresses:",
+        "options": ["A real future possibility", "A present imaginary situation", "A past situation that didn't happen (regret)", "A general truth"],
+        "answer": 2,
+        "tip": "'If I had known' means I didn't know → it's a past regret."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She would have went if she had known.", "She would have go if she had known.", "She would have gone if she had known.", "She would gone if she had known."],
+        "answer": 2,
+        "tip": "would have + past participle. 'Go' → 'gone'."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["If he had been more careful, the accident could have been avoided.", "If he has been more careful, the accident could have been avoided.", "If he was more careful, the accident could be avoided.", "If he had been more careful, the accident can have been avoided."],
+        "answer": 0,
+        "tip": "Third Conditional: If + Past Perfect, could/would/might + have + past participle."
+      },
+      {
+        "q": "What is the meaning of: 'If I had left earlier, I wouldn't have missed the train'?",
+        "options": ["I left early and caught the train.", "I didn't leave early, so I missed the train.", "I will leave early to catch the train.", "I always miss the train when I leave early."],
+        "answer": 1,
+        "tip": "Third Conditional refers to a past situation that didn't happen — the opposite is true."
+      }
+    ]
+  },
+  {
+    "slug": "mixed-conditional",
+    "questions": [
+      {
+        "q": "Which sentence is a Mixed Conditional (past condition → present result)?",
+        "options": ["If I studied, I would pass.", "If I had studied medicine, I would be a doctor now.", "If I had studied, I would have passed.", "If I study, I will pass."],
+        "answer": 1,
+        "tip": "Mixed: If + Past Perfect (past condition), would + base verb (present result)."
+      },
+      {
+        "q": "Mixed Conditional is used when:",
+        "options": ["Both clauses refer to the same time", "The condition and the result refer to different times", "Both clauses are in the present", "The condition is future and the result is past"],
+        "answer": 1,
+        "tip": "Past condition + present result, or present state + past result."
+      },
+      {
+        "q": "Which Mixed Conditional is correct (present state → past result)?",
+        "options": ["If I were braver, I would have spoken up.", "If I had been braver, I would speak up.", "If I was braver, I would spoken up.", "If I am braver, I would have spoken up."],
+        "answer": 0,
+        "tip": "Present state → past result: If + Past Simple (were), would + have + past participle."
+      },
+      {
+        "q": "Which Mixed Conditional is correct (past cause → present result)?",
+        "options": ["If I had taken the job, I would be rich now.", "If I took the job, I would have been rich now.", "If I had taken the job, I would have been rich.", "If I would take the job, I would be rich now."],
+        "answer": 0,
+        "tip": "Past cause → present result: If + Past Perfect, would + base verb."
+      },
+      {
+        "q": "When do we use a Mixed Conditional?",
+        "options": ["When both clauses are about the same time", "When condition and result are in different time frames", "When making polite requests", "When expressing general truths"],
+        "answer": 1,
+        "tip": "Mixed Conditionals combine different time frames — usually past condition + present result, or vice versa."
+      }
+    ]
+  },
+  {
+    "slug": "passive-voice",
+    "questions": [
+      {
+        "q": "Which is the correct passive form of 'They built this house in 1900'?",
+        "options": ["This house was build in 1900.", "This house built in 1900.", "This house was built in 1900.", "This house has built in 1900."],
+        "answer": 2,
+        "tip": "Passive: was/were + past participle. 'Build' → irregular past participle 'built'."
+      },
+      {
+        "q": "Passive Voice is used when:",
+        "options": ["The subject is the most important element", "The agent (doer) is unknown, obvious, or unimportant", "You want to emphasize who did the action", "The action happened in the future"],
+        "answer": 1,
+        "tip": "'The car was stolen.' — we don't know (or care) who stole it."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["The report will be finish by Friday.", "The report will be finished by Friday.", "The report will been finished by Friday.", "The report will have finished by Friday."],
+        "answer": 1,
+        "tip": "Future Passive: will + be + past participle."
+      },
+      {
+        "q": "Which is correct (Present Perfect Passive)?",
+        "options": ["The letter has been sent.", "The letter have been sent.", "The letter has been send.", "The letter was been sent."],
+        "answer": 0,
+        "tip": "Present Perfect Passive: has/have + been + past participle."
+      },
+      {
+        "q": "Which active sentence converts correctly to passive?",
+        "options": ["Active: 'He writes the report.' → Passive: 'The report is writing by him.'", "Active: 'He writes the report.' → Passive: 'The report is written by him.'", "Active: 'He writes the report.' → Passive: 'The report was written by him.'", "Active: 'He writes the report.' → Passive: 'The report is being written by him.'"],
+        "answer": 1,
+        "tip": "Simple Present Passive: is/are + past participle. 'write' → 'written'."
+      }
+    ]
+  },
+  {
+    "slug": "reported-speech",
+    "questions": [
+      {
+        "q": "Direct: 'I love pizza.' → Reported: She said...",
+        "options": ["...that she loves pizza.", "...that she loved pizza.", "...that she will love pizza.", "...that she is loving pizza."],
+        "answer": 1,
+        "tip": "In reported speech, Simple Present → Simple Past (backshift)."
+      },
+      {
+        "q": "Direct: 'I will call you.' → Reported: He said...",
+        "options": ["...that he will call me.", "...that he calls me.", "...that he would call me.", "...that he had called me."],
+        "answer": 2,
+        "tip": "In reported speech, 'will' → 'would'."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She said me she was tired.", "She told me she was tired.", "She told to me she was tired.", "She said to me that she were tired."],
+        "answer": 1,
+        "tip": "'Say' doesn't take an object directly. 'Tell' requires a person: tell me, tell her."
+      },
+      {
+        "q": "Direct: 'I am tired.' → Reported: She said...",
+        "options": ["...that she is tired.", "...that she was tired.", "...that she will be tired.", "...that she had been tired."],
+        "answer": 1,
+        "tip": "Backshift: Simple Present → Simple Past. 'is' → 'was'."
+      },
+      {
+        "q": "Direct: 'Don't touch that!' → Reported: He told me...",
+        "options": ["...not touch that.", "...to not touch that.", "...don't touch that.", "...not to touch that."],
+        "answer": 3,
+        "tip": "Reported commands (negative): tell + object + not to + base verb."
+      }
+    ]
+  },
+  {
+    "slug": "modal-verbs",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["She cans speak French.", "She can speaks French.", "She can to speak French.", "She can speak French."],
+        "answer": 3,
+        "tip": "Modals (can, will, must, should) + base verb. No 's', no 'to', no -ing."
+      },
+      {
+        "q": "'Must' vs 'Have to' — which expresses external obligation (a rule imposed by someone else)?",
+        "options": ["You must be home by midnight. (parent's rule)", "You have to wear a uniform. (school rule)", "You must try this cake! (strong recommendation)", "You must be joking. (deduction)"],
+        "answer": 1,
+        "tip": "'Have to' = external rule. 'Must' = speaker's own obligation or deduction."
+      },
+      {
+        "q": "Which expresses advice?",
+        "options": ["You must see a doctor. (obligation)", "You should see a doctor. (advice)", "You can see a doctor. (ability/permission)", "You will see a doctor. (prediction)"],
+        "answer": 1,
+        "tip": "'Should' = advice or recommendation. 'Must' = strong obligation."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I must to go now.", "I should to leave.", "I might be late.", "She would to help."],
+        "answer": 2,
+        "tip": "Modals are followed by the base verb without 'to'."
+      },
+      {
+        "q": "Which expresses possibility (not certainty)?",
+        "options": ["She must be at home. (deduction — very likely)", "She might be at home. (possibility)", "She can't be at home. (near certainty — impossible)", "She has to be at home. (external obligation)"],
+        "answer": 1,
+        "tip": "'Might' = possibility (maybe). 'Must' = strong deduction (almost certain)."
+      }
+    ]
+  },
+  {
+    "slug": "articles",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["She is engineer.", "She is a engineer.", "She is an engineer.", "She is the engineer."],
+        "answer": 2,
+        "tip": "'Engineer' starts with a vowel sound (/ɛ/) → use 'an'."
+      },
+      {
+        "q": "Which sentence uses 'the' correctly?",
+        "options": ["The life is short.", "The dogs are friendly. (general statement)", "I saw a dog. The dog was friendly.", "I play the tennis."],
+        "answer": 2,
+        "tip": "Use 'the' on second mention — both speaker and listener know which dog."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I love the music. (general)", "Music is beautiful. (general)", "The music is beautiful. (general)", "A music is beautiful."],
+        "answer": 1,
+        "tip": "General statements about uncountable nouns → no article. 'Music is beautiful.'"
+      },
+      {
+        "q": "Which sentence is correct?",
+        "options": ["She plays piano very well.", "She plays a piano very well.", "She plays the piano very well.", "She plays the piano very good."],
+        "answer": 2,
+        "tip": "Musical instruments always take 'the': play the piano, the guitar, the violin."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["He is a honest man.", "He is an honest man.", "He is the honest man.", "He is honest man."],
+        "answer": 1,
+        "tip": "'Honest' begins with a silent H, so the vowel sound /ɒ/ follows → use 'an', not 'a'."
+      }
+    ]
+  },
+  {
+    "slug": "prepositions-time",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I was born in April 12th.", "I was born on April 12th.", "I was born at April 12th.", "I was born by April 12th."],
+        "answer": 1,
+        "tip": "Specific dates → 'on'. Months → 'in'. Times → 'at'."
+      },
+      {
+        "q": "Choose the correct preposition:",
+        "options": ["She started working on 2019.", "She started working at 2019.", "She started working in 2019.", "She started working by 2019."],
+        "answer": 2,
+        "tip": "Years → 'in'. Days → 'on'. Clock times → 'at'."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I'll see you on the morning.", "I'll see you in the morning.", "I'll see you at the morning.", "I'll see you by the morning."],
+        "answer": 1,
+        "tip": "Parts of the day: in the morning, in the afternoon, in the evening. Exception: at night."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["The meeting is in Monday.", "The meeting is on Monday.", "The meeting is at Monday.", "The meeting is by Monday."],
+        "answer": 1,
+        "tip": "Days of the week → 'on': on Monday, on Tuesday, on Christmas Day."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I'll finish it at the end of the week.", "I'll finish it in the end of the week.", "I'll finish it on the end of the week.", "I'll finish it by the end of the week."],
+        "answer": 3,
+        "tip": "'By' expresses a deadline — 'by the end of the week' = no later than that point."
+      }
+    ]
+  },
+  {
+    "slug": "prepositions-place",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["The keys are in the table.", "The keys are at the table.", "The keys are on the table.", "The keys are by the table."],
+        "answer": 2,
+        "tip": "'On' = surface. 'In' = enclosed space. 'At' = specific point/location."
+      },
+      {
+        "q": "Choose the correct sentence:",
+        "options": ["She lives in Paris.", "She lives on Paris.", "She lives at Paris.", "She lives by Paris."],
+        "answer": 0,
+        "tip": "Cities and countries → 'in'. Specific points → 'at'."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["There's a fly on my soup.", "There's a fly in my soup.", "There's a fly at my soup.", "There's a fly by my soup."],
+        "answer": 1,
+        "tip": "'In' = inside a container or enclosed space."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I live in the second floor.", "I live on the second floor.", "I live at the second floor.", "I live by the second floor."],
+        "answer": 1,
+        "tip": "Floors in a building: 'on the first/second floor' (not 'in' or 'at')."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She hid the letter at the book.", "She hid the letter by the book.", "She hid the letter in the book.", "She hid the letter on the book."],
+        "answer": 2,
+        "tip": "'In' = inside/enclosed space. A letter placed inside a book: 'in the book'."
+      }
+    ]
+  },
+  {
+    "slug": "gerund-vs-infinitive",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I enjoy to swim.", "I enjoy swimming.", "I enjoy swim.", "I enjoy to swimming."],
+        "answer": 1,
+        "tip": "'Enjoy' is always followed by a gerund (-ing), never by an infinitive."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She wants going to Paris.", "She wants go to Paris.", "She wants to go to Paris.", "She wants to going to Paris."],
+        "answer": 2,
+        "tip": "'Want' is always followed by an infinitive (to + base verb)."
+      },
+      {
+        "q": "'Stop smoking' vs 'Stop to smoke' — what's the difference?",
+        "options": ["They mean the same thing.", "'Stop smoking' = quit the habit. 'Stop to smoke' = pause in order to smoke.", "'Stop to smoke' = quit the habit. 'Stop smoking' = pause to smoke.", "Neither is correct."],
+        "answer": 1,
+        "tip": "Gerund after 'stop' = quit. Infinitive after 'stop' = purpose (stop in order to)."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["He's good at to cook.", "He's good at cook.", "He's good at cooking.", "He's good to cook."],
+        "answer": 2,
+        "tip": "After prepositions (at, in, about, for...), always use the gerund (-ing)."
+      },
+      {
+        "q": "Which is correct with 'forget'?",
+        "options": ["Don't forget calling your mom. (a future task)", "Don't forget to call your mom. (a future task)", "Don't forget to calling your mom.", "Don't forget call your mom."],
+        "answer": 1,
+        "tip": "'Forget to do' = forget a future task. 'Forget doing' = forget a past experience."
+      }
+    ]
+  },
+  {
+    "slug": "relative-clauses",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["The man which called me was my boss.", "The man who called me was my boss.", "The man that called me was my boss.", "B and C are both correct."],
+        "answer": 3,
+        "tip": "For people, use 'who' or 'that' in defining relative clauses."
+      },
+      {
+        "q": "Which sentence has a non-defining relative clause?",
+        "options": ["The book that I bought is great.", "My sister, who lives in London, is a doctor.", "The city where I grew up is small.", "The man who called was my boss."],
+        "answer": 1,
+        "tip": "Non-defining = extra info between commas. Defining = essential info, no commas."
+      },
+      {
+        "q": "Which is correct in a non-defining clause?",
+        "options": ["My brother, that is a doctor, lives in NY.", "My brother, who is a doctor, lives in NY.", "My brother who is a doctor lives in NY.", "My brother, which is a doctor, lives in NY."],
+        "answer": 1,
+        "tip": "'That' cannot be used in non-defining relative clauses. Use 'who' for people."
+      },
+      {
+        "q": "Which uses 'where' correctly?",
+        "options": ["The city which I was born is beautiful.", "The city where I was born is beautiful.", "The city that I was born is beautiful.", "The city who I was born is beautiful."],
+        "answer": 1,
+        "tip": "'Where' replaces a place in relative clauses."
+      },
+      {
+        "q": "Which sentence can omit the relative pronoun?",
+        "options": ["The man who is standing there is my uncle. (subject)", "The woman who I spoke to is my teacher. (object)", "The house which was built in 1800 is famous. (subject)", "The man whose car was stolen called the police. (possessive)"],
+        "answer": 1,
+        "tip": "Object relative pronouns (who, which, that) can be omitted: 'The woman I spoke to is my teacher.'"
+      }
+    ]
+  },
+  {
+    "slug": "comparatives-superlatives",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["She is more taller than her brother.", "She is tallest than her brother.", "She is taller than her brother.", "She is the taller than her brother."],
+        "answer": 2,
+        "tip": "Short adjectives: add -er + than (not 'more'). Never both together."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["This is the most tallest building.", "This is the tallest building.", "This is the more tall building.", "This is tallest building."],
+        "answer": 1,
+        "tip": "Superlative of short adjectives: the + -est. Never 'most' with -est."
+      },
+      {
+        "q": "What is the comparative of 'good'?",
+        "options": ["gooder", "more good", "better", "best"],
+        "answer": 2,
+        "tip": "Irregular: good → better → best."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She is the most intelligent student in the class.", "She is the more intelligent student in the class.", "She is most intelligent student in the class.", "She is more intelligent student in the class."],
+        "answer": 0,
+        "tip": "Long adjectives (3+ syllables): the most + adjective. Always use 'the' with superlatives."
+      },
+      {
+        "q": "What is the correct comparative of 'bad'?",
+        "options": ["badder", "more bad", "worst", "worse"],
+        "answer": 3,
+        "tip": "Irregular: bad → worse → worst."
+      }
+    ]
+  },
+  {
+    "slug": "question-formation",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["Where she lives?", "Where does she lives?", "Where does she live?", "Where is she live?"],
+        "answer": 2,
+        "tip": "Wh- questions: Wh-word + auxiliary (does) + subject + base verb."
+      },
+      {
+        "q": "Which is the correct subject question?",
+        "options": ["Who did call you?", "Who called you?", "Who does call you?", "Who is called you?"],
+        "answer": 1,
+        "tip": "When 'who' is the subject, NO auxiliary needed: Who called? (not 'Who did call?')"
+      },
+      {
+        "q": "Which tag question is correct?",
+        "options": ["You like coffee, don't you?", "You like coffee, do you?", "You like coffee, aren't you?", "You like coffee, isn't it?"],
+        "answer": 0,
+        "tip": "Positive statement + negative tag. 'Like' → auxiliary 'do' → tag: don't you?"
+      },
+      {
+        "q": "Which indirect question is correct?",
+        "options": ["Can you tell me where does she live?", "Can you tell me where she lives?", "Can you tell me where she does live?", "Can you tell me where is she living?"],
+        "answer": 1,
+        "tip": "Indirect questions use normal word order (not inverted): 'where she lives' (not 'where does she live')."
+      },
+      {
+        "q": "Which choice question is correct?",
+        "options": ["Do you prefer coffee, do you?", "You prefer coffee or tea?", "Would you prefer coffee or tea?", "Are you prefer coffee or tea?"],
+        "answer": 2,
+        "tip": "Choice questions for offers/preferences: Would you prefer A or B?"
+      }
+    ]
+  },
+  {
+    "slug": "countable-uncountable",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["She gave me an advice.", "She gave me some advices.", "She gave me some advice.", "She gave me an advices."],
+        "answer": 2,
+        "tip": "'Advice' is uncountable — no plural, no 'a/an'. Use 'some advice' or 'a piece of advice'."
+      },
+      {
+        "q": "Which sentence is correct?",
+        "options": ["How many water do you drink?", "How much water do you drink?", "How many waters do you drink?", "How much waters do you drink?"],
+        "answer": 1,
+        "tip": "'Water' is uncountable → 'how much'. Countable nouns → 'how many'."
+      },
+      {
+        "q": "Which is NOT a mistake?",
+        "options": ["I have many informations.", "I need some furnitures.", "There is a news on TV.", "I have a little free time."],
+        "answer": 3,
+        "tip": "'A little' is correct with uncountable nouns. Information, furniture, and news are all uncountable."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["Can I have a bread?", "Can I have some bread?", "Can I have some breads?", "Can I have an bread?"],
+        "answer": 1,
+        "tip": "'Bread' is uncountable — use 'some bread' or 'a slice/loaf of bread' (never 'a bread')."
+      },
+      {
+        "q": "Which pair is correct (countable vs uncountable)?",
+        "options": ["Work (countable) / job (uncountable)", "Work (uncountable) / job (countable)", "Work (uncountable) / job (uncountable)", "Work (countable) / job (countable)"],
+        "answer": 1,
+        "tip": "'Work' is usually uncountable ('a lot of work'). 'Job' is countable ('two jobs')."
+      }
+    ]
+  },
+  {
+    "slug": "phrasal-verbs",
+    "questions": [
+      {
+        "q": "What does 'give up' mean?",
+        "options": ["Give something to someone above you", "Quit or stop doing something", "Return something", "Start doing something new"],
+        "answer": 1,
+        "tip": "'Give up' is idiomatic — it means quit/stop, not literally give something up."
+      },
+      {
+        "q": "Which sentence is correct (separable phrasal verb)?",
+        "options": ["Turn off it.", "Turn it off.", "Turn the television off it.", "It off turn."],
+        "answer": 1,
+        "tip": "With pronouns, the object must go BETWEEN verb and particle: turn it off (not 'turn off it')."
+      },
+      {
+        "q": "Which is correct (inseparable phrasal verb)?",
+        "options": ["She looked after her grandmother.", "She looked her grandmother after.", "She looked after her grandmother it.", "She looked her after grandmother."],
+        "answer": 0,
+        "tip": "Inseparable phrasal verbs (look after, look for, get on) keep verb and particle together."
+      },
+      {
+        "q": "What does 'run out of' mean?",
+        "options": ["To start running", "To have no more of something", "To escape from somewhere", "To exceed a limit"],
+        "answer": 1,
+        "tip": "'Run out of' = have no more left: 'We ran out of milk' = there's no milk left."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I came across an old photo.", "I came an old photo across.", "I came across to an old photo.", "I across came an old photo."],
+        "answer": 0,
+        "tip": "'Come across' = find by chance. It is inseparable: you cannot split verb and particle."
+      }
+    ]
+  },
+  {
+    "slug": "subject-verb-agreement",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["Everyone are ready.", "Everyone is ready.", "Everyone were ready.", "Everyone be ready."],
+        "answer": 1,
+        "tip": "Indefinite pronouns (everyone, someone, nobody, each) always take a singular verb."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["The news are shocking.", "The news were shocking.", "The news is shocking.", "The news be shocking."],
+        "answer": 2,
+        "tip": "'News' looks plural but is uncountable and singular: 'the news is'."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["Mathematics are difficult.", "Mathematics is difficult.", "Mathematics were difficult.", "Mathematics have been difficult."],
+        "answer": 1,
+        "tip": "Subjects ending in -ics (mathematics, physics, economics) take a singular verb."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["Neither of them are ready.", "Neither of them is ready.", "Neither of they is ready.", "Neither of them was being ready."],
+        "answer": 1,
+        "tip": "'Neither of + plural noun' takes a singular verb in formal English."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["A number of students was absent.", "A number of students were absent.", "The number of students were absent.", "A number of students are was absent."],
+        "answer": 1,
+        "tip": "'A number of' = many → plural verb. 'The number of' = the total count → singular verb."
+      }
+    ]
+  },
+  {
+    "slug": "used-to",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I use to smoke.", "I used to smoke.", "I am used to smoke.", "I was used to smoking."],
+        "answer": 1,
+        "tip": "'Used to' + base verb = past habit that no longer exists."
+      },
+      {
+        "q": "'I am used to waking up early' means:",
+        "options": ["I woke up early in the past but not anymore", "I am accustomed to waking up early (it's normal for me)", "I need to start waking up early", "I will wake up early"],
+        "answer": 1,
+        "tip": "'Be used to' + gerund = accustomed to. 'Used to' + base verb = past habit."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["I am used to wake up early.", "I am used to waking up early.", "I used to waking up early.", "I am used to woke up early."],
+        "answer": 1,
+        "tip": "'Be used to' is always followed by a gerund (-ing) or noun."
+      },
+      {
+        "q": "Which is the correct question form of 'used to'?",
+        "options": ["Did you used to play chess?", "Used you to play chess?", "Did you use to play chess?", "Do you used to play chess?"],
+        "answer": 2,
+        "tip": "In questions/negatives, 'used to' loses the -d: 'Did you use to...?' (not 'did you used to')."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["She got used to drive on the left.", "She got used to driving on the left.", "She is used to drive on the left.", "She got used to drove on the left."],
+        "answer": 1,
+        "tip": "'Get/be used to' is followed by a gerund (-ing) or noun, never an infinitive."
+      }
+    ]
+  },
+  {
+    "slug": "wish-if-only",
+    "questions": [
+      {
+        "q": "Which is correct?",
+        "options": ["I wish I have more time.", "I wish I had more time.", "I wish I would have more time.", "I wish I will have more time."],
+        "answer": 1,
+        "tip": "Wish for present situations: wish + Past Simple (not present, not would)."
+      },
+      {
+        "q": "To express a past regret with 'wish':",
+        "options": ["I wish I didn't say that.", "I wish I haven't said that.", "I wish I hadn't said that.", "I wish I didn't said that."],
+        "answer": 2,
+        "tip": "Wish + Past Perfect = regret about the past."
+      },
+      {
+        "q": "'I wish you would stop talking' expresses:",
+        "options": ["A past regret", "A desire for someone to change their current behavior", "An impossible present situation", "A future plan"],
+        "answer": 1,
+        "tip": "Wish + would = annoyance or desire for change in someone else's behavior."
+      },
+      {
+        "q": "Which is correct?",
+        "options": ["If only I will be taller.", "If only I am taller.", "If only I were taller.", "If only I had be taller."],
+        "answer": 2,
+        "tip": "'If only' works like 'wish': use Past Simple (were) for present situations."
+      },
+      {
+        "q": "I wish it _____ raining. (Correct form:)",
+        "options": ["will stop", "stopped", "would stop", "has stopped"],
+        "answer": 2,
+        "tip": "Wish + would = annoyance, wanting a change: 'I wish it would stop raining.'"
+      }
+    ]
+  }
+]

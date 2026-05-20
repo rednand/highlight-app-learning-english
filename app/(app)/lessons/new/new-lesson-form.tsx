@@ -24,13 +24,6 @@ export default function NewLessonForm() {
 
   return (
     <form action={createLesson} className="space-y-5">
-      <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-          O que você está assistindo?{" "}
-          <span className="text-gray-700 normal-case font-normal tracking-normal">(opcional)</span>
-        </label>
-        <MediaPicker onSelect={handleMediaSelect} />
-      </div>
 
       <div>
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">

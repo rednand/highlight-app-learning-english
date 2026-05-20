@@ -1,6 +1,6 @@
 "use client"
 
-import { fetchFlashcards, updateFlashcard } from "../../actions/review"
+import { fetchFlashcards, updateFlashcard, updateStreak } from "../../actions/review"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowRight, BookOpen, Play, Zap, CheckCircle, Film, Tv, Music } from "lucide-react"
@@ -102,6 +102,7 @@ export default function ReviewClient({
   avgDominio,
   lessonStats,
   cinemaTotal,
+  initialStreak,
 }: {
   lessons: Lesson[]
   totalDue: number
@@ -109,6 +110,7 @@ export default function ReviewClient({
   avgDominio: number
   lessonStats: Record<string, LessonStat>
   cinemaTotal: number
+  initialStreak: number
 }) {
   const router = useRouter()
   const [step, setStep] = useState<"filter" | "review">("filter")
@@ -120,25 +122,8 @@ export default function ReviewClient({
   const [done, setDone] = useState(false)
   const [reviewed, setReviewed] = useState(0)
   const [tab, setTab] = useState<FilterTab>("todas")
-  const [streak, setStreak] = useState(0)
+  const [streak, setStreak] = useState(initialStreak)
   const [cardMode, setCardMode] = useState<"standard" | "cinema">("standard")
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      try {
-        const raw = localStorage.getItem("hl_streak")
-        if (raw) {
-          const { days, lastDate } = JSON.parse(raw) as { days: number; lastDate: string }
-          const today = new Date().toDateString()
-          const yesterday = new Date(Date.now() - 86400000).toDateString()
-          if (lastDate === today || lastDate === yesterday) setStreak(days)
-        }
-      } catch {
-        //
-      }
-    }, 0)
-    return () => clearTimeout(id)
-  }, [])
 
   function startReview(lessonId: string | null) {
     setCardMode("standard")
@@ -183,29 +168,8 @@ export default function ReviewClient({
       setReviewed((r) => r + 1)
       if (index + 1 >= cards.length) {
         setDone(true)
-        try {
-          const today = new Date().toDateString()
-          const raw = localStorage.getItem("hl_streak")
-          if (raw) {
-            const { days, lastDate } = JSON.parse(raw) as { days: number; lastDate: string }
-            const yesterday = new Date(Date.now() - 86400000).toDateString()
-            if (lastDate === today) {
-              // already counted today
-            } else if (lastDate === yesterday) {
-              const next = { days: days + 1, lastDate: today }
-              localStorage.setItem("hl_streak", JSON.stringify(next))
-              setStreak(next.days)
-            } else {
-              localStorage.setItem("hl_streak", JSON.stringify({ days: 1, lastDate: today }))
-              setStreak(1)
-            }
-          } else {
-            localStorage.setItem("hl_streak", JSON.stringify({ days: 1, lastDate: today }))
-            setStreak(1)
-          }
-        } catch {
-          //
-        }
+        const newStreak = await updateStreak()
+        setStreak(newStreak)
       } else {
         setFlipped(false)
         setIndex((i) => i + 1)

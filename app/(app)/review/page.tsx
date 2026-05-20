@@ -1,4 +1,5 @@
 import { createClient } from "../../utils/supabase/server"
+import { getStreak } from "../../actions/review"
 import ReviewClient from "./review-client"
 
 type RawCard = {
@@ -13,7 +14,7 @@ export default async function ReviewPage() {
 
   const now = new Date().toISOString()
 
-  const [{ data: lessons }, { count: totalDue }, { data: allCards }, { count: totalFlashcards }] =
+  const [{ data: lessons }, { count: totalDue }, { data: allCards }, { count: totalFlashcards }, initialStreak] =
     await Promise.all([
       supabase
         .from("lessons")
@@ -33,6 +34,7 @@ export default async function ReviewPage() {
         .from("flashcards")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user!.id),
+      getStreak(),
     ])
 
   const lessonEaseFactors: Record<string, number[]> = {}
@@ -91,6 +93,7 @@ export default async function ReviewPage() {
         avgDominio={avgDominio}
         lessonStats={lessonStats}
         cinemaTotal={cinemaTotal}
+        initialStreak={initialStreak}
       />
     </div>
   )

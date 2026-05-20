@@ -26,6 +26,8 @@ export async function createLesson(formData: FormData) {
   const source_type = (formData.get("source_type") as string) || "lesson"
   const music_artist = formData.get("music_artist") as string
   const music_thumbnail_url = formData.get("music_thumbnail_url") as string
+  const book_author = formData.get("book_author") as string
+  const book_cover_url = formData.get("book_cover_url") as string
 
   const { data, error } = await supabase
     .from("lessons")
@@ -42,6 +44,8 @@ export async function createLesson(formData: FormData) {
       tmdb_season: tmdb_season ? parseInt(tmdb_season) : null,
       music_artist: music_artist || null,
       music_thumbnail_url: music_thumbnail_url || null,
+      book_author: book_author || null,
+      book_cover_url: book_cover_url || null,
     })
     .select()
     .single()
