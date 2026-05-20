@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Remove-Item \"c:\\\\english-notes-saas\\\\middleware.ts\")",
+      "Bash(npm install *)",
+      "Bash(Get-ChildItem -Recurse -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(ConvertTo-Csv -NoTypeInformation)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\" -Recurse -Force | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName })",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(gh pr *)",
+      "Bash(git add *)",
+      "Bash(git checkout *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(npx web-push *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\english-notes-saas\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\" -Force | Select-Object Name, @{Name='IsDir'; Expression={$_.PSIsContainer}} | Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\\\\app\" -Recurse -Force | Select-Object FullName | ForEach-Object {$_.FullName -replace [regex]::Escape\\('C:\\\\english-notes-saas'\\), ''})",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\\\\.claude\" -Recurse -Force | Select-Object FullName | ForEach-Object {$_.FullName -replace [regex]::Escape\\('C:\\\\english-notes-saas'\\), ''})",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\\\\supabase\" -Recurse -Force | Select-Object FullName | ForEach-Object {$_.FullName -replace [regex]::Escape\\('C:\\\\english-notes-saas'\\), ''})",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\\\\components\" -Recurse -Force | Select-Object FullName | ForEach-Object {$_.FullName -replace [regex]::Escape\\('C:\\\\english-notes-saas'\\), ''})",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\english-notes-saas\\\\public\" -Recurse -Force | Select-Object FullName | ForEach-Object {$_.FullName -replace [regex]::Escape\\('C:\\\\english-notes-saas'\\), ''})",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(python3 *)",
+      "Bash(git config *)"
+    ]
+  }
+}

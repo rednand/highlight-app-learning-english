@@ -12,7 +12,7 @@ npm run build    # Production build
 npm run lint     # Lint — must pass before any PR
 ```
 
-No test suite exists. Verify changes manually via the dev server.
+Run `npm run test:coverage` for the Vitest suite (80% coverage required). Verify UI changes manually via the dev server.
 
 ## Architecture
 
@@ -38,7 +38,7 @@ Server Components fetch Supabase directly → render. Mutations go through Serve
 
 | System | Files |
 |---|---|
-| SM-2 algorithm | `app/actions/review.ts`, `app/(app)/review/review-client.tsx` |
+| SM-2 algorithm | `app/lib/review-utils.ts` (pure), `app/actions/review.ts`, `app/(app)/review/review-client.tsx` |
 | Word extraction from text | `app/(app)/lessons/[id]/transcript-extractor.tsx` + `common-words.ts` |
 | Daily push cron | `app/api/cron/push-review/route.ts` (Vercel cron, noon UTC) |
 | Auth (Google OAuth) | `app/auth/`, `app/utils/supabase/` |
@@ -49,3 +49,9 @@ Server Components fetch Supabase directly → render. Mutations go through Serve
 - **Dictionary API** (`api.dictionaryapi.dev`): IPA phonetics
 - **Tatoeba** (`tatoeba.org/api_v0`): example sentences
 - **Web Push**: browser notifications via `web-push` + VAPID keys in `.env.local`
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+at `specs/001-add-actions/plan.md`.
+<!-- SPECKIT END -->
