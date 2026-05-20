@@ -38,3 +38,51 @@ export async function updateFlashcard(
   const supabase = await createClient()
   await supabase.from("flashcards").update(update).eq("id", id)
 }
+
+export async function getStreak(): Promise<number> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return 0
+
+  const { data } = await supabase
+    .from("user_streaks")
+    .select("days, last_review_date")
+    .eq("user_id", user.id)
+    .single()
+
+  if (!data) return 0
+
+  const today = new Date().toISOString().slice(0, 10)
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+
+  if (data.last_review_date === today || data.last_review_date === yesterday) {
+    return data.days
+  }
+  return 0
+}
+
+export async function updateStreak(): Promise<number> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return 0
+
+  const today = new Date().toISOString().slice(0, 10)
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+
+  const { data: existing } = await supabase
+    .from("user_streaks")
+    .select("days, last_review_date")
+    .eq("user_id", user.id)
+    .single()
+
+  if (existing?.last_review_date === today) return existing.days
+
+  const newDays =
+    existing?.last_review_date === yesterday ? existing.days + 1 : 1
+
+  await supabase
+    .from("user_streaks")
+    .upsert({ user_id: user.id, days: newDays, last_review_date: today, updated_at: new Date().toISOString() })
+
+  return newDays
+}

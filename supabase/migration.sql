@@ -135,3 +135,63 @@ DO $$ BEGIN
       CHECK (tmdb_type IN ('movie', 'tv') OR tmdb_type IS NULL);
   END IF;
 END $$;
+
+-- 10. Book fields
+ALTER TABLE lessons ADD COLUMN IF NOT EXISTS book_author    TEXT;
+ALTER TABLE lessons ADD COLUMN IF NOT EXISTS book_cover_url TEXT;
+
+DO $$ BEGIN
+  ALTER TABLE lessons DROP CONSTRAINT IF EXISTS lessons_source_type_check;
+  ALTER TABLE lessons
+    ADD CONSTRAINT lessons_source_type_check
+    CHECK (source_type IN ('lesson', 'movie', 'music', 'book'));
+END $$;
+
+-- 12. User streaks
+CREATE TABLE IF NOT EXISTS user_streaks (
+  user_id          UUID  NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  days             INT   NOT NULL DEFAULT 1,
+  last_review_date DATE  NOT NULL,
+  updated_at       TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE user_streaks ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_streaks'
+    AND policyname = 'Users can manage their own streak'
+  ) THEN
+    CREATE POLICY "Users can manage their own streak"
+      ON user_streaks FOR ALL TO authenticated
+      USING  (auth.uid() = user_id)
+      WITH CHECK (auth.uid() = user_id);
+  END IF;
+END $$;
+
+-- 11. Grammar quiz progress
+CREATE TABLE IF NOT EXISTS grammar_progress (
+  id           UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id      UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  rule_slug    TEXT        NOT NULL,
+  correct      INT         NOT NULL DEFAULT 0,
+  total        INT         NOT NULL DEFAULT 0,
+  completed_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (user_id, rule_slug)
+);
+
+ALTER TABLE grammar_progress ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'grammar_progress'
+    AND policyname = 'Users can manage their own grammar progress'
+  ) THEN
+    CREATE POLICY "Users can manage their own grammar progress"
+      ON grammar_progress FOR ALL TO authenticated
+      USING  (auth.uid() = user_id)
+      WITH CHECK (auth.uid() = user_id);
+  END IF;
+END $$;

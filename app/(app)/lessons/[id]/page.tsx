@@ -2,7 +2,7 @@ import { createClient } from "../../../utils/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Film, Tv, Music } from "lucide-react"
+import { ArrowLeft, Film, Tv, Music, BookMarked } from "lucide-react"
 import AddItemForm from "./add-item-form"
 import TranscriptExtractor from "./transcript-extractor"
 import EditLessonForm from "./edit-lesson-form"
@@ -40,11 +40,11 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
     <div className="max-w-2xl mx-auto p-4 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <Link
-          href={lesson.source_type === "movie" ? "/movies" : lesson.source_type === "music" ? "/music" : "/lessons"}
+          href={lesson.source_type === "movie" ? "/movies" : lesson.source_type === "music" ? "/music" : lesson.source_type === "book" ? "/books" : "/lessons"}
           className="flex items-center gap-2 text-gray-500 hover:text-white text-sm transition-colors"
         >
           <ArrowLeft size={15} />
-          {lesson.source_type === "movie" ? "Filmes & Séries" : lesson.source_type === "music" ? "Música" : "Aulas"}
+          {lesson.source_type === "movie" ? "Filmes & Séries" : lesson.source_type === "music" ? "Música" : lesson.source_type === "book" ? "Livros" : "Aulas"}
         </Link>
         <div className="flex items-center gap-3">
           <DeleteLessonButton lessonId={id} />
@@ -66,6 +66,23 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
             <p className="text-gray-500 text-xs mt-0.5 truncate">{lesson.music_artist}</p>
+          </div>
+        </div>
+      )}
+
+      {lesson.source_type === "book" && lesson.book_author && (
+        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+          {lesson.book_cover_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={lesson.book_cover_url} alt={lesson.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
+          ) : (
+            <div className="w-10 h-14 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+              <BookMarked size={18} className="text-gray-600" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
+            <p className="text-gray-500 text-xs mt-0.5 truncate">{lesson.book_author}</p>
           </div>
         </div>
       )}

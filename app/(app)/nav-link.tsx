@@ -8,14 +8,18 @@ export default function NavLink({
   icon,
   label,
   exact = false,
+  activeFor = [],
 }: {
   href: string
   icon: React.ReactNode
   label: string
   exact?: boolean
+  activeFor?: string[]
 }) {
   const pathname = usePathname()
-  const isActive = exact ? pathname === href : pathname.startsWith(href)
+  const isActive = exact
+    ? pathname === href
+    : pathname.startsWith(href) || activeFor.some((p) => pathname.startsWith(p))
 
   return (
     <Link
