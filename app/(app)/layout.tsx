@@ -8,6 +8,7 @@ import MobileNav from "./mobile-nav"
 import PushToggle from "./push-toggle"
 import StreakBadge from "./streak-badge"
 import { Toaster } from "sonner"
+import PwaInstallBanner from "../../components/pwa-install-banner"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -57,6 +58,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
       <main className="flex-1 overflow-auto pb-16 md:pb-0">{children}</main>
       <MobileNav />
+      <PwaInstallBanner />
       <Toaster theme="dark" position="bottom-right" offset={80} />
     </div>
   )
