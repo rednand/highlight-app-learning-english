@@ -96,7 +96,7 @@
 - [X] T020 Run `npm run test:coverage` — verify ≥ 80% coverage on all four metrics (lines, functions, branches, statements)
 - [X] T021 Run `npm run build` — confirm production build succeeds with no errors or warnings
 - [X] T022 Run `/review` — resolve all critical issues before opening PR
-- [ ] T023 Run `gh pr create` — only after T022 review is clean
+- [X] T023 Run `gh pr create` — only after T022 review is clean (branch pushed; PR criado manualmente — gh CLI não instalado)
 
 ---
 
