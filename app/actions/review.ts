@@ -44,6 +44,38 @@ export async function fetchDistractorPool(): Promise<string[]> {
   return [...new Set(data.map((f) => f.back).filter(Boolean) as string[])]
 }
 
+export async function fetchTitlePool(): Promise<string[]> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data } = await supabase
+    .from("lesson_items")
+    .select("lessons(title)")
+    .eq("user_id", user.id)
+  if (!data) return []
+  type TitleRow = { lessons: { title: string } | null }
+  const titles = (data as unknown as TitleRow[])
+    .map((item) => item.lessons?.title)
+    .filter((t): t is string => Boolean(t))
+  return [...new Set(titles)]
+}
+
+export async function fetchFallbackTitlePool(): Promise<string[]> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data } = await supabase
+    .from("lesson_items")
+    .select("lessons(title)")
+    .eq("user_id", user.id)
+  if (!data) return []
+  type TitleRow = { lessons: { title: string } | null }
+  const titles = (data as unknown as TitleRow[])
+    .map((item) => item.lessons?.title)
+    .filter((t): t is string => Boolean(t))
+  return [...new Set(titles)]
+}
+
 export async function fetchFallbackDistractors(): Promise<string[]> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

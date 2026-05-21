@@ -53,5 +53,5 @@ Server Components fetch Supabase directly → render. Mutations go through Serve
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/003-flashcard-multiple-choice/plan.md`.
+at `specs/004-cinema-source-quiz/plan.md`.
 <!-- SPECKIT END -->
