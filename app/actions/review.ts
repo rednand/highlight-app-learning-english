@@ -32,6 +32,41 @@ export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean
   return { cards: data ?? [] }
 }
 
+export async function fetchDistractorPool(): Promise<string[]> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data } = await supabase
+    .from("flashcards")
+    .select("back")
+    .eq("user_id", user.id)
+  if (!data) return []
+  return [...new Set(data.map((f) => f.back).filter(Boolean) as string[])]
+}
+
+export async function fetchFallbackDistractors(): Promise<string[]> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data: flashcards } = await supabase
+    .from("flashcards")
+    .select("lesson_item_id")
+    .eq("user_id", user.id)
+  const usedIds = new Set(
+    (flashcards ?? []).map((f) => f.lesson_item_id).filter(Boolean),
+  )
+  const { data: items } = await supabase
+    .from("lesson_items")
+    .select("id, translation")
+    .eq("user_id", user.id)
+  if (!items) return []
+  return [...new Set(
+    items
+      .filter((item) => !usedIds.has(item.id) && item.translation)
+      .map((item) => item.translation as string),
+  )]
+}
+
 export async function updateFlashcard(
   id: string,
   update: { ease_factor: number; interval_days: number; next_review_at: string },

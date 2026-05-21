@@ -1,5 +1,16 @@
 export type Grade = 0 | 1 | 2 | 3 | 4 | 5
 
+export type ChoiceOption = {
+  label: 'A' | 'B' | 'C' | 'D'
+  text: string
+  isCorrect: boolean
+}
+
+export type SelectionState = {
+  selectedLabel: 'A' | 'B' | 'C' | 'D'
+  isCorrect: boolean
+} | null
+
 export interface FlashcardSM2 {
   ease_factor: number
   interval_days: number
@@ -33,6 +44,33 @@ export function sm2(
     interval_days,
     next_review_at: next.toISOString(),
   }
+}
+
+export function buildMultipleChoiceOptions(
+  correct: string,
+  pool: string[],
+): ChoiceOption[] {
+  const labels: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D']
+  const candidates = [...new Set(pool.filter((t) => t !== correct))]
+
+  const distractors: string[] = []
+  const available = [...candidates]
+  while (distractors.length < 3 && available.length > 0) {
+    const idx = Math.floor(Math.random() * available.length)
+    distractors.push(available.splice(idx, 1)[0])
+  }
+
+  const all = [correct, ...distractors]
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[all[i], all[j]] = [all[j], all[i]]
+  }
+
+  return all.map((text, i) => ({
+    label: labels[i],
+    text,
+    isCorrect: text === correct,
+  }))
 }
 
 export function formatNextReview(dateStr: string | null): string {
