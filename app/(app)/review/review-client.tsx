@@ -4,6 +4,8 @@ import {
   fetchFlashcards,
   fetchDistractorPool,
   fetchFallbackDistractors,
+  fetchTitlePool,
+  fetchFallbackTitlePool,
   updateFlashcard,
   updateStreak,
 } from "../../actions/review"
@@ -84,20 +86,38 @@ export default function ReviewClient({
   const skipMapRef = useRef<Map<string, number>>(new Map())
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  async function buildCards(fetched: Flashcard[]): Promise<MultipleChoiceCard[]> {
-    let pool = await fetchDistractorPool()
-    if (pool.length < 3) {
-      const fallback = await fetchFallbackDistractors()
-      pool = [...new Set([...pool, ...fallback])]
+  async function buildCards(
+    fetched: Flashcard[],
+    mode: "standard" | "cinema",
+  ): Promise<MultipleChoiceCard[]> {
+    let pool: string[]
+    if (mode === "cinema") {
+      pool = await fetchTitlePool()
+      if (pool.length < 3) {
+        const fallback = await fetchFallbackTitlePool()
+        pool = [...new Set([...pool, ...fallback])]
+      }
+    } else {
+      pool = await fetchDistractorPool()
+      if (pool.length < 3) {
+        const fallback = await fetchFallbackDistractors()
+        pool = [...new Set([...pool, ...fallback])]
+      }
     }
     if (pool.length < 3) {
       setInsufficientPool(true)
       return []
     }
-    return fetched.map((card) => ({
-      ...card,
-      options: buildMultipleChoiceOptions(card.back, pool.filter((t) => t !== card.back)),
-    }))
+    return fetched.map((card) => {
+      const correct =
+        mode === "cinema"
+          ? (card.lesson_items?.lessons?.title ?? card.back)
+          : card.back
+      return {
+        ...card,
+        options: buildMultipleChoiceOptions(correct, pool.filter((t) => t !== correct)),
+      }
+    })
   }
 
   function resetReviewState() {
@@ -113,7 +133,7 @@ export default function ReviewClient({
     setSelectedLesson(lessonId)
     setLoading(true)
     fetchFlashcards(lessonId ?? undefined).then(async ({ cards: fetched }) => {
-      const built = await buildCards((fetched ?? []) as unknown as Flashcard[])
+      const built = await buildCards((fetched ?? []) as unknown as Flashcard[], "standard")
       setCards(built)
       setLoading(false)
       setStep("review")
@@ -131,7 +151,7 @@ export default function ReviewClient({
         const st = c.lesson_items?.lessons?.source_type
         return st === "movie" || st === "music"
       })
-      const built = await buildCards(filtered)
+      const built = await buildCards(filtered, "cinema")
       setCards(built)
       setLoading(false)
       setStep("review")
@@ -504,6 +524,10 @@ export default function ReviewClient({
 
         {selection !== null && cardMode === "cinema" && (
           <div className="mt-4 pt-4 border-t border-white/5 text-center space-y-3">
+            <div className="pb-1">
+              <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Tradução</p>
+              <p className="text-white text-lg font-semibold">{card.back}</p>
+            </div>
             {isMusic ? (
               <>
                 {media?.music_thumbnail_url ? (
