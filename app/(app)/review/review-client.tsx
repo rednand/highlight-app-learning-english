@@ -1,13 +1,20 @@
 "use client"
 
-import { fetchFlashcards, updateFlashcard, updateStreak } from "../../actions/review"
-import { useState, useEffect, useCallback } from "react"
+import {
+  fetchFlashcards,
+  fetchDistractorPool,
+  fetchFallbackDistractors,
+  updateFlashcard,
+  updateStreak,
+} from "../../actions/review"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, BookOpen, Play, Zap, CheckCircle, Film, Tv, Music } from "lucide-react"
+import { ArrowRight, BookOpen, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward } from "lucide-react"
 import Image from "next/image"
 import SpeakButton from "../speak-button"
-import { sm2, formatNextReview, urgencyLabel } from "../../lib/review-utils"
-import type { Grade, LessonStat } from "../../lib/review-utils"
+import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel } from "../../lib/review-utils"
+import type { Grade, LessonStat, ChoiceOption, SelectionState } from "../../lib/review-utils"
+import MultipleChoiceOptions from "../../../components/review/multiple-choice-options"
 
 type MediaContext = {
   title: string
@@ -34,21 +41,15 @@ type Flashcard = {
   } | null
 }
 
+type MultipleChoiceCard = Flashcard & {
+  options: ChoiceOption[]
+}
+
 type Lesson = { id: string; title: string; source_type: string | null }
 
-const GRADES = [
-  { grade: 1 as Grade, label: "Não lembro", color: "text-red-400 border-red-400/20 bg-red-400/5 hover:bg-red-400/15 hover:border-red-400/40" },
-  { grade: 3 as Grade, label: "Quase", color: "text-yellow-400 border-yellow-400/20 bg-yellow-400/5 hover:bg-yellow-400/15 hover:border-yellow-400/40" },
-  { grade: 5 as Grade, label: "Fácil", color: "text-green-400 border-green-400/20 bg-green-400/5 hover:bg-green-400/15 hover:border-green-400/40" },
-]
-
-const CINEMA_GRADES = [
-  { grade: 1 as Grade, label: "Não lembro", color: "text-red-400 border-red-400/20 bg-red-400/5 hover:bg-red-400/15 hover:border-red-400/40" },
-  { grade: 3 as Grade, label: "Quase", color: "text-yellow-400 border-yellow-400/20 bg-yellow-400/5 hover:bg-yellow-400/15 hover:border-yellow-400/40" },
-  { grade: 5 as Grade, label: "Lembrei!", color: "text-green-400 border-green-400/20 bg-green-400/5 hover:bg-green-400/15 hover:border-green-400/40" },
-]
-
 type FilterTab = "todas" | "urgentes" | "concluidas"
+
+const ADVANCE_DELAY_MS = 1500
 
 export default function ReviewClient({
   lessons,
@@ -70,28 +71,53 @@ export default function ReviewClient({
   const router = useRouter()
   const [step, setStep] = useState<"filter" | "review">("filter")
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
-  const [cards, setCards] = useState<Flashcard[]>([])
+  const [cards, setCards] = useState<MultipleChoiceCard[]>([])
   const [index, setIndex] = useState(0)
-  const [flipped, setFlipped] = useState(false)
+  const [selection, setSelection] = useState<SelectionState>(null)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [reviewed, setReviewed] = useState(0)
   const [tab, setTab] = useState<FilterTab>("todas")
   const [streak, setStreak] = useState(initialStreak)
   const [cardMode, setCardMode] = useState<"standard" | "cinema">("standard")
+  const [insufficientPool, setInsufficientPool] = useState(false)
+  const skipMapRef = useRef<Map<string, number>>(new Map())
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  async function buildCards(fetched: Flashcard[]): Promise<MultipleChoiceCard[]> {
+    let pool = await fetchDistractorPool()
+    if (pool.length < 3) {
+      const fallback = await fetchFallbackDistractors()
+      pool = [...new Set([...pool, ...fallback])]
+    }
+    if (pool.length < 3) {
+      setInsufficientPool(true)
+      return []
+    }
+    return fetched.map((card) => ({
+      ...card,
+      options: buildMultipleChoiceOptions(card.back, pool.filter((t) => t !== card.back)),
+    }))
+  }
+
+  function resetReviewState() {
+    setIndex(0)
+    setSelection(null)
+    setDone(false)
+    setReviewed(0)
+    skipMapRef.current = new Map()
+  }
 
   function startReview(lessonId: string | null) {
     setCardMode("standard")
     setSelectedLesson(lessonId)
     setLoading(true)
-    fetchFlashcards(lessonId ?? undefined).then(({ cards: fetched }) => {
-      setCards((fetched ?? []) as unknown as Flashcard[])
+    fetchFlashcards(lessonId ?? undefined).then(async ({ cards: fetched }) => {
+      const built = await buildCards((fetched ?? []) as unknown as Flashcard[])
+      setCards(built)
       setLoading(false)
       setStep("review")
-      setIndex(0)
-      setFlipped(false)
-      setDone(false)
-      setReviewed(0)
+      resetReviewState()
     })
   }
 
@@ -99,56 +125,88 @@ export default function ReviewClient({
     setCardMode("cinema")
     setSelectedLesson(null)
     setLoading(true)
-    fetchFlashcards(undefined).then(({ cards: fetched }) => {
+    fetchFlashcards(undefined).then(async ({ cards: fetched }) => {
       const all = (fetched ?? []) as unknown as Flashcard[]
       const filtered = all.filter((c) => {
         const st = c.lesson_items?.lessons?.source_type
         return st === "movie" || st === "music"
       })
-      setCards(filtered)
+      const built = await buildCards(filtered)
+      setCards(built)
       setLoading(false)
       setStep("review")
-      setIndex(0)
-      setFlipped(false)
-      setDone(false)
-      setReviewed(0)
+      resetReviewState()
     })
   }
 
-  const handleGrade = useCallback(
-    async (grade: Grade) => {
-      const card = cards[index]
-      const update = sm2(card, grade)
-      await updateFlashcard(card.id, update)
+  const advance = useCallback(
+    async (card: MultipleChoiceCard, isCorrect: boolean, currentIndex: number, currentCards: MultipleChoiceCard[]) => {
+      const grade: Grade = isCorrect ? 5 : 1
+      await updateFlashcard(card.id, sm2(card, grade))
       setReviewed((r) => r + 1)
-      if (index + 1 >= cards.length) {
+      if (currentIndex + 1 >= currentCards.length) {
         setDone(true)
         const newStreak = await updateStreak()
         setStreak(newStreak)
       } else {
-        setFlipped(false)
+        setSelection(null)
         setIndex((i) => i + 1)
       }
     },
-    [cards, index],
+    [],
   )
+
+  const handleSelect = useCallback(
+    (label: "A" | "B" | "C" | "D") => {
+      const card = cards[index]
+      const chosen = card.options.find((o) => o.label === label)
+      if (!chosen) return
+      const sel: SelectionState = { selectedLabel: label, isCorrect: chosen.isCorrect }
+      setSelection(sel)
+      advanceTimerRef.current = setTimeout(() => {
+        advance(card, chosen.isCorrect, index, cards)
+      }, ADVANCE_DELAY_MS)
+    },
+    [cards, index, advance],
+  )
+
+  const handleSkip = useCallback(() => {
+    if (advanceTimerRef.current) return
+    const card = cards[index]
+    const skipCount = skipMapRef.current.get(card.id) ?? 0
+    if (skipCount >= 1) {
+      if (index + 1 >= cards.length) {
+        setDone(true)
+        updateStreak().then(setStreak)
+      } else {
+        setIndex((i) => i + 1)
+      }
+      return
+    }
+    skipMapRef.current.set(card.id, 1)
+    setCards((prev) => [...prev, card])
+    setIndex((i) => i + 1)
+  }, [cards, index])
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (step !== "review") return
-      if (e.code === "Space") {
-        e.preventDefault()
-        if (!flipped) setFlipped(true)
-      }
-      if (flipped) {
-        if (e.code === "Digit1") handleGrade(1)
-        if (e.code === "Digit2") handleGrade(3)
-        if (e.code === "Digit3") handleGrade(5)
-      }
+      if (step !== "review" || done) return
+      if (selection !== null) return
+      if (e.code === "Digit1") { e.preventDefault(); handleSelect("A") }
+      if (e.code === "Digit2") { e.preventDefault(); handleSelect("B") }
+      if (e.code === "Digit3") { e.preventDefault(); handleSelect("C") }
+      if (e.code === "Digit4") { e.preventDefault(); handleSelect("D") }
+      if (e.code === "Space") { e.preventDefault(); handleSkip() }
     }
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-  }, [flipped, step, handleGrade])
+  }, [step, done, selection, handleSelect, handleSkip])
 
   if (step === "filter") {
     const lessonsWithCards = lessons.filter((l) => lessonStats[l.id])
@@ -301,6 +359,24 @@ export default function ReviewClient({
     )
   }
 
+  if (insufficientPool) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-4xl mb-4">📚</p>
+        <p className="text-white font-semibold text-lg mb-2">Vocabulário insuficiente</p>
+        <p className="text-gray-500 text-sm">
+          Adicione mais palavras ao seu vocabulário para ativar a revisão.
+        </p>
+        <button
+          onClick={() => { setInsufficientPool(false); setStep("filter") }}
+          className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+        >
+          Voltar ao filtro <ArrowRight size={14} />
+        </button>
+      </div>
+    )
+  }
+
   if (cards.length === 0) {
     return (
       <div className="text-center py-20">
@@ -350,12 +426,14 @@ export default function ReviewClient({
   const context = card.lesson_items?.context
   const media = card.lesson_items?.lessons ?? null
   const isMusic = media?.source_type === "music"
-  const activeGrades = cardMode === "cinema" ? CINEMA_GRADES : GRADES
 
   return (
     <div className="max-w-md mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => { router.refresh(); setStep("filter") }} className="text-xs text-gray-600 hover:text-white transition-colors shrink-0">
+        <button
+          onClick={() => { router.refresh(); setStep("filter") }}
+          className="text-xs text-gray-600 hover:text-white transition-colors shrink-0"
+        >
           ← filtro
         </button>
         <span className="text-xs text-gray-500 tabular-nums">{index + 1}/{cards.length}</span>
@@ -367,9 +445,11 @@ export default function ReviewClient({
         </div>
       </div>
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-8 mb-4">
-        <div className="text-center mb-6">
-          <span className="text-[10px] font-bold tracking-[0.2em] uppercase" style={{ color: cardMode === "cinema" ? "#60a5fa99" : undefined }}>
+      <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-6 mb-3">
+        <div className="text-center mb-5">
+          <span
+            className={`text-[10px] font-bold tracking-[0.2em] uppercase ${cardMode === "cinema" ? "text-blue-400/60" : ""}`}
+          >
             {cardMode === "cinema"
               ? (isMusic ? "Em que música você ouviu?" : "Em que filme / série você ouviu?")
               : "inglês"}
@@ -387,124 +467,109 @@ export default function ReviewClient({
           )}
         </div>
 
-        {!flipped ? (
-          <button
-            onClick={() => setFlipped(true)}
-            className="flex items-center gap-2 mx-auto text-sm text-gray-500 hover:text-white border border-white/10 hover:border-white/20 px-5 py-2.5 rounded-full transition-colors"
-          >
-            Ver resposta
-            <kbd className="text-[10px] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">espaço</kbd>
-          </button>
-        ) : cardMode === "cinema" ? (
-          <>
-            <div className="h-px bg-white/5 my-6" />
-            <div className="text-center space-y-4">
-              {isMusic ? (
-                <>
-                  {media?.music_thumbnail_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={media.music_thumbnail_url} alt={media.title} className="w-24 h-24 rounded-xl object-cover mx-auto" />
-                  ) : (
-                    <div className="w-24 h-24 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
-                      <Music size={28} className="text-gray-600" />
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-white text-xl font-semibold">{media?.title}</p>
-                    <div className="flex items-center justify-center gap-1.5 mt-1">
-                      <Music size={11} className="text-gray-500" />
-                      <p className="text-gray-500 text-sm">{media?.music_artist}</p>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {media?.tmdb_poster_path ? (
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w185${media.tmdb_poster_path}`}
-                      alt={media?.title ?? ""}
-                      width={80}
-                      height={120}
-                      className="rounded-xl object-cover mx-auto"
-                    />
-                  ) : (
-                    <div className="w-20 h-28 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
-                      {media?.tmdb_type === "tv"
-                        ? <Tv size={24} className="text-gray-600" />
-                        : <Film size={24} className="text-gray-600" />}
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-white text-xl font-semibold">{media?.title ?? "—"}</p>
-                    <div className="flex items-center justify-center gap-1.5 mt-1">
-                      {media?.tmdb_type === "movie"
-                        ? <Film size={11} className="text-gray-500" />
-                        : <Tv size={11} className="text-gray-500" />}
-                      <p className="text-gray-500 text-sm">
-                        {media?.tmdb_type === "movie" ? "Filme" : "Série"}
-                        {media?.tmdb_season ? ` · T${media.tmdb_season}` : ""}
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
-              <div className="mt-2 pt-4 border-t border-white/5">
-                <p className="text-gray-600 text-[10px] uppercase font-bold tracking-wider">Tradução</p>
-                <p className="text-white text-lg mt-1">{card.back}</p>
+        <div className="h-px bg-white/5 mb-4" />
+
+        <MultipleChoiceOptions options={card.options} selection={selection} onSelect={handleSelect} />
+
+        {selection !== null && cardMode === "standard" && (mySentence || media?.tmdb_poster_path) && (
+          <div className="mt-4 pt-4 border-t border-white/5">
+            {mySentence && (
+              <div className="bg-white/5 rounded-xl px-4 py-3 text-left mb-3">
+                <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Minha frase</p>
+                <p className="text-gray-300 text-sm italic">&ldquo;{mySentence}&rdquo;</p>
               </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="h-px bg-white/5 my-6" />
-            <div className="text-center space-y-3">
-              <span className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase">português</span>
-              <p className="text-2xl font-semibold text-white">{card.back}</p>
-              {mySentence && (
-                <div className="mt-3 bg-white/5 rounded-xl px-4 py-3 text-left">
-                  <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Minha frase</p>
-                  <p className="text-gray-300 text-sm italic">&ldquo;{mySentence}&rdquo;</p>
+            )}
+            {media?.tmdb_poster_path && (
+              <div className="flex items-center gap-3">
+                <Image
+                  src={`https://image.tmdb.org/t/p/w92${media.tmdb_poster_path}`}
+                  alt={media.title}
+                  width={24}
+                  height={36}
+                  className="rounded object-cover shrink-0"
+                />
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {media.tmdb_type === "movie"
+                    ? <Film size={10} className="text-gray-600 shrink-0" />
+                    : <Tv size={10} className="text-gray-600 shrink-0" />}
+                  <p className="text-[11px] text-gray-500 truncate">
+                    {media.title}
+                    {media.tmdb_type === "tv" && media.tmdb_season ? ` T${media.tmdb_season}` : ""}
+                  </p>
                 </div>
-              )}
-              {media?.tmdb_poster_path && (
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-3">
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w92${media.tmdb_poster_path}`}
+              </div>
+            )}
+          </div>
+        )}
+
+        {selection !== null && cardMode === "cinema" && (
+          <div className="mt-4 pt-4 border-t border-white/5 text-center space-y-3">
+            {isMusic ? (
+              <>
+                {media?.music_thumbnail_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={media.music_thumbnail_url}
                     alt={media.title}
-                    width={24}
-                    height={36}
-                    className="rounded object-cover shrink-0"
+                    className="w-20 h-20 rounded-xl object-cover mx-auto"
                   />
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    {media.tmdb_type === "movie"
-                      ? <Film size={10} className="text-gray-600 shrink-0" />
-                      : <Tv size={10} className="text-gray-600 shrink-0" />}
-                    <p className="text-[11px] text-gray-500 truncate">
-                      {media.title}
-                      {media.tmdb_type === "tv" && media.tmdb_season ? ` T${media.tmdb_season}` : ""}
+                ) : (
+                  <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
+                    <Music size={24} className="text-gray-600" />
+                  </div>
+                )}
+                <div>
+                  <p className="text-white text-lg font-semibold">{media?.title}</p>
+                  <div className="flex items-center justify-center gap-1.5 mt-1">
+                    <Music size={11} className="text-gray-500" />
+                    <p className="text-gray-500 text-sm">{media?.music_artist}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {media?.tmdb_poster_path ? (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w185${media.tmdb_poster_path}`}
+                    alt={media?.title ?? ""}
+                    width={72}
+                    height={108}
+                    className="rounded-xl object-cover mx-auto"
+                  />
+                ) : (
+                  <div className="w-18 h-24 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
+                    {media?.tmdb_type === "tv"
+                      ? <Tv size={22} className="text-gray-600" />
+                      : <Film size={22} className="text-gray-600" />}
+                  </div>
+                )}
+                <div>
+                  <p className="text-white text-lg font-semibold">{media?.title ?? "—"}</p>
+                  <div className="flex items-center justify-center gap-1.5 mt-1">
+                    {media?.tmdb_type === "movie"
+                      ? <Film size={11} className="text-gray-500" />
+                      : <Tv size={11} className="text-gray-500" />}
+                    <p className="text-gray-500 text-sm">
+                      {media?.tmdb_type === "movie" ? "Filme" : "Série"}
+                      {media?.tmdb_season ? ` · T${media.tmdb_season}` : ""}
                     </p>
                   </div>
                 </div>
-              )}
-            </div>
-          </>
+              </>
+            )}
+          </div>
         )}
       </div>
 
-      {flipped && (
-        <div className="grid grid-cols-3 gap-3">
-          {activeGrades.map(({ grade, label, color }, i) => (
-            <button
-              key={grade}
-              onClick={() => handleGrade(grade)}
-              className={`flex flex-col items-center gap-1 py-3 rounded-xl border text-sm font-semibold transition-colors ${color}`}
-            >
-              {label}
-              <kbd className="text-[9px] opacity-40">{i + 1}</kbd>
-            </button>
-          ))}
-        </div>
-      )}
+      <button
+        onClick={handleSkip}
+        disabled={selection !== null}
+        className="flex items-center gap-1.5 mx-auto text-xs text-gray-600 hover:text-gray-400 transition-colors disabled:opacity-0 disabled:pointer-events-none"
+      >
+        <SkipForward size={12} />
+        Pular
+        <kbd className="text-[9px] bg-white/5 border border-white/10 px-1 py-0.5 rounded">espaço</kbd>
+      </button>
     </div>
   )
 }
