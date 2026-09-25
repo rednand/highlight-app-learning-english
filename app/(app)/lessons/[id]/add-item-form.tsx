@@ -13,6 +13,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [term, setTerm] = useState("")
   const [translation, setTranslation] = useState("")
   const [isSuggesting, setIsSuggesting] = useState(false)
+  const [translationError, setTranslationError] = useState(false)
   const [context, setContext] = useState("")
   const [isFetchingExample, setIsFetchingExample] = useState(false)
   const [exampleError, setExampleError] = useState(false)
@@ -39,6 +40,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     setPhonetic("")
     setMySentence("")
     setExampleError(false)
+    setTranslationError(false)
   }
 
   function toggleListening() {
@@ -64,11 +66,14 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   async function suggestTranslation() {
     if (!term.trim()) return
     setTranslation("")
+    setTranslationError(false)
     setIsSuggesting(true)
     try {
       const suggested = await translateTerm(term)
       if (suggested) setTranslation(suggested)
+      else setTranslationError(true)
     } catch {
+      setTranslationError(true)
     } finally {
       setIsSuggesting(false)
     }
@@ -209,6 +214,11 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
             <input type="hidden" name="phonetic" value={phonetic} />
 
             {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+            {translationError && (
+              <p className="text-xs text-gray-500">
+                Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
+              </p>
+            )}
             {exampleError && (
               <p className="text-xs text-gray-500">
                 Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.

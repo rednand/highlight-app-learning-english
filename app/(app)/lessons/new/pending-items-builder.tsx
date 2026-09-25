@@ -30,16 +30,22 @@ export default function PendingItemsBuilder() {
   const [mySentence, setMySentence] = useState("")
   const [isSuggesting, setIsSuggesting] = useState(false)
   const [isFetchingExample, setIsFetchingExample] = useState(false)
+  const [translationError, setTranslationError] = useState(false)
+  const [exampleError, setExampleError] = useState(false)
 
   const inputClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
 
   async function suggestTranslation() {
     if (!term.trim()) return
     setTranslation("")
+    setTranslationError(false)
     setIsSuggesting(true)
     try {
       const suggested = await translateTerm(term)
       if (suggested) setTranslation(suggested)
+      else setTranslationError(true)
+    } catch {
+      setTranslationError(true)
     } finally {
       setIsSuggesting(false)
     }
@@ -48,10 +54,12 @@ export default function PendingItemsBuilder() {
   async function fetchExample() {
     if (!term.trim()) return
     setContext("")
+    setExampleError(false)
     setIsFetchingExample(true)
     try {
       const { example, phonetic: ipa } = await fetchExampleSentence(term)
       if (example) setContext(example)
+      else setExampleError(true)
       if (ipa) setPhonetic(ipa)
     } finally {
       setIsFetchingExample(false)
@@ -67,6 +75,8 @@ export default function PendingItemsBuilder() {
     setContext("")
     setPhonetic("")
     setMySentence("")
+    setTranslationError(false)
+    setExampleError(false)
   }
 
   function removeItem(index: number) {
@@ -158,6 +168,16 @@ export default function PendingItemsBuilder() {
         </div>
 
         {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+        {translationError && (
+          <p className="text-xs text-gray-500">
+            Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
+          </p>
+        )}
+        {exampleError && (
+          <p className="text-xs text-gray-500">
+            Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
+          </p>
+        )}
 
         <textarea
           value={mySentence}
