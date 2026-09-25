@@ -40,15 +40,20 @@ export default function ItemCard({ item }: { item: Item }) {
   const [mySentence, setMySentence] = useState(item.my_sentence ?? "")
   const [isSuggesting, setIsSuggesting] = useState(false)
   const [isFetchingExample, setIsFetchingExample] = useState(false)
+  const [translationError, setTranslationError] = useState(false)
+  const [exampleError, setExampleError] = useState(false)
 
   async function suggestTranslation() {
     if (!term.trim()) return
     setTranslation("")
+    setTranslationError(false)
     setIsSuggesting(true)
     try {
       const suggested = await translateTerm(term)
       if (suggested) setTranslation(suggested)
+      else setTranslationError(true)
     } catch {
+      setTranslationError(true)
     } finally {
       setIsSuggesting(false)
     }
@@ -57,10 +62,12 @@ export default function ItemCard({ item }: { item: Item }) {
   async function fetchExample() {
     if (!term.trim()) return
     setContext("")
+    setExampleError(false)
     setIsFetchingExample(true)
     try {
       const { example, phonetic: ipa } = await fetchExampleSentence(term)
       if (example) setContext(example)
+      else setExampleError(true)
       if (ipa) setPhonetic(ipa)
     } finally {
       setIsFetchingExample(false)
@@ -115,6 +122,16 @@ export default function ItemCard({ item }: { item: Item }) {
 
           <input type="hidden" name="phonetic" value={phonetic} />
           {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+          {translationError && (
+            <p className="text-xs text-gray-500">
+              Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
+            </p>
+          )}
+          {exampleError && (
+            <p className="text-xs text-gray-500">
+              Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
+            </p>
+          )}
 
           <textarea
             name="my_sentence"
