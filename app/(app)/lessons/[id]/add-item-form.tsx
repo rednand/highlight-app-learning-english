@@ -4,6 +4,7 @@ import { useRef, useState, useTransition, useEffect } from "react"
 import { Plus, X, Wand2, Mic, MicOff } from "lucide-react"
 import { addLessonItem } from "../../../actions/items"
 import { fetchExampleSentence } from "../../../actions/examples"
+import { translateTerm } from "../../../actions/translate"
 
 export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [open, setOpen] = useState(false)
@@ -65,9 +66,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     setTranslation("")
     setIsSuggesting(true)
     try {
-      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(term)}&langpair=en|pt`)
-      const json = await res.json()
-      const suggested = json?.responseData?.translatedText
+      const suggested = await translateTerm(term)
       if (suggested) setTranslation(suggested)
     } catch {
     } finally {

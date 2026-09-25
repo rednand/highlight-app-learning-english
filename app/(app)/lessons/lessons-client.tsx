@@ -9,7 +9,15 @@ type Lesson = {
   title: string
   lesson_date: string | null
   created_at: string
+  notes: string | null
   itemCount: number
+  previewWord: string | null
+}
+
+function lessonPreview(lesson: Lesson): string {
+  if (lesson.notes?.trim()) return lesson.notes.trim()
+  if (lesson.previewWord) return lesson.previewWord
+  return lesson.itemCount === 1 ? "1 item" : `${lesson.itemCount} itens`
 }
 
 export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
@@ -87,8 +95,8 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
                   </p>
                   <p className="text-xs text-gray-600 mt-0.5">{date}</p>
                 </div>
-                <span className="text-xs text-gray-600 shrink-0">
-                  {lesson.itemCount} {lesson.itemCount === 1 ? "item" : "itens"}
+                <span className="text-xs text-gray-600 shrink-0 max-w-[40%] truncate">
+                  {lessonPreview(lesson)}
                 </span>
               </Link>
             )
@@ -107,11 +115,9 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
                 {lesson.title}
               </h2>
               <div className="flex items-center gap-2 text-xs text-gray-600">
-                <span>{date}</span>
-                <span>·</span>
-                <span>
-                  {lesson.itemCount} {lesson.itemCount === 1 ? "item" : "itens"}
-                </span>
+                <span className="shrink-0">{date}</span>
+                <span className="shrink-0">·</span>
+                <span className="truncate">{lessonPreview(lesson)}</span>
               </div>
             </Link>
           )

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createLesson } from "../../../actions/lessons"
 import BookPicker from "./book-picker"
+import SubmitButton from "../../../../components/submit-button"
 
 type BookResult = {
   id: string
@@ -76,12 +77,12 @@ export default function NewBookForm() {
             />
           </div>
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Criando..."
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
           >
             Criar sessão de estudo
-          </button>
+          </SubmitButton>
         </>
       )}
     </form>

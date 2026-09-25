@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createLesson } from "../../../actions/lessons"
 import MusicPicker from "./music-picker"
+import SubmitButton from "../../../../components/submit-button"
 
 type TrackResult = {
   trackId: number
@@ -76,12 +77,12 @@ export default function NewMusicForm() {
             />
           </div>
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Criando..."
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
           >
             Criar sessão de estudo
-          </button>
+          </SubmitButton>
         </>
       )}
     </form>

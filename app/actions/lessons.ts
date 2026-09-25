@@ -4,6 +4,36 @@ import { createClient } from "../utils/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
+type PendingItem = {
+  term: string
+  translation: string
+  type: string
+  context: string
+  phonetic: string
+  my_sentence: string
+}
+
+function isPendingItem(value: unknown): value is PendingItem {
+  if (typeof value !== "object" || value === null) return false
+  const v = value as Record<string, unknown>
+  return typeof v.term === "string" && v.term.trim().length > 0
+}
+
+function parsePendingItems(raw: string | null): PendingItem[] {
+  if (!raw) return []
+  try {
+    const parsed: unknown = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed.filter(isPendingItem) : []
+  } catch {
+    return []
+  }
+}
+
+function formatLessonDate(lesson_date: string): string {
+  const date = lesson_date ? new Date(`${lesson_date}T00:00:00`) : new Date()
+  return date.toLocaleDateString("pt-BR")
+}
+
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
@@ -15,10 +45,11 @@ export async function createLesson(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  const title = formData.get("title") as string
+  const rawTitle = formData.get("title") as string
   const lesson_date = formData.get("lesson_date") as string
   const notes = formData.get("notes") as string
   const roadmap_key = formData.get("roadmap_key") as string
+  const title = rawTitle.trim() || formatLessonDate(lesson_date)
   const tmdb_id = formData.get("tmdb_id") as string
   const tmdb_type = formData.get("tmdb_type") as string
   const tmdb_poster_path = formData.get("tmdb_poster_path") as string
@@ -28,6 +59,7 @@ export async function createLesson(formData: FormData) {
   const music_thumbnail_url = formData.get("music_thumbnail_url") as string
   const book_author = formData.get("book_author") as string
   const book_cover_url = formData.get("book_cover_url") as string
+  const items = parsePendingItems(formData.get("items") as string)
 
   const { data, error } = await supabase
     .from("lessons")
@@ -51,6 +83,36 @@ export async function createLesson(formData: FormData) {
     .single()
 
   if (error) throw new Error(error.message)
+
+  if (items.length > 0) {
+    const { data: insertedItems, error: itemsError } = await supabase
+      .from("lesson_items")
+      .insert(items.map(item => ({
+        lesson_id: data.id,
+        user_id: user.id,
+        term: item.term,
+        translation: item.translation || null,
+        type: item.type || "word",
+        context: item.context || null,
+        phonetic: item.phonetic || null,
+        my_sentence: item.my_sentence || null,
+      })))
+      .select()
+
+    if (itemsError) throw new Error(itemsError.message)
+
+    await supabase.from("flashcards").insert(
+      insertedItems.map(item => ({
+        user_id: user.id,
+        lesson_item_id: item.id,
+        front: item.term,
+        back: item.translation || item.term,
+        ease_factor: 2.5,
+        interval_days: 1,
+        next_review_at: new Date().toISOString(),
+      }))
+    )
+  }
 
   revalidatePath("/lessons")
   redirect(`/lessons/${data.id}`)

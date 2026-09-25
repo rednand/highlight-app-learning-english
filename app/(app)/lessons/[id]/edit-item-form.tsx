@@ -4,6 +4,7 @@ import { useState, useTransition } from "react"
 import { Pencil, X, Wand2, Trash2 } from "lucide-react"
 import { updateLessonItem, deleteLessonItem } from "../../../actions/items"
 import { fetchExampleSentence } from "../../../actions/examples"
+import { translateTerm } from "../../../actions/translate"
 import SpeakButton from "../../speak-button"
 
 type Item = {
@@ -45,9 +46,7 @@ export default function ItemCard({ item }: { item: Item }) {
     setTranslation("")
     setIsSuggesting(true)
     try {
-      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(term)}&langpair=en|pt`)
-      const json = await res.json()
-      const suggested = json?.responseData?.translatedText
+      const suggested = await translateTerm(term)
       if (suggested) setTranslation(suggested)
     } catch {
     } finally {
