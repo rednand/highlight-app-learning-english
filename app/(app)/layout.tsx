@@ -1,39 +1,79 @@
-import { createClient } from "../utils/supabase/server"
-import { redirect } from "next/navigation"
-import { signOut } from "../actions/lessons"
-import Image from "next/image"
-import { LayoutDashboard, BookOpen, RotateCcw, Map, Library, ScrollText } from "lucide-react"
-import NavLink from "./nav-link"
-import MobileNav from "./mobile-nav"
-import PushToggle from "./push-toggle"
-import StreakBadge from "./streak-badge"
-import { Toaster } from "sonner"
-import PwaInstallBanner from "../../components/pwa-install-banner"
+import { createClient } from "../utils/supabase/server";
+import { redirect } from "next/navigation";
+import { signOut } from "../actions/lessons";
+import Image from "next/image";
+import {
+  LayoutDashboard,
+  BookOpen,
+  RotateCcw,
+  Map,
+  Library,
+  ScrollText,
+} from "lucide-react";
+import NavLink from "./nav-link";
+import MobileNav from "./mobile-nav";
+import PushToggle from "./push-toggle";
+import StreakBadge from "./streak-badge";
+import { Toaster } from "sonner";
+import PwaInstallBanner from "../../components/pwa-install-banner";
 
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login")
+  if (!user) redirect("/login");
 
-  const initials = user.email?.slice(0, 2).toUpperCase() ?? "??"
+  const initials = user.email?.slice(0, 2).toUpperCase() ?? "??";
 
   return (
     <div className="flex h-screen bg-[#0a0a0a] text-white overflow-hidden">
       <aside className="hidden md:flex w-56 border-r border-white/5 flex-col shrink-0">
         <div className="px-5 py-5 border-b border-white/5">
           <div className="flex items-center gap-2">
-            <Image src="/icon.svg" alt="Highlight" width={24} height={24} className="rounded" />
-            <span className="font-bold tracking-tight">Highlight</span>
+            <Image
+              src="/highlight-logo.png"
+              alt="Highlight"
+              width={150}
+              height={24}
+              className="rounded"
+            />
           </div>
         </div>
 
         <nav className="flex-1 p-3 space-y-0.5">
-          <NavLink href="/" icon={<LayoutDashboard size={16} />} label="Início" exact />
-          <NavLink href="/lessons" icon={<BookOpen size={16} />} label="Aulas" />
-          <NavLink href="/media" icon={<Library size={16} />} label="Mídia" activeFor={["/movies", "/music", "/books"]} />
-          <NavLink href="/grammar" icon={<ScrollText size={16} />} label="Gramática" />
-          <NavLink href="/review" icon={<RotateCcw size={16} />} label="Revisar" />
+          <NavLink
+            href="/"
+            icon={<LayoutDashboard size={16} />}
+            label="Início"
+            exact
+          />
+          <NavLink
+            href="/lessons"
+            icon={<BookOpen size={16} />}
+            label="Aulas"
+          />
+          <NavLink
+            href="/media"
+            icon={<Library size={16} />}
+            label="Mídia"
+            activeFor={["/movies", "/music", "/books"]}
+          />
+          <NavLink
+            href="/grammar"
+            icon={<ScrollText size={16} />}
+            label="Gramática"
+          />
+          <NavLink
+            href="/review"
+            icon={<RotateCcw size={16} />}
+            label="Revisar"
+          />
           <NavLink href="/roadmap" icon={<Map size={16} />} label="Trilha" />
         </nav>
 
@@ -61,5 +101,5 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <PwaInstallBanner />
       <Toaster theme="dark" position="bottom-right" offset={80} />
     </div>
-  )
+  );
 }
