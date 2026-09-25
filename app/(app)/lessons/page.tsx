@@ -11,7 +11,7 @@ export default async function LessonsPage() {
 
   const { data: lessons } = await supabase
     .from("lessons")
-    .select("id, title, lesson_date, created_at")
+    .select("id, title, lesson_date, created_at, notes")
     .eq("user_id", user.id)
     .or("source_type.eq.lesson,source_type.is.null")
     .order("lesson_date", { ascending: false, nullsFirst: false })
@@ -19,17 +19,26 @@ export default async function LessonsPage() {
   const lessonIds = (lessons ?? []).map((l) => l.id)
 
   let countMap: Record<string, number> = {}
+  let previewMap: Record<string, string> = {}
   if (lessonIds.length > 0) {
-    const { data: counts } = await supabase
+    const { data: items } = await supabase
       .from("lesson_items")
-      .select("lesson_id")
+      .select("lesson_id, term, created_at")
       .in("lesson_id", lessonIds)
-    countMap = (counts ?? []).reduce(
+      .order("created_at", { ascending: true })
+    countMap = (items ?? []).reduce(
       (acc, item) => {
         acc[item.lesson_id] = (acc[item.lesson_id] || 0) + 1
         return acc
       },
       {} as Record<string, number>,
+    )
+    previewMap = (items ?? []).reduce(
+      (acc, item) => {
+        if (!acc[item.lesson_id]) acc[item.lesson_id] = item.term
+        return acc
+      },
+      {} as Record<string, string>,
     )
   }
 
@@ -41,6 +50,7 @@ export default async function LessonsPage() {
   const lessonsWithCounts = (lessons ?? []).map((l) => ({
     ...l,
     itemCount: countMap[l.id] ?? 0,
+    previewWord: previewMap[l.id] ?? null,
   }))
 
   return (

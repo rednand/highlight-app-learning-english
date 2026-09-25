@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createLesson } from "../../../actions/lessons"
 import MediaPicker from "../../lessons/new/media-picker"
+import SubmitButton from "../../../../components/submit-button"
 import type { TMDBResult } from "../../../actions/tmdb"
 
 type Selection = TMDBResult & { season?: number }
@@ -76,12 +77,12 @@ export default function NewMovieForm() {
             />
           </div>
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Criando..."
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
           >
             Criar sessão de estudo
-          </button>
+          </SubmitButton>
         </>
       )}
     </form>

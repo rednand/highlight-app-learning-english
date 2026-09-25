@@ -4,6 +4,8 @@ import { useState } from "react"
 import { createLesson } from "../../../actions/lessons"
 import MediaPicker from "./media-picker"
 import RoadmapPicker from "./roadmap-picker"
+import PendingItemsBuilder from "./pending-items-builder"
+import SubmitButton from "../../../../components/submit-button"
 import type { TMDBResult } from "../../../actions/tmdb"
 
 type Selection = TMDBResult & { season?: number }
@@ -31,10 +33,9 @@ export default function NewLessonForm() {
         </label>
         <input
           name="title"
-          required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder='Ex: Phrasal verbs com &ldquo;up&rdquo;'
+          placeholder="Ex: Phrasal verbs com &ldquo;up&rdquo; (opcional, usa a data se vazio)"
           className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
         />
       </div>
@@ -64,14 +65,16 @@ export default function NewLessonForm() {
         />
       </div>
 
+      <PendingItemsBuilder />
+
       <RoadmapPicker />
 
-      <button
-        type="submit"
+      <SubmitButton
+        pendingLabel="Criando..."
         className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
       >
         Criar Aula
-      </button>
+      </SubmitButton>
     </form>
   )
 }

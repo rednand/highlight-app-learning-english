@@ -4,6 +4,7 @@ import { useState, useTransition } from "react"
 import { FileText, X, Wand2, Plus, Check } from "lucide-react"
 import COMMON_WORDS from "./common-words"
 import { addLessonItem } from "../../../actions/items"
+import { translateTerm } from "../../../actions/translate"
 
 type ExtractedWord = {
   term: string
@@ -21,19 +22,6 @@ function extractUncommonWords(text: string): string[] {
     .filter(w => w.length > 3 && !COMMON_WORDS.has(w) && /^[a-z]/.test(w))
 
   return [...new Set(words)]
-}
-
-async function translateWord(term: string): Promise<string | undefined> {
-  try {
-    const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(term)}&langpair=en|pt`
-    )
-    const json = await res.json()
-    const t = json?.responseData?.translatedText
-    return t && t.toLowerCase() !== term.toLowerCase() ? t : undefined
-  } catch {
-    return undefined
-  }
 }
 
 export default function TranscriptExtractor({ lessonId }: { lessonId: string }) {
@@ -59,9 +47,9 @@ export default function TranscriptExtractor({ lessonId }: { lessonId: string }) 
       const batch = extracted.slice(i, i + BATCH)
       await Promise.all(
         batch.map(async term => {
-          const translation = await translateWord(term)
+          const translation = await translateTerm(term)
           setWords(prev =>
-            prev.map(w => w.term === term ? { ...w, translation, translating: false } : w)
+            prev.map(w => w.term === term ? { ...w, translation: translation ?? undefined, translating: false } : w)
           )
         })
       )
