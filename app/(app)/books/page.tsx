@@ -29,7 +29,7 @@ export default async function BooksPage() {
   }
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
           <Link href="/media" className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1 hover:text-yellow-200 transition-colors block">
@@ -69,7 +69,7 @@ export default async function BooksPage() {
                 href={`/lessons/${book.id}`}
                 className="group flex flex-col"
               >
-                <div className="relative aspect-[2/3] bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden mb-2 group-hover:border-yellow-400/20 transition-colors">
+                <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-2 group-hover:border-yellow-400/20 transition-colors">
                   {book.book_cover_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img

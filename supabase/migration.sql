@@ -195,3 +195,34 @@ DO $$ BEGIN
       WITH CHECK (auth.uid() = user_id);
   END IF;
 END $$;
+
+-- 12. Track when a flashcard was last reviewed (for the daily goal)
+ALTER TABLE flashcards
+  ADD COLUMN IF NOT EXISTS last_reviewed_at TIMESTAMPTZ;
+
+-- 13. AI grammar practice attempts
+CREATE TABLE IF NOT EXISTS practice_attempts (
+  id                     UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id                UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  rule_slug              TEXT        NOT NULL,
+  direction              TEXT        NOT NULL,
+  source_text            TEXT        NOT NULL,
+  reference_translation  TEXT        NOT NULL,
+  my_translation         TEXT        NOT NULL,
+  created_at             TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE practice_attempts ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'practice_attempts'
+    AND policyname = 'Users can manage their own practice attempts'
+  ) THEN
+    CREATE POLICY "Users can manage their own practice attempts"
+      ON practice_attempts FOR ALL TO authenticated
+      USING  (auth.uid() = user_id)
+      WITH CHECK (auth.uid() = user_id);
+  END IF;
+END $$;

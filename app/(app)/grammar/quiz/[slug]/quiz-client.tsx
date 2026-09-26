@@ -145,7 +145,7 @@ export default function QuizClient({
         />
       </div>
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5 mb-4">
+      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5 mb-4">
         <p className="text-white font-semibold text-base">{question.q}</p>
       </div>
 

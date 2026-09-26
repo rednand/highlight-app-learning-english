@@ -246,7 +246,7 @@ export default function ReviewClient({
             { icon: <CheckCircle size={15} className="text-green-400" />, value: `${avgDominio}%`, label: "Domínio médio" },
             { icon: <span className="text-base leading-none">🔥</span>, value: streak, label: "Dias seguidos" },
           ].map(({ icon, value, label }) => (
-            <div key={label} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+            <div key={label} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
               <div className="flex items-center gap-2 mb-2">{icon}</div>
               <p className="text-2xl font-bold text-white">{value}</p>
               <p className="text-xs text-gray-500 mt-0.5">{label}</p>
@@ -278,7 +278,7 @@ export default function ReviewClient({
         {cinemaTotal > 0 && (
           <button
             onClick={startCinema}
-            className="w-full flex items-center justify-between gap-3 p-4 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-white/10 transition-colors mb-6"
+            className="w-full flex items-center justify-between gap-3 p-4 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-white/10 transition-colors mb-6"
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0">
@@ -323,7 +323,7 @@ export default function ReviewClient({
             return (
               <div
                 key={lesson.id}
-                className="flex items-center gap-3 p-3 sm:p-4 bg-[#0f0f0f] border border-white/5 rounded-xl"
+                className="flex items-center gap-3 p-3 sm:p-4 bg-[#151515] border border-[#292929] rounded-[18px]"
               >
                 <div className="hidden sm:flex w-8 h-8 rounded-lg bg-yellow-400/10 items-center justify-center shrink-0">
                   <BookOpen size={14} className="text-yellow-400" />

@@ -29,7 +29,7 @@ export default async function MediaPage() {
   }
 
   return (
-    <div className="p-4 md:p-8 space-y-10">
+    <div className="pt-4 px-[18px] pb-6 md:p-8 space-y-10">
       <div>
         <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
         <h1 className="text-2xl font-bold text-white">Mídia</h1>
@@ -66,7 +66,7 @@ export default async function MediaPage() {
               const count = countMap[movie.id] ?? 0
               return (
                 <Link key={movie.id} href={`/lessons/${movie.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-[2/3] bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
                     {movie.tmdb_poster_path ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -128,7 +128,7 @@ export default async function MediaPage() {
               const count = countMap[track.id] ?? 0
               return (
                 <Link key={track.id} href={`/lessons/${track.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-square bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-square bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
                     {track.music_thumbnail_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -191,7 +191,7 @@ export default async function MediaPage() {
               const count = countMap[book.id] ?? 0
               return (
                 <Link key={book.id} href={`/lessons/${book.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-[2/3] bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
                     {book.book_cover_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img

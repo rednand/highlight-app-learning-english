@@ -156,7 +156,7 @@ export default function ItemCard({ item }: { item: Item }) {
   }
 
   return (
-    <div className="flex items-start gap-4 p-4 bg-[#0f0f0f] border border-white/5 rounded-xl">
+    <div className="flex items-start gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px]">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-white font-medium text-sm">{item.term}</p>

@@ -60,7 +60,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
 
       {/* Structure */}
       {rule.structure && (
-        <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4 mb-6">
+        <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 mb-6">
           <SectionTitle>Estrutura</SectionTitle>
           <p className="text-yellow-400 font-mono text-sm">{rule.structure}</p>
           {rule.negative && (
@@ -162,7 +162,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Modais</SectionTitle>
           <div className="space-y-2">
             {Object.entries(rule.modals).map(([modal, data]) => (
-              <div key={modal} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+              <div key={modal} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
                 <p className="text-yellow-400 font-mono font-bold text-sm mb-2">{modal}</p>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {data.usage.map((u, i) => (
@@ -184,7 +184,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Formas</SectionTitle>
           <div className="space-y-3">
             {Object.entries(rule.forms).map(([formKey, data]) => (
-              <div key={formKey} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+              <div key={formKey} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
                 <p className="text-yellow-400 font-mono text-xs font-bold mb-1">{data.structure}</p>
                 <p className="text-gray-400 text-xs mb-2">{data.usage}</p>
                 {data.examples.map((ex, i) => (
@@ -202,7 +202,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Verbos com duplo significado</SectionTitle>
           <div className="space-y-3">
             {Object.entries(rule.both_with_meaning_change).map(([verb, data]) => (
-              <div key={verb} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+              <div key={verb} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
                 <p className="text-yellow-400 font-bold text-sm mb-2">{verb}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="bg-white/5 rounded-lg p-2.5">
@@ -244,7 +244,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Tipos</SectionTitle>
           <div className="space-y-4">
             {Object.entries(rule.types).map(([typeKey, data]) => (
-              <div key={typeKey} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+              <div key={typeKey} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
                 <p className="text-white text-sm font-bold capitalize mb-1">
                   {typeKey.replace(/_/g, " ")}
                 </p>

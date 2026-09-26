@@ -80,7 +80,7 @@ export default async function ReviewPage() {
     .reduce((sum, l) => sum + (lessonStats[l.id]?.dueCount ?? 0), 0)
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="mb-8">
         <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">REVISÃO</p>
         <h1 className="text-2xl font-bold text-white">Flashcards</h1>

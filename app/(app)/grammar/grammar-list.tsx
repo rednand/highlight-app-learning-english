@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { Sparkles } from "lucide-react"
 import type { GrammarRule } from "./types"
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -34,30 +35,39 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
   const filtered = active === "all" ? rules : rules.filter((r) => r.category === active)
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="flex items-start justify-between mb-8">
+    <div className="pt-4 px-[18px] pb-6 md:p-8">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
         <div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
           <h1 className="text-2xl font-bold text-white">Gramática</h1>
-          <p className="text-gray-500 text-sm mt-1">{rules.length} regras · clique para ver detalhes</p>
+          <p className="text-[#8B8B98] text-sm mt-1">{rules.length} regras · clique para ver detalhes</p>
         </div>
-        <Link
-          href="/grammar/quiz"
-          className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2 rounded-full transition-colors shrink-0"
-        >
-          Fazer Quiz
-        </Link>
+        <div className="grid grid-cols-2 md:flex md:items-center gap-2 md:shrink-0">
+          <Link
+            href="/grammar/practice"
+            className="flex items-center justify-center gap-2 bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
+          >
+            <Sparkles size={14} className="text-yellow-400" />
+            Praticar com IA
+          </Link>
+          <Link
+            href="/grammar/quiz"
+            className="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
+          >
+            Fazer Quiz
+          </Link>
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex gap-2 mb-6 pb-2 overflow-x-auto -mx-[18px] px-[18px] md:mx-0 md:px-0 md:pb-0 md:flex-wrap md:overflow-visible [scrollbar-width:thin] [scrollbar-color:#292929_transparent]">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActive(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors border ${
+            className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-colors border ${
               active === cat
                 ? "bg-yellow-400 text-black border-yellow-400"
-                : "bg-transparent text-gray-500 border-white/10 hover:border-white/20 hover:text-white"
+                : "bg-transparent text-[#8B8B98] border-[#292929] hover:border-white/20 hover:text-white"
             }`}
           >
             {cat === "all" ? "Todos" : CATEGORY_LABELS[cat] ?? cat}
@@ -70,7 +80,7 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
           <Link
             key={rule.slug}
             href={`/grammar/${rule.slug}`}
-            className="group bg-[#0f0f0f] border border-white/5 rounded-xl p-4 hover:border-yellow-400/20 transition-all"
+            className="group bg-[#151515] border border-[#292929] rounded-[18px] p-4 hover:border-yellow-400/30 transition-all"
           >
             <div className="flex items-start justify-between gap-2 mb-2">
               <h2 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors leading-snug">

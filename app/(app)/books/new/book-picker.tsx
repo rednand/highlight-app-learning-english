@@ -103,7 +103,7 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
               key={b.id}
               type="button"
               onClick={() => pick(b)}
-              className="w-full flex items-center gap-3 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 transition-all text-left"
+              className="w-full flex items-center gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all text-left"
             >
               {b.coverUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element

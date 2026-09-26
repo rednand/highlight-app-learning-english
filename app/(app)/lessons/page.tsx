@@ -54,7 +54,7 @@ export default async function LessonsPage() {
   }))
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>

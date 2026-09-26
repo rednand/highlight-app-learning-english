@@ -97,7 +97,7 @@ export default function MusicPicker({ onSelectAction }: { onSelectAction: (s: Tr
               key={r.trackId}
               type="button"
               onClick={() => pick(r)}
-              className="w-full flex items-center gap-3 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 transition-all text-left"
+              className="w-full flex items-center gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all text-left"
             >
               {r.artworkUrl100 ? (
                 // eslint-disable-next-line @next/next/no-img-element

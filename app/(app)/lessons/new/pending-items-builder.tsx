@@ -95,7 +95,7 @@ export default function PendingItemsBuilder() {
       {items.length > 0 && (
         <ul className="space-y-2">
           {items.map((item, i) => (
-            <li key={i} className="flex items-center justify-between gap-3 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl">
+            <li key={i} className="flex items-center justify-between gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px]">
               <div className="min-w-0">
                 <p className="text-white text-sm truncate">
                   {item.term}

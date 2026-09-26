@@ -54,7 +54,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       <EditLessonForm lesson={{ id, title: lesson.title, lesson_date: lesson.lesson_date, notes: lesson.notes, roadmap_key: lesson.roadmap_key }} />
 
       {lesson.source_type === "music" && lesson.music_artist && (
-        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
           {lesson.music_thumbnail_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={lesson.music_thumbnail_url} alt={lesson.title} className="w-12 h-12 rounded-lg object-cover shrink-0" />
@@ -71,7 +71,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       )}
 
       {lesson.source_type === "book" && lesson.book_author && (
-        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
           {lesson.book_cover_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={lesson.book_cover_url} alt={lesson.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
@@ -88,7 +88,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       )}
 
       {lesson.tmdb_poster_path && (
-        <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl mb-6">
+        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
           <Image
             src={`https://image.tmdb.org/t/p/w92${lesson.tmdb_poster_path}`}
             alt={lesson.title}
@@ -129,7 +129,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           )
         })()}
         {lesson.notes && (
-          <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-wrap bg-[#0f0f0f] border border-white/5 rounded-xl px-4 py-3">
+          <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-wrap bg-[#151515] border border-[#292929] rounded-[18px] px-4 py-3">
             {lesson.notes}
           </p>
         )}

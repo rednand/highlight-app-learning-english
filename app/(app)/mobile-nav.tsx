@@ -70,7 +70,7 @@ export default function MobileNav() {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-t border-white/5 flex md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#0a0a0a]/95 backdrop-blur border-t border-white/10 flex md:hidden pb-[env(safe-area-inset-bottom)]">
         {mainLinks.map(({ href, icon: Icon, label, exact, activeFor }) => {
           const isActive = exact
             ? pathname === href
@@ -79,12 +79,18 @@ export default function MobileNav() {
             <Link
               key={href}
               href={href}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 text-[9px] font-bold tracking-wide transition-colors ${
-                isActive ? "text-yellow-400" : "text-gray-600"
-              }`}
+              className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
             >
-              <Icon size={18} />
-              {label}
+              <span className={`flex items-center justify-center w-11 h-7 rounded-full transition-colors ${
+                isActive ? "bg-yellow-400/15 text-yellow-400" : "text-gray-500"
+              }`}>
+                <Icon size={18} />
+              </span>
+              <span className={`text-[10px] font-bold tracking-wide transition-colors ${
+                isActive ? "text-yellow-400" : "text-gray-600"
+              }`}>
+                {label}
+              </span>
             </Link>
           )
         })}
@@ -92,12 +98,18 @@ export default function MobileNav() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 text-[9px] font-bold tracking-wide transition-colors ${
-            isMoreActive || open ? "text-yellow-400" : "text-gray-600"
-          }`}
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
         >
-          <Menu size={18} />
-          Mais
+          <span className={`flex items-center justify-center w-11 h-7 rounded-full transition-colors ${
+            isMoreActive || open ? "bg-yellow-400/15 text-yellow-400" : "text-gray-500"
+          }`}>
+            <Menu size={18} />
+          </span>
+          <span className={`text-[10px] font-bold tracking-wide transition-colors ${
+            isMoreActive || open ? "text-yellow-400" : "text-gray-600"
+          }`}>
+            Mais
+          </span>
         </button>
       </nav>
     </>
