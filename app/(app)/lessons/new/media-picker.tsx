@@ -95,7 +95,7 @@ export default function MediaPicker({ onSelect }: { onSelect: (s: Selection | nu
               key={`${r.tmdb_type}-${r.tmdb_id}`}
               type="button"
               onClick={() => pick(r)}
-              className="flex items-center gap-3 p-3 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 transition-all text-left"
+              className="flex items-center gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all text-left"
             >
               {r.poster_path ? (
                 <Image src={posterUrl(r.poster_path)} alt={r.title} width={32} height={48} className="rounded object-cover shrink-0" />

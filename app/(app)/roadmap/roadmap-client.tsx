@@ -64,7 +64,7 @@ export default function RoadmapClient({
         ))}
       </div>
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-5">
+      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-yellow-400/10 flex items-center justify-center">
@@ -92,7 +92,7 @@ export default function RoadmapClient({
           const temaPct = temaTotal > 0 ? Math.round((temaDone / temaTotal) * 100) : 0
 
           return (
-            <div key={tema} className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+            <div key={tema} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{label}</span>
                 <span className="text-[10px] text-gray-500">
@@ -146,7 +146,7 @@ export default function RoadmapClient({
         })}
       </div>
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-xl p-4">
+      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
         <p className="text-xs font-bold text-gray-400 mb-3">Legenda</p>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2 text-xs text-gray-400">

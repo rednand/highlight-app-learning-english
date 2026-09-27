@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "../utils/supabase/server"
+import { revalidatePath } from "next/cache"
 import { computeStreak, computeNewDays, todayAndYesterday } from "../lib/streak-utils"
 
 export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean) {
@@ -104,7 +105,8 @@ export async function updateFlashcard(
   update: { ease_factor: number; interval_days: number; next_review_at: string },
 ) {
   const supabase = await createClient()
-  await supabase.from("flashcards").update(update).eq("id", id)
+  await supabase.from("flashcards").update({ ...update, last_reviewed_at: new Date().toISOString() }).eq("id", id)
+  revalidatePath("/")
 }
 
 export async function getStreak(): Promise<number> {

@@ -2,6 +2,7 @@ import { createClient } from "../utils/supabase/server";
 import { redirect } from "next/navigation";
 import { signOut } from "../actions/lessons";
 import Image from "next/image";
+import Link from "next/link";
 import {
   LayoutDashboard,
   BookOpen,
@@ -9,6 +10,7 @@ import {
   Map,
   Library,
   ScrollText,
+  Plus,
 } from "lucide-react";
 import NavLink from "./nav-link";
 import MobileNav from "./mobile-nav";
@@ -39,9 +41,9 @@ export default async function AppLayout({
             <Image
               src="/highlight-logo.png"
               alt="Highlight"
-              width={150}
-              height={24}
-              className="rounded"
+              width={110}
+              height={32}
+              className="h-8 w-auto rounded"
             />
           </div>
         </div>
@@ -78,6 +80,15 @@ export default async function AppLayout({
         </nav>
 
         <StreakBadge />
+        <div className="p-3">
+          <Link
+            href="/lessons/new"
+            className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+          >
+            <Plus size={15} />
+            Nova Aula
+          </Link>
+        </div>
         <div className="p-4 border-t border-white/5">
           <div className="flex items-center gap-2.5 mb-3">
             <div className="w-7 h-7 rounded-full bg-yellow-400/20 text-yellow-400 flex items-center justify-center text-xs font-bold shrink-0">
@@ -96,7 +107,9 @@ export default async function AppLayout({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto pb-16 md:pb-0">{children}</main>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <main className="flex-1 overflow-auto pb-20 md:pb-0">{children}</main>
+      </div>
       <MobileNav />
       <PwaInstallBanner />
       <Toaster theme="dark" position="bottom-right" offset={80} />

@@ -58,7 +58,7 @@ export default async function QuizListPage() {
   const total = (quizData as QuizEntry[]).length
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="pt-4 px-[18px] pb-6 md:p-8">
       <Link
         href="/grammar"
         className="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition-colors w-fit"

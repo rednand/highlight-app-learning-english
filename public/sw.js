@@ -3,8 +3,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title ?? "Highlight", {
       body: data.body,
-      icon: data.icon ?? "/highlight-highlight-icon.png",
-      badge: "/highlight-highlight-icon.png",
+      icon: data.icon ?? "/highlight-icon.png",
+      badge: "/highlight-icon.png",
       data: { url: data.url ?? "/" },
     }),
   );

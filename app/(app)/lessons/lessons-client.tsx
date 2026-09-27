@@ -38,10 +38,10 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
             placeholder="Buscar aulas..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#0f0f0f] border border-white/5 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400/30 transition-colors"
+            className="w-full bg-[#151515] border border-[#292929] rounded-[18px] pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400/30 transition-colors"
           />
         </div>
-        <div className="flex items-center gap-1 bg-[#0f0f0f] border border-white/5 rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-[#151515] border border-[#292929] rounded-[18px] p-1">
           <button
             onClick={() => setView("grid")}
             className={`p-1.5 rounded-lg transition-colors ${
@@ -84,7 +84,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
               <Link
                 key={lesson.id}
                 href={`/lessons/${lesson.id}`}
-                className="flex items-center gap-4 p-4 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 transition-all group"
+                className="flex items-center gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all group"
               >
                 <div className="w-8 h-8 rounded-lg bg-yellow-400/10 flex items-center justify-center shrink-0">
                   <BookOpen size={14} className="text-yellow-400" />
@@ -106,7 +106,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
             <Link
               key={lesson.id}
               href={`/lessons/${lesson.id}`}
-              className="block p-5 bg-[#0f0f0f] border border-white/5 rounded-xl hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
+              className="block p-5 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
             >
               <div className="w-9 h-9 rounded-xl bg-yellow-400/10 flex items-center justify-center mb-4">
                 <BookOpen size={16} className="text-yellow-400" />
