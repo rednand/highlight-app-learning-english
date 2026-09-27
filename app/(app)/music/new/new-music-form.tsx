@@ -4,6 +4,7 @@ import { useState } from "react"
 import { createLesson } from "../../../actions/lessons"
 import MusicPicker from "./music-picker"
 import SubmitButton from "../../../../components/submit-button"
+import PendingItemsBuilder from "../../lessons/new/pending-items-builder"
 
 type TrackResult = {
   trackId: number
@@ -77,11 +78,13 @@ export default function NewMusicForm() {
             />
           </div>
 
+          <PendingItemsBuilder />
+
           <SubmitButton
-            pendingLabel="Criando..."
+            pendingLabel="Salvando..."
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
           >
-            Criar sessão de estudo
+            Salvar anotações
           </SubmitButton>
         </>
       )}

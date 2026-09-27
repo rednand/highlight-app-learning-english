@@ -22,12 +22,13 @@ export async function searchTMDB(query: string): Promise<{ results: TMDBResult[]
   const key = process.env.TMDB_API_KEY
   if (!key || !query.trim()) return { results: [] }
 
-  const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}&language=pt-BR&page=1`
+  const isBearerToken = key.startsWith("eyJ")
+  const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}&language=pt-BR&page=1${isBearerToken ? "" : `&api_key=${key}`}`
 
   try {
     const res = await fetch(url, {
       next: { revalidate: 3600 },
-      headers: { Authorization: `Bearer ${key}` },
+      headers: isBearerToken ? { Authorization: `Bearer ${key}` } : undefined,
     })
     if (!res.ok) return { results: [] }
 
