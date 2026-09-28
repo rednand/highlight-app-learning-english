@@ -83,9 +83,11 @@ export default function PendingItemsBuilder() {
     setItems(prev => prev.filter((_, i) => i !== index))
   }
 
+  const draft = term.trim() ? [{ term, translation, type, context, phonetic, my_sentence: mySentence }] : []
+
   return (
     <div className="space-y-3">
-      <input type="hidden" name="items" value={JSON.stringify(items)} />
+      <input type="hidden" name="items" value={JSON.stringify([...items, ...draft])} />
 
       <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
         Palavras / expressões{" "}
@@ -116,6 +118,7 @@ export default function PendingItemsBuilder() {
           <input
             value={term}
             onChange={e => setTerm(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addItem() } }}
             placeholder="Palavra / expressão"
             className={inputClass}
           />
