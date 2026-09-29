@@ -66,29 +66,29 @@ describe("MobileNav", () => {
   it("Início ativo quando pathname é '/'", () => {
     mockPathname.mockReturnValue("/")
     render(<MobileNav />)
-    const link = screen.getByText("Início").closest("a")
-    expect(link).toHaveClass("text-yellow-400")
+    const label = screen.getByText("Início")
+    expect(label).toHaveClass("text-yellow-400")
   })
 
   it("Aulas ativo quando pathname começa com /lessons", () => {
     mockPathname.mockReturnValue("/lessons")
     render(<MobileNav />)
-    const link = screen.getByText("Aulas").closest("a")
-    expect(link).toHaveClass("text-yellow-400")
+    const label = screen.getByText("Aulas")
+    expect(label).toHaveClass("text-yellow-400")
   })
 
   it("Revisar ativo quando pathname começa com /review", () => {
     mockPathname.mockReturnValue("/review")
     render(<MobileNav />)
-    const link = screen.getByText("Revisar").closest("a")
-    expect(link).toHaveClass("text-yellow-400")
+    const label = screen.getByText("Revisar")
+    expect(label).toHaveClass("text-yellow-400")
   })
 
   it("Início não ativo em outras rotas", () => {
     mockPathname.mockReturnValue("/lessons")
     render(<MobileNav />)
-    const link = screen.getByText("Início").closest("a")
-    expect(link).not.toHaveClass("text-yellow-400")
+    const label = screen.getByText("Início")
+    expect(label).not.toHaveClass("text-yellow-400")
   })
 
   it("clicar em link do menu Mais fecha o menu", () => {
