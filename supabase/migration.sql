@@ -226,3 +226,7 @@ DO $$ BEGIN
       WITH CHECK (auth.uid() = user_id);
   END IF;
 END $$;
+
+-- 14. Store AI correction feedback for practice attempts
+ALTER TABLE practice_attempts
+  ADD COLUMN IF NOT EXISTS ai_feedback TEXT;

@@ -5,6 +5,7 @@ vi.mock("../app/utils/supabase/server", () => ({ createClient: vi.fn() }))
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
 
 import { createClient } from "../app/utils/supabase/server"
+import { revalidatePath } from "next/cache"
 const mockCreateClient = vi.mocked(createClient)
 
 function makeBuilder(overrides: Record<string, unknown> = {}) {
@@ -239,7 +240,8 @@ describe("updateFlashcard", () => {
     mockCreateClient.mockResolvedValue(supa as never)
     const update = { ease_factor: 2.6, interval_days: 6, next_review_at: new Date().toISOString() }
     await updateFlashcard("card-1", update)
-    expect(b.update).toHaveBeenCalledWith(update)
+    expect(b.update).toHaveBeenCalledWith({ ...update, last_reviewed_at: expect.any(String) })
     expect(b.eq).toHaveBeenCalledWith("id", "card-1")
+    expect(revalidatePath).toHaveBeenCalledWith("/")
   })
 })

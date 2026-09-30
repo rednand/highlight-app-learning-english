@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { ArrowLeft, Sparkles, Eye, RefreshCw, Shuffle, Save } from "lucide-react"
+import { ArrowLeft, Sparkles, Eye, RefreshCw, Shuffle, Save, History } from "lucide-react"
 import { generatePracticeText, savePracticeAttempt, type PracticeText } from "../../../actions/practice"
 import type { GrammarRule } from "../types"
 
@@ -104,10 +104,19 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
 
   return (
     <div className="pt-4 px-[18px] pb-6 md:p-8 max-w-2xl mx-auto">
-      <Link href="/grammar" className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors mb-4">
-        <ArrowLeft size={12} />
-        Voltar
-      </Link>
+      <div className="flex items-center justify-between mb-4">
+        <Link href="/grammar" className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors">
+          <ArrowLeft size={12} />
+          Voltar
+        </Link>
+        <Link
+          href="/grammar/practice/history"
+          className="inline-flex items-center gap-1.5 bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+        >
+          <History size={13} className="text-yellow-400" />
+          Histórico
+        </Link>
+      </div>
 
       <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
       <h1 className="text-2xl font-bold text-white mb-1">Praticar com IA</h1>

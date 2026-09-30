@@ -147,3 +147,64 @@ describe("deleteLesson", () => {
     expect(mockRedirect).toHaveBeenCalledWith("/lessons")
   })
 })
+
+// ─── createLesson: título automático e palavras ──────────────────────────────
+
+describe("createLesson com palavras", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  function makeMultiTable(itemsResult: { data: unknown; error: { message: string } | null }) {
+    const lessonsB = makeBuilder({ data: { id: "lesson-1" }, error: null })
+    const itemsSelect = vi.fn().mockResolvedValue(itemsResult)
+    const itemsB = { insert: vi.fn().mockReturnValue({ select: itemsSelect }) }
+    const cardsB = { insert: vi.fn().mockResolvedValue({ error: null }) }
+    const supa = {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: "u1" } } }) },
+      from: vi.fn((table: string) => (table === "lessons" ? lessonsB : table === "lesson_items" ? itemsB : cardsB)),
+    }
+    return { supa, lessonsB, itemsB, cardsB }
+  }
+
+  it("usa a data da aula como título quando ele vem vazio", async () => {
+    const { supa, lessonsB } = makeMultiTable({ data: [], error: null })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(createLesson(fd({ title: "  ", lesson_date: "2026-09-25" }))).rejects.toThrow("NEXT_REDIRECT")
+    expect(lessonsB.insert).toHaveBeenCalledWith(expect.objectContaining({ title: "25/09/2026" }))
+  })
+
+  it("insere as palavras válidas e cria um flashcard para cada uma", async () => {
+    const { supa, itemsB, cardsB } = makeMultiTable({
+      data: [{ id: "i1", term: "sullen", translation: "mal-humorado" }],
+      error: null,
+    })
+    mockCreateClient.mockResolvedValue(supa as never)
+    const items = JSON.stringify([
+      { term: "sullen", translation: "mal-humorado", type: "word", context: "", phonetic: "", my_sentence: "" },
+      { term: "   " },
+      "lixo",
+    ])
+    await expect(createLesson(fd({ title: "Aula", items }))).rejects.toThrow("NEXT_REDIRECT")
+
+    const inserted = itemsB.insert.mock.calls[0][0]
+    expect(inserted).toHaveLength(1)
+    expect(inserted[0]).toEqual(expect.objectContaining({ lesson_id: "lesson-1", user_id: "u1", term: "sullen", context: null }))
+    expect(cardsB.insert).toHaveBeenCalledWith([
+      expect.objectContaining({ lesson_item_id: "i1", front: "sullen", back: "mal-humorado", user_id: "u1" }),
+    ])
+    expect(mockRedirect).toHaveBeenCalledWith("/lessons/lesson-1")
+  })
+
+  it("ignora a lista de palavras quando o JSON é inválido", async () => {
+    const { supa, itemsB } = makeMultiTable({ data: [], error: null })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(createLesson(fd({ title: "Aula", items: "{quebrado" }))).rejects.toThrow("NEXT_REDIRECT")
+    expect(itemsB.insert).not.toHaveBeenCalled()
+  })
+
+  it("lança erro quando falha ao inserir as palavras", async () => {
+    const { supa } = makeMultiTable({ data: null, error: { message: "items error" } })
+    mockCreateClient.mockResolvedValue(supa as never)
+    const items = JSON.stringify([{ term: "sullen" }])
+    await expect(createLesson(fd({ title: "Aula", items }))).rejects.toThrow("items error")
+  })
+})
