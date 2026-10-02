@@ -65,6 +65,14 @@ export async function addLessonItems(lessonId: string, text: string) {
     .map((line) => parseBulkLine(line))
     .filter((row): row is { term: string; translation: string } => row !== null)
 
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("id")
+    .eq("id", lessonId)
+    .eq("user_id", user.id)
+    .single()
+  if (!lesson) throw new Error("Aula não encontrada")
+
   if (parsed.length === 0) throw new Error("Digite pelo menos uma palavra")
   if (parsed.length > 50) throw new Error("Máximo de 50 palavras por vez")
 
@@ -91,7 +99,7 @@ export async function addLessonItems(lessonId: string, text: string) {
   if (error) throw new Error(error.message)
 
   const now = new Date().toISOString()
-  await supabase.from("flashcards").insert(
+  const { error: cardsError } = await supabase.from("flashcards").insert(
     items.map((item) => ({
       user_id: user.id,
       lesson_item_id: item.id,
@@ -102,6 +110,7 @@ export async function addLessonItems(lessonId: string, text: string) {
       next_review_at: now,
     }))
   )
+  if (cardsError) throw new Error(cardsError.message)
 
   revalidatePath(`/lessons/${lessonId}`)
   return items.length
