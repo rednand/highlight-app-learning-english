@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition, useEffect } from "react"
 import { Plus, X, Wand2, Mic, MicOff } from "lucide-react"
-import { addLessonItem } from "../../../actions/items"
+import { addLessonItem, addLessonItems } from "../../../actions/items"
 import { fetchExampleSentence } from "../../../actions/examples"
 import { translateTerm } from "../../../actions/translate"
 
@@ -20,6 +20,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
   const [phonetic, setPhonetic] = useState("")
   const [mySentence, setMySentence] = useState("")
   const [isListening, setIsListening] = useState(false)
+  const [bulk, setBulk] = useState(false)
+  const [bulkText, setBulkText] = useState("")
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
@@ -39,6 +41,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     setContext("")
     setPhonetic("")
     setMySentence("")
+    setBulk(false)
+    setBulkText("")
     setExampleError(false)
     setTranslationError(false)
   }
@@ -100,7 +104,8 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
     setError(null)
     startTransition(async () => {
       try {
-        await addLessonItem(fd)
+        if (bulk) await addLessonItems(lessonId, bulkText)
+        else await addLessonItem(fd)
         closeModal()
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Erro ao salvar")
@@ -139,7 +144,40 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
 
             <input type="hidden" name="lesson_id" value={lessonId} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-1 p-1 bg-[#0a0a0a] border border-white/10 rounded-full">
+              <button
+                type="button"
+                onClick={() => setBulk(false)}
+                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${!bulk ? "bg-yellow-400 text-black" : "text-gray-500 hover:text-white"}`}
+              >
+                Uma palavra
+              </button>
+              <button
+                type="button"
+                onClick={() => setBulk(true)}
+                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${bulk ? "bg-yellow-400 text-black" : "text-gray-500 hover:text-white"}`}
+              >
+                Várias de uma vez
+              </button>
+            </div>
+
+            {bulk && (
+              <div className="space-y-2">
+                <textarea
+                  rows={8}
+                  placeholder={"Uma por linha. Tradução é opcional:\nhang out = sair com amigos\nreluctant\nkeep an eye on - ficar de olho em"}
+                  value={bulkText}
+                  onChange={e => setBulkText(e.target.value)}
+                  className={`${inputClass} resize-none`}
+                  autoFocus
+                />
+                <p className="text-xs text-gray-600">
+                  Use &ldquo;=&rdquo; ou &ldquo; - &rdquo; para separar a tradução. Sem tradução, ela é sugerida automaticamente.
+                </p>
+              </div>
+            )}
+
+            {!bulk && <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="relative">
                 <input
                   name="term"
@@ -179,9 +217,9 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
                   <Wand2 size={14} className={isSuggesting ? "animate-pulse" : ""} />
                 </button>
               </div>
-            </div>
+            </div>}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {!bulk && <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <select
                 name="type"
                 defaultValue="word"
@@ -209,39 +247,41 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
                   <Wand2 size={14} className={isFetchingExample ? "animate-pulse" : ""} />
                 </button>
               </div>
-            </div>
+            </div>}
 
             <input type="hidden" name="phonetic" value={phonetic} />
 
-            {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
-            {translationError && (
+            {!bulk && phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+            {!bulk && translationError && (
               <p className="text-xs text-gray-500">
                 Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
               </p>
             )}
-            {exampleError && (
+            {!bulk && exampleError && (
               <p className="text-xs text-gray-500">
                 Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
               </p>
             )}
 
-            <textarea
-              name="my_sentence"
-              rows={2}
-              placeholder="Minha frase (opcional) — escreva uma frase sua usando essa palavra"
-              value={mySentence}
-              onChange={e => setMySentence(e.target.value)}
-              className={`${inputClass} resize-none`}
-            />
+            {!bulk && (
+              <textarea
+                name="my_sentence"
+                rows={2}
+                placeholder="Minha frase (opcional) — escreva uma frase sua usando essa palavra"
+                value={mySentence}
+                onChange={e => setMySentence(e.target.value)}
+                className={`${inputClass} resize-none`}
+              />
+            )}
 
             {error && <p className="text-xs text-red-400">{error}</p>}
 
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || (bulk && !bulkText.trim())}
               className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
             >
-              {isPending ? "Salvando…" : "Salvar"}
+              {isPending ? "Salvando…" : bulk ? "Salvar todas" : "Salvar"}
             </button>
           </form>
         </div>

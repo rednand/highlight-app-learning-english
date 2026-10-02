@@ -18,6 +18,7 @@ import PushToggle from "./push-toggle";
 import StreakBadge from "./streak-badge";
 import { Toaster } from "sonner";
 import PwaInstallBanner from "../../components/pwa-install-banner";
+import WatchSessionResume from "../../components/watch-session-resume";
 
 export default async function AppLayout({
   children,
@@ -112,6 +113,7 @@ export default async function AppLayout({
       </div>
       <MobileNav />
       <PwaInstallBanner />
+      <WatchSessionResume />
       <Toaster theme="dark" position="bottom-right" offset={80} />
     </div>
   );
