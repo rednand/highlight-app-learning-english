@@ -8,6 +8,7 @@ import TranscriptExtractor from "./transcript-extractor"
 import EditLessonForm from "./edit-lesson-form"
 import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
+import WatchSessionToggle from "../../../../components/watch-session-toggle"
 
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
@@ -159,6 +160,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
         )}
 
         <div className="space-y-2">
+          {lesson.source_type === "movie" && <WatchSessionToggle lessonId={id} />}
           <AddItemForm lessonId={id} />
           <TranscriptExtractor lessonId={id} />
         </div>

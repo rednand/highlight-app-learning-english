@@ -4,6 +4,7 @@ async function translateWithMyMemory(q: string): Promise<string | null> {
   const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=en|pt`)
   if (!res.ok) return null
   const json = await res.json()
+  if (Number(json?.responseStatus) !== 200) return null
   const translated = json?.responseData?.translatedText
   return translated && translated.toLowerCase() !== q.toLowerCase() ? translated : null
 }

@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { deleteLesson } from "../../../actions/lessons"
 import { deleteLessonItem } from "../../../actions/items"
+import { endWatchSession, getWatchSessionLessonId } from "../../../lib/watch-session"
 
 export function DeleteLessonButton({ lessonId }: { lessonId: string }) {
   const [isPending, startTransition] = useTransition()
@@ -14,7 +15,10 @@ export function DeleteLessonButton({ lessonId }: { lessonId: string }) {
       description: "Todas as palavras também serão removidas.",
       action: {
         label: "Excluir",
-        onClick: () => startTransition(() => deleteLesson(lessonId)),
+        onClick: () => {
+          if (getWatchSessionLessonId() === lessonId) endWatchSession()
+          startTransition(() => deleteLesson(lessonId))
+        },
       },
     })
   }
