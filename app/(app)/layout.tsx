@@ -95,7 +95,12 @@ export default async function AppLayout({
             <div className="w-7 h-7 rounded-full bg-yellow-400/20 text-yellow-400 flex items-center justify-center text-xs font-bold shrink-0">
               {initials}
             </div>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            <Link
+              href="/account"
+              className="text-xs text-gray-500 truncate hover:text-white transition-colors"
+            >
+              {user.email}
+            </Link>
           </div>
           <div className="flex items-center gap-3">
             <PushToggle />

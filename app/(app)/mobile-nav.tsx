@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, BookOpen, RotateCcw, ScrollText, Menu, Library, Map, X } from "lucide-react"
+import { LayoutDashboard, BookOpen, RotateCcw, ScrollText, Menu, Library, Map, UserRound, X } from "lucide-react"
 import { useState } from "react"
 
 const mainLinks = [
@@ -15,6 +15,7 @@ const mainLinks = [
 
 const moreLinks = [
   { href: "/roadmap", icon: Map, label: "Trilha", activeFor: [] as string[] },
+  { href: "/account", icon: UserRound, label: "Conta", activeFor: [] as string[] },
 ]
 
 export default function MobileNav() {
