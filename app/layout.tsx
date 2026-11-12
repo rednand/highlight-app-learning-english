@@ -5,7 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Highlight",
-  description: "Registre suas aulas e aprenda inglês com flashcards.",
+  description: "Aprenda inglês com filmes, séries, músicas e livros, e revise com flashcards.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
