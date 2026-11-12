@@ -95,7 +95,7 @@ export default async function ReviewPage({ searchParams }: { searchParams: Promi
         lessonStats={lessonStats}
         cinemaTotal={cinemaTotal}
         initialStreak={initialStreak}
-        initialLessonId={requestedLesson && lessonStats[requestedLesson] ? requestedLesson : null}
+        initialLessonId={requestedLesson && (lessons ?? []).some((l) => l.id === requestedLesson) ? requestedLesson : null}
       />
     </div>
   )

@@ -17,24 +17,8 @@ import SpeakButton from "../speak-button"
 import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel } from "../../lib/review-utils"
 import type { Grade, LessonStat, ChoiceOption, SelectionState } from "../../lib/review-utils"
 import MultipleChoiceOptions from "../../../components/review/multiple-choice-options"
-import { splitByTerm, contextLabel } from "../../lib/context-utils"
-
-function ContextSentence({ label, sentence, term }: { label: string; sentence: string; term: string }) {
-  return (
-    <div className="bg-white/5 rounded-xl px-4 py-3 text-left">
-      <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">{label}</p>
-      <p className="text-gray-300 text-sm italic">
-        &ldquo;
-        {splitByTerm(sentence, term).map((part, i) =>
-          part.match
-            ? <strong key={i} className="text-yellow-400 not-italic font-semibold">{part.text}</strong>
-            : <span key={i}>{part.text}</span>,
-        )}
-        &rdquo;
-      </p>
-    </div>
-  )
-}
+import ContextSentence from "../../../components/review/context-sentence"
+import { contextLabel } from "../../lib/context-utils"
 
 type MediaContext = {
   title: string
@@ -103,6 +87,7 @@ export default function ReviewClient({
   const [streak, setStreak] = useState(initialStreak)
   const [cardMode, setCardMode] = useState<"standard" | "cinema">("standard")
   const [insufficientPool, setInsufficientPool] = useState(false)
+  const [practiceOnly, setPracticeOnly] = useState(false)
   const skipMapRef = useRef<Map<string, number>>(new Map())
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const autoStartedRef = useRef(false)
@@ -149,26 +134,38 @@ export default function ReviewClient({
     skipMapRef.current = new Map()
   }
 
+  function backToFilter() {
+    setLoading(false)
+    setStep("filter")
+  }
+
   function startReview(lessonId: string | null) {
     setCardMode("standard")
     setSelectedLesson(lessonId)
+    setPracticeOnly(false)
     setLoading(true)
-    fetchFlashcards(lessonId ?? undefined).then(async ({ cards: fetched }) => {
-      let list = fetched ?? []
-      if (lessonId && list.length === 0) {
-        list = (await fetchFlashcards(lessonId, true)).cards ?? []
-      }
-      const built = await buildCards(list as unknown as Flashcard[], "standard")
-      setCards(built)
-      setLoading(false)
-      setStep("review")
-      resetReviewState()
-    })
+    fetchFlashcards(lessonId ?? undefined)
+      .then(async ({ cards: fetched }) => {
+        let list = fetched ?? []
+        let practice = false
+        if (lessonId && list.length === 0) {
+          list = (await fetchFlashcards(lessonId, true)).cards ?? []
+          practice = list.length > 0
+        }
+        const built = await buildCards(list as unknown as Flashcard[], "standard")
+        setCards(built)
+        setPracticeOnly(practice)
+        setLoading(false)
+        setStep("review")
+        resetReviewState()
+      })
+      .catch(backToFilter)
   }
 
   function startCinema() {
     setCardMode("cinema")
     setSelectedLesson(null)
+    setPracticeOnly(false)
     setLoading(true)
     fetchFlashcards(undefined).then(async ({ cards: fetched }) => {
       const all = (fetched ?? []) as unknown as Flashcard[]
@@ -181,24 +178,23 @@ export default function ReviewClient({
       setLoading(false)
       setStep("review")
       resetReviewState()
-    })
+    }).catch(backToFilter)
   }
 
   const advance = useCallback(
     async (card: MultipleChoiceCard, isCorrect: boolean, currentIndex: number, currentCards: MultipleChoiceCard[]) => {
       const grade: Grade = isCorrect ? 5 : 1
-      await updateFlashcard(card.id, sm2(card, grade))
+      if (!practiceOnly) await updateFlashcard(card.id, sm2(card, grade))
       setReviewed((r) => r + 1)
       if (currentIndex + 1 >= currentCards.length) {
         setDone(true)
-        const newStreak = await updateStreak()
-        setStreak(newStreak)
+        if (!practiceOnly) setStreak(await updateStreak())
       } else {
         setSelection(null)
         setIndex((i) => i + 1)
       }
     },
-    [],
+    [practiceOnly],
   )
 
   const handleSelect = useCallback(
@@ -222,7 +218,7 @@ export default function ReviewClient({
     if (skipCount >= 1) {
       if (index + 1 >= cards.length) {
         setDone(true)
-        updateStreak().then(setStreak)
+        if (!practiceOnly) updateStreak().then(setStreak)
       } else {
         setIndex((i) => i + 1)
       }
@@ -231,7 +227,7 @@ export default function ReviewClient({
     skipMapRef.current.set(card.id, 1)
     setCards((prev) => [...prev, card])
     setIndex((i) => i + 1)
-  }, [cards, index])
+  }, [cards, index, practiceOnly])
 
   useEffect(() => {
     return () => {
@@ -499,6 +495,12 @@ export default function ReviewClient({
           />
         </div>
       </div>
+
+      {practiceOnly && (
+        <p className="text-xs text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 mb-3">
+          Nenhuma palavra pendente aqui. Modo treino: suas respostas não mudam a agenda de revisão.
+        </p>
+      )}
 
       <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-6 mb-3">
         <div className="text-center mb-5">

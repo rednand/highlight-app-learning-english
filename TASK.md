@@ -49,3 +49,6 @@
 - [x] Testes: `extract-words.test.ts`, `lyrics-actions.test.ts`
 - [ ] Teste manual: buscar letra de uma música real em produção (LRCLIB)
 - [ ] Teste manual: revisão por mídia e frase da cena no celular
+- [x] Correções do review: modo treino sem alterar agenda quando nada está pendente, erro na revisão volta ao filtro, destaque só de palavra inteira, timeout e fallback no LRCLIB, nomes de artista com vírgula
+- [x] Home: grade "Adicionar" com ícones maiores (Filme, Música, Livro, Aula), contadores em cartões, mídias recentes com capas grandes
+- [ ] Teste manual da nova home no celular

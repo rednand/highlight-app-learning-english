@@ -29,8 +29,8 @@ describe("extractUncommonWords", () => {
   })
 
   it("trata apóstrofo tipográfico como apóstrofo comum", () => {
-    const terms = extractUncommonWords("She’s wandering").map((w) => w.term)
-    expect(terms).toContain("wandering")
+    const [first] = extractUncommonWords("She’s wandering")
+    expect(first.sentence).toBe("She's wandering")
   })
 
   it("encurta frases muito longas", () => {
@@ -52,6 +52,25 @@ describe("splitByTerm", () => {
       { text: " skies, so ", match: false },
       { text: "sullen", match: true },
     ])
+  })
+
+  it("não destaca o termo dentro de outra palavra", () => {
+    expect(splitByTerm("Training in the rain", "rain")).toEqual([
+      { text: "Training in the ", match: false },
+      { text: "rain", match: true },
+    ])
+  })
+
+  it("aceita apóstrofo tipográfico na frase", () => {
+    expect(splitByTerm("I don’t know", "don't")).toEqual([
+      { text: "I ", match: false },
+      { text: "don’t", match: true },
+      { text: " know", match: false },
+    ])
+  })
+
+  it("devolve a frase inteira quando o termo não aparece", () => {
+    expect(splitByTerm("Hello there", "gloomy")).toEqual([{ text: "Hello there", match: false }])
   })
 
   it("escapa caracteres especiais do termo", () => {

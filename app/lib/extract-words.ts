@@ -1,4 +1,4 @@
-import COMMON_WORDS from "../(app)/lessons/[id]/common-words"
+import COMMON_WORDS from "./common-words"
 
 export type ExtractedTerm = {
   term: string
@@ -10,7 +10,7 @@ const MAX_SENTENCE_LENGTH = 200
 export function splitSentences(text: string): string[] {
   return text
     .split(/\n+|(?<=[.!?])\s+/)
-    .map((s) => s.replace(/\s+/g, " ").trim())
+    .map((s) => s.replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim())
     .filter(Boolean)
 }
 

@@ -4,12 +4,13 @@ import { createClient } from "../utils/supabase/server"
 import { cleanArtistName, cleanTrackTitle, pickLyrics } from "../lib/lyrics-utils"
 
 const LRCLIB_SEARCH = "https://lrclib.net/api/search"
+const TIMEOUT_MS = 8000
 
 export type LyricsResult = { lyrics: string } | { error: "not_found" | "not_music" | "unavailable" }
 
 async function searchLrclib(params: Record<string, string>): Promise<string | null> {
   const url = `${LRCLIB_SEARCH}?${new URLSearchParams(params).toString()}`
-  const res = await fetch(url)
+  const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) })
   if (!res.ok) throw new Error(`lrclib ${res.status}`)
   return pickLyrics(await res.json())
 }
@@ -31,17 +32,22 @@ export async function fetchLyrics(lessonId: string): Promise<LyricsResult> {
   const track = cleanTrackTitle(lesson.title)
   const artist = cleanArtistName(lesson.music_artist ?? "")
 
-  try {
-    const exact = artist
-      ? await searchLrclib({ track_name: track, artist_name: artist })
-      : null
-    if (exact) return { lyrics: exact }
+  let failed = false
+  if (artist) {
+    try {
+      const exact = await searchLrclib({ track_name: track, artist_name: artist })
+      if (exact) return { lyrics: exact }
+    } catch {
+      failed = true
+    }
+  }
 
+  try {
     const loose = await searchLrclib({ q: `${track} ${artist}`.trim() })
     if (loose) return { lyrics: loose }
-
-    return { error: "not_found" }
   } catch {
-    return { error: "unavailable" }
+    failed = true
   }
+
+  return { error: failed ? "unavailable" : "not_found" }
 }

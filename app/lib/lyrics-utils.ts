@@ -1,7 +1,7 @@
 export function cleanTrackTitle(title: string): string {
   return title
     .replace(/\s*[([][^)\]]*[)\]]/g, "")
-    .replace(/\s+-\s+.*(remaster|version|live|edit|mix|mono|stereo).*$/i, "")
+    .replace(/\s+-\s+.*\b(remaster(ed)?|version|live|edit|mix|mono|stereo)\b.*$/i, "")
     .replace(/\s+(feat\.?|ft\.?|featuring)\s+.*$/i, "")
     .replace(/\s+/g, " ")
     .trim()
@@ -9,7 +9,7 @@ export function cleanTrackTitle(title: string): string {
 
 export function cleanArtistName(artist: string): string {
   return artist
-    .split(/\s*(?:,|\bfeat\.?|\bft\.?|\bfeaturing\b)\s*/i)[0]
+    .split(/\s+(?:feat\.?|ft\.?|featuring)\s+/i)[0]
     .trim()
 }
 

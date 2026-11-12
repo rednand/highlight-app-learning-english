@@ -43,18 +43,21 @@ describe("cleanTrackTitle", () => {
 
   it("mantém títulos com hífen que não são versão", () => {
     expect(cleanTrackTitle("Anti-Hero")).toBe("Anti-Hero")
+    expect(cleanTrackTitle("Stayin' Alive - Bee Gees")).toBe("Stayin' Alive - Bee Gees")
   })
 })
 
 describe("cleanArtistName", () => {
-  it("fica só com o artista principal", () => {
-    expect(cleanArtistName("Shawn Mendes, Camila Cabello")).toBe("Shawn Mendes")
+  it("remove participações", () => {
     expect(cleanArtistName("Drake feat. Rihanna")).toBe("Drake")
+    expect(cleanArtistName("Calvin Harris ft. Dua Lipa")).toBe("Calvin Harris")
   })
 
-  it("não quebra nomes com & ou X", () => {
-    expect(cleanArtistName("Simon & Garfunkel")).toBe("Simon & Garfunkel")
+  it("não quebra nomes com vírgula, &, X ou que começam com feat", () => {
+    expect(cleanArtistName("Tyler, The Creator")).toBe("Tyler, The Creator")
+    expect(cleanArtistName("Earth, Wind & Fire")).toBe("Earth, Wind & Fire")
     expect(cleanArtistName("Lil Nas X")).toBe("Lil Nas X")
+    expect(cleanArtistName("Feather")).toBe("Feather")
   })
 })
 
@@ -145,12 +148,28 @@ describe("fetchLyrics", () => {
     expect(await fetchLyrics("l1")).toEqual({ error: "not_found" })
   })
 
+  it("tenta a busca livre mesmo se a busca exata falhar", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, song) as never)
+    fetchMock
+      .mockReturnValueOnce(jsonResponse(false, {}))
+      .mockReturnValueOnce(jsonResponse(true, [{ plainLyrics: "Look at the stars" }]))
+    expect(await fetchLyrics("l1")).toEqual({ lyrics: "Look at the stars" })
+  })
+
+  it("passa um timeout para a requisição", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, song) as never)
+    fetchMock.mockReturnValueOnce(jsonResponse(true, [{ plainLyrics: "Look at the stars" }]))
+    await fetchLyrics("l1")
+    expect(fetchMock.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal)
+  })
+
   it("retorna unavailable quando a API falha", async () => {
     mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, song) as never)
-    fetchMock.mockReturnValueOnce(jsonResponse(false, {}))
+    fetchMock.mockReturnValue(jsonResponse(false, {}))
     expect(await fetchLyrics("l1")).toEqual({ error: "unavailable" })
 
-    fetchMock.mockRejectedValueOnce(new Error("offline"))
+    fetchMock.mockReset()
+    fetchMock.mockRejectedValue(new Error("offline"))
     expect(await fetchLyrics("l1")).toEqual({ error: "unavailable" })
   })
 })
