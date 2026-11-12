@@ -18,10 +18,12 @@
 
 ## Google Play (TWA)
 - [x] Manifest: id, scope, lang, categories
+- [x] Manifest: dir, display_override, launch_handler, prefer_related_applications, shortcuts (score PWABuilder)
+- [ ] Screenshots no manifest (opcional)
 - [x] Rota /.well-known/assetlinks.json (env ANDROID_PACKAGE_NAME e ANDROID_SHA256_FINGERPRINTS)
 - [x] Icone maskable com area segura (icon-512.png ja esta dentro da area segura, sem alteracao)
 - [x] Politica de privacidade publica em /privacy (env opcional PRIVACY_CONTACT_EMAIL)
-- [ ] Definir PRIVACY_CONTACT_EMAIL no Vercel
+- [x] Definir PRIVACY_CONTACT_EMAIL no Vercel
 - [x] Exclusao de conta dentro do app: action `deleteAccount`, pagina /account, link na sidebar e no menu Mais
 - [x] Pagina publica /account-deletion (URL de exclusao exigida pelo Play Console)
 - [x] Teste `__tests__/account-actions.test.ts`
