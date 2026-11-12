@@ -26,6 +26,6 @@
 - [x] Pagina publica /account-deletion (URL de exclusao exigida pelo Play Console)
 - [x] Teste `__tests__/account-actions.test.ts`
 - [ ] Teste manual da exclusao de conta com um usuario descartavel
-- [ ] Corrigir teste pre-existente translate-actions (falha sem relacao com esta tarefa)
+- [x] Corrigir teste pre-existente translate-actions (mock do MyMemory sem responseStatus)
 - [ ] Gerar .aab no PWABuilder e configurar as envs no Vercel
 - [ ] Conta Play Console e teste fechado

@@ -5,7 +5,7 @@ function jsonResponse(ok: boolean, body: unknown) {
   return Promise.resolve({ ok, json: () => Promise.resolve(body) } as Response)
 }
 
-const myMemory = (translatedText: string) => ({ responseData: { translatedText } })
+const myMemory = (translatedText: string) => ({ responseStatus: 200, responseData: { translatedText } })
 const deepl = (text: string) => ({ translations: [{ text }] })
 
 describe("translateTerm", () => {
