@@ -20,13 +20,23 @@ describe("MobileNav", () => {
     vi.clearAllMocks()
   })
 
-  it("renderiza os 5 links principais", () => {
+  it("renderiza os 4 links principais com Mídia antes de Aulas", () => {
     render(<MobileNav />)
-    expect(screen.getByText("Início")).toBeInTheDocument()
-    expect(screen.getByText("Aulas")).toBeInTheDocument()
-    expect(screen.getByText("Mídia")).toBeInTheDocument()
+    const labels = screen.getAllByRole("link").map((link) => link.textContent)
+    expect(labels).toEqual(["Início", "Mídia", "Aulas", "Revisar"])
+  })
+
+  it("Gramática fica no menu Mais", () => {
+    render(<MobileNav />)
+    expect(screen.queryByText("Gramática")).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText("Mais"))
     expect(screen.getByText("Gramática")).toBeInTheDocument()
-    expect(screen.getByText("Revisar")).toBeInTheDocument()
+  })
+
+  it("Mídia ativo nas rotas de filmes, músicas e livros", () => {
+    mockPathname.mockReturnValue("/movies/new")
+    render(<MobileNav />)
+    expect(screen.getByText("Mídia")).toHaveClass("text-yellow-400")
   })
 
   it("renderiza o botão Mais", () => {

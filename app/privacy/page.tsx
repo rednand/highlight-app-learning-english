@@ -14,7 +14,7 @@ const sections: { title: string; body: string[] }[] = [
     title: "Dados que coletamos",
     body: [
       "Ao entrar com sua conta Google, recebemos seu nome, e-mail e foto de perfil. Não temos acesso à sua senha do Google.",
-      "Guardamos o conteúdo que você cria no app: aulas, palavras e expressões, traduções, frases de exemplo, flashcards e o seu progresso de revisão.",
+      "Guardamos o conteúdo que você cria no app: aulas, filmes, séries, músicas e livros, palavras e expressões, traduções, frases de exemplo, flashcards e o seu progresso de revisão.",
       "Se você ativar as notificações, guardamos o identificador de inscrição push do seu navegador ou dispositivo para enviar lembretes diários de revisão.",
       "Seu progresso no roadmap e a sessão de filme em andamento ficam salvos apenas no armazenamento local do seu dispositivo.",
     ],
@@ -22,7 +22,7 @@ const sections: { title: string; body: string[] }[] = [
   {
     title: "Como usamos os dados",
     body: [
-      "Usamos os dados para autenticar você, exibir suas aulas e flashcards, calcular as próximas revisões e enviar os lembretes que você ativou.",
+      "Usamos os dados para autenticar você, exibir suas aulas, mídias e flashcards, calcular as próximas revisões e enviar os lembretes que você ativou.",
       "Não vendemos seus dados, não os usamos para publicidade e não os compartilhamos com terceiros para fins de marketing.",
     ],
   },
@@ -44,7 +44,7 @@ const sections: { title: string; body: string[] }[] = [
   {
     title: "Exclusão de dados",
     body: [
-      "Você pode excluir aulas e palavras diretamente no app.",
+      "Você pode excluir aulas, mídias e palavras diretamente no app.",
       "Você pode excluir sua conta e todos os dados associados a ela a qualquer momento na página Conta do app. A exclusão é imediata e permanente.",
       "Se não conseguir acessar o app, envie uma solicitação pelo contato indicado abaixo, a partir do e-mail cadastrado. Removemos os dados em até 30 dias.",
     ],

@@ -42,7 +42,7 @@ export default function LoginPage() {
         <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-8">
           <h1 className="text-xl font-bold text-white mb-1">Entrar</h1>
           <p className="text-gray-500 text-sm mb-8">
-            Acesse para registrar suas aulas.
+            Aprenda inglês com filmes, séries, músicas e livros.
           </p>
 
           <button

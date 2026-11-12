@@ -57,37 +57,47 @@ export default async function AppLayout({
             exact
           />
           <NavLink
-            href="/lessons"
-            icon={<BookOpen size={16} />}
-            label="Aulas"
-          />
-          <NavLink
             href="/media"
             icon={<Library size={16} />}
             label="Mídia"
             activeFor={["/movies", "/music", "/books"]}
           />
           <NavLink
-            href="/grammar"
-            icon={<ScrollText size={16} />}
-            label="Gramática"
+            href="/lessons"
+            icon={<BookOpen size={16} />}
+            label="Aulas"
           />
           <NavLink
             href="/review"
             icon={<RotateCcw size={16} />}
             label="Revisar"
           />
+          <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-gray-600 uppercase">
+            Mais
+          </p>
+          <NavLink
+            href="/grammar"
+            icon={<ScrollText size={16} />}
+            label="Gramática"
+          />
           <NavLink href="/roadmap" icon={<Map size={16} />} label="Trilha" />
         </nav>
 
         <StreakBadge />
-        <div className="p-3">
+        <div className="p-3 space-y-2">
           <Link
-            href="/lessons/new"
+            href="/media"
             className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
           >
             <Plus size={15} />
-            Nova Aula
+            Adicionar mídia
+          </Link>
+          <Link
+            href="/lessons/new"
+            className="flex items-center justify-center gap-2 w-full text-xs font-semibold text-gray-500 hover:text-white py-1 transition-colors"
+          >
+            <Plus size={12} />
+            Nova aula
           </Link>
         </div>
         <div className="p-4 border-t border-white/5">

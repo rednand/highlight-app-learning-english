@@ -31,3 +31,10 @@
 - [x] Corrigir teste pre-existente translate-actions (mock do MyMemory sem responseStatus)
 - [ ] Gerar .aab no PWABuilder e configurar as envs no Vercel
 - [ ] Conta Play Console e teste fechado
+
+## Foco em mídia
+- [x] Navegação: Mídia antes de Aulas; Gramática e Trilha no "Mais"
+- [x] Home: atalhos para adicionar filme/série, música e livro; contador de mídias; mídias recentes na coluna principal
+- [x] Textos: descrição do app, manifest, login e política de privacidade
+- [ ] Teste manual da nova home e navegação (celular e desktop)
+- [ ] Atualizar descrição da ficha na Play Console

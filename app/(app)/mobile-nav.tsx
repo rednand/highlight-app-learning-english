@@ -7,13 +7,13 @@ import { useState } from "react"
 
 const mainLinks = [
   { href: "/", icon: LayoutDashboard, label: "Início", exact: true, activeFor: [] as string[] },
-  { href: "/lessons", icon: BookOpen, label: "Aulas", exact: false, activeFor: [] as string[] },
   { href: "/media", icon: Library, label: "Mídia", exact: false, activeFor: ["/movies", "/music", "/books"] },
-  { href: "/grammar", icon: ScrollText, label: "Gramática", exact: false, activeFor: [] as string[] },
+  { href: "/lessons", icon: BookOpen, label: "Aulas", exact: false, activeFor: [] as string[] },
   { href: "/review", icon: RotateCcw, label: "Revisar", exact: false, activeFor: [] as string[] },
 ]
 
 const moreLinks = [
+  { href: "/grammar", icon: ScrollText, label: "Gramática", activeFor: [] as string[] },
   { href: "/roadmap", icon: Map, label: "Trilha", activeFor: [] as string[] },
   { href: "/account", icon: UserRound, label: "Conta", activeFor: [] as string[] },
 ]
