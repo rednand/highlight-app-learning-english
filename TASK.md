@@ -29,7 +29,8 @@
 - [x] Teste `__tests__/account-actions.test.ts`
 - [ ] Teste manual da exclusao de conta com um usuario descartavel
 - [x] Corrigir teste pre-existente translate-actions (mock do MyMemory sem responseStatus)
-- [ ] Gerar .aab no PWABuilder e configurar as envs no Vercel
+- [x] Gerar .aab no PWABuilder e configurar as envs no Vercel (assetlinks.json ok)
+- [ ] Adicionar SHA-256 da chave de assinatura do Play em ANDROID_SHA256_FINGERPRINTS
 - [ ] Conta Play Console e teste fechado
 
 ## Foco em mídia
