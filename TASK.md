@@ -29,7 +29,8 @@
 - [x] Teste `__tests__/account-actions.test.ts`
 - [ ] Teste manual da exclusao de conta com um usuario descartavel
 - [x] Corrigir teste pre-existente translate-actions (mock do MyMemory sem responseStatus)
-- [ ] Gerar .aab no PWABuilder e configurar as envs no Vercel
+- [x] Gerar .aab no PWABuilder e configurar as envs no Vercel (assetlinks.json ok)
+- [ ] Adicionar SHA-256 da chave de assinatura do Play em ANDROID_SHA256_FINGERPRINTS
 - [ ] Conta Play Console e teste fechado
 
 ## Foco em mídia
@@ -38,3 +39,16 @@
 - [x] Textos: descrição do app, manifest, login e política de privacidade
 - [ ] Teste manual da nova home e navegação (celular e desktop)
 - [ ] Atualizar descrição da ficha na Play Console
+
+## Aprendizado com mídia: letra, frase da cena e revisão por mídia
+- [x] Letra automática: action `fetchLyrics` (LRCLIB) e botão "Buscar letra automaticamente" nas músicas
+- [x] Frase da cena: extração guarda a frase onde cada palavra apareceu em `context`
+- [x] Revisão mostra a frase ("Na cena", "Na música", "No livro") com a palavra destacada
+- [x] Placeholder do campo de contexto por tipo de mídia
+- [x] Revisar por mídia: botão na página da mídia abre `/review?lesson=<id>`; sem pendentes, revisa todas as palavras
+- [x] Testes: `extract-words.test.ts`, `lyrics-actions.test.ts`
+- [ ] Teste manual: buscar letra de uma música real em produção (LRCLIB)
+- [ ] Teste manual: revisão por mídia e frase da cena no celular
+- [x] Correções do review: modo treino sem alterar agenda quando nada está pendente, erro na revisão volta ao filtro, destaque só de palavra inteira, timeout e fallback no LRCLIB, nomes de artista com vírgula
+- [x] Home: grade "Adicionar" com ícones maiores (Filme, Música, Livro, Aula), contadores em cartões, mídias recentes com capas grandes
+- [ ] Teste manual da nova home no celular

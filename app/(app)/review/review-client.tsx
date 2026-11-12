@@ -11,12 +11,14 @@ import {
 } from "../../actions/review"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, BookOpen, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward } from "lucide-react"
+import { ArrowRight, BookOpen, BookMarked, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward } from "lucide-react"
 import Image from "next/image"
 import SpeakButton from "../speak-button"
 import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel } from "../../lib/review-utils"
 import type { Grade, LessonStat, ChoiceOption, SelectionState } from "../../lib/review-utils"
 import MultipleChoiceOptions from "../../../components/review/multiple-choice-options"
+import ContextSentence from "../../../components/review/context-sentence"
+import { contextLabel } from "../../lib/context-utils"
 
 type MediaContext = {
   title: string
@@ -61,6 +63,7 @@ export default function ReviewClient({
   lessonStats,
   cinemaTotal,
   initialStreak,
+  initialLessonId = null,
 }: {
   lessons: Lesson[]
   totalDue: number
@@ -69,22 +72,25 @@ export default function ReviewClient({
   lessonStats: Record<string, LessonStat>
   cinemaTotal: number
   initialStreak: number
+  initialLessonId?: string | null
 }) {
   const router = useRouter()
-  const [step, setStep] = useState<"filter" | "review">("filter")
+  const [step, setStep] = useState<"filter" | "review">(initialLessonId ? "review" : "filter")
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const [cards, setCards] = useState<MultipleChoiceCard[]>([])
   const [index, setIndex] = useState(0)
   const [selection, setSelection] = useState<SelectionState>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(Boolean(initialLessonId))
   const [done, setDone] = useState(false)
   const [reviewed, setReviewed] = useState(0)
   const [tab, setTab] = useState<FilterTab>("todas")
   const [streak, setStreak] = useState(initialStreak)
   const [cardMode, setCardMode] = useState<"standard" | "cinema">("standard")
   const [insufficientPool, setInsufficientPool] = useState(false)
+  const [practiceOnly, setPracticeOnly] = useState(false)
   const skipMapRef = useRef<Map<string, number>>(new Map())
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const autoStartedRef = useRef(false)
 
   async function buildCards(
     fetched: Flashcard[],
@@ -128,22 +134,38 @@ export default function ReviewClient({
     skipMapRef.current = new Map()
   }
 
+  function backToFilter() {
+    setLoading(false)
+    setStep("filter")
+  }
+
   function startReview(lessonId: string | null) {
     setCardMode("standard")
     setSelectedLesson(lessonId)
+    setPracticeOnly(false)
     setLoading(true)
-    fetchFlashcards(lessonId ?? undefined).then(async ({ cards: fetched }) => {
-      const built = await buildCards((fetched ?? []) as unknown as Flashcard[], "standard")
-      setCards(built)
-      setLoading(false)
-      setStep("review")
-      resetReviewState()
-    })
+    fetchFlashcards(lessonId ?? undefined)
+      .then(async ({ cards: fetched }) => {
+        let list = fetched ?? []
+        let practice = false
+        if (lessonId && list.length === 0) {
+          list = (await fetchFlashcards(lessonId, true)).cards ?? []
+          practice = list.length > 0
+        }
+        const built = await buildCards(list as unknown as Flashcard[], "standard")
+        setCards(built)
+        setPracticeOnly(practice)
+        setLoading(false)
+        setStep("review")
+        resetReviewState()
+      })
+      .catch(backToFilter)
   }
 
   function startCinema() {
     setCardMode("cinema")
     setSelectedLesson(null)
+    setPracticeOnly(false)
     setLoading(true)
     fetchFlashcards(undefined).then(async ({ cards: fetched }) => {
       const all = (fetched ?? []) as unknown as Flashcard[]
@@ -156,24 +178,23 @@ export default function ReviewClient({
       setLoading(false)
       setStep("review")
       resetReviewState()
-    })
+    }).catch(backToFilter)
   }
 
   const advance = useCallback(
     async (card: MultipleChoiceCard, isCorrect: boolean, currentIndex: number, currentCards: MultipleChoiceCard[]) => {
       const grade: Grade = isCorrect ? 5 : 1
-      await updateFlashcard(card.id, sm2(card, grade))
+      if (!practiceOnly) await updateFlashcard(card.id, sm2(card, grade))
       setReviewed((r) => r + 1)
       if (currentIndex + 1 >= currentCards.length) {
         setDone(true)
-        const newStreak = await updateStreak()
-        setStreak(newStreak)
+        if (!practiceOnly) setStreak(await updateStreak())
       } else {
         setSelection(null)
         setIndex((i) => i + 1)
       }
     },
-    [],
+    [practiceOnly],
   )
 
   const handleSelect = useCallback(
@@ -197,7 +218,7 @@ export default function ReviewClient({
     if (skipCount >= 1) {
       if (index + 1 >= cards.length) {
         setDone(true)
-        updateStreak().then(setStreak)
+        if (!practiceOnly) updateStreak().then(setStreak)
       } else {
         setIndex((i) => i + 1)
       }
@@ -206,13 +227,20 @@ export default function ReviewClient({
     skipMapRef.current.set(card.id, 1)
     setCards((prev) => [...prev, card])
     setIndex((i) => i + 1)
-  }, [cards, index])
+  }, [cards, index, practiceOnly])
 
   useEffect(() => {
     return () => {
       if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (!initialLessonId || autoStartedRef.current) return
+    autoStartedRef.current = true
+    startReview(initialLessonId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLessonId])
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -312,7 +340,7 @@ export default function ReviewClient({
         </div>
 
         {lessonsWithCards.length > 0 && (
-          <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-3">Por aula</p>
+          <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-3">Por aula e mídia</p>
         )}
 
         <div className="space-y-2">
@@ -326,7 +354,10 @@ export default function ReviewClient({
                 className="flex items-center gap-3 p-3 sm:p-4 bg-[#151515] border border-[#292929] rounded-[18px]"
               >
                 <div className="hidden sm:flex w-8 h-8 rounded-lg bg-yellow-400/10 items-center justify-center shrink-0">
-                  <BookOpen size={14} className="text-yellow-400" />
+                  {lesson.source_type === "movie" ? <Film size={14} className="text-yellow-400" />
+                    : lesson.source_type === "music" ? <Music size={14} className="text-yellow-400" />
+                    : lesson.source_type === "book" ? <BookMarked size={14} className="text-yellow-400" />
+                    : <BookOpen size={14} className="text-yellow-400" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5 min-w-0">
@@ -465,6 +496,12 @@ export default function ReviewClient({
         </div>
       </div>
 
+      {practiceOnly && (
+        <p className="text-xs text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 mb-3">
+          Nenhuma palavra pendente aqui. Modo treino: suas respostas não mudam a agenda de revisão.
+        </p>
+      )}
+
       <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-6 mb-3">
         <div className="text-center mb-5">
           <span
@@ -480,9 +517,8 @@ export default function ReviewClient({
           </div>
           {phonetic && <p className="text-gray-600 text-sm mt-1 font-mono">{phonetic}</p>}
           {cardMode === "cinema" && context && (
-            <div className="mt-4 bg-white/5 rounded-xl px-4 py-3 text-left">
-              <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Exemplo</p>
-              <p className="text-gray-300 text-sm italic">&ldquo;{context}&rdquo;</p>
+            <div className="mt-4">
+              <ContextSentence label="Exemplo" sentence={context} term={card.front} />
             </div>
           )}
         </div>
@@ -491,8 +527,13 @@ export default function ReviewClient({
 
         <MultipleChoiceOptions options={card.options} selection={selection} onSelect={handleSelect} />
 
-        {selection !== null && cardMode === "standard" && (mySentence || media?.tmdb_poster_path) && (
+        {selection !== null && cardMode === "standard" && (context || mySentence || media?.tmdb_poster_path) && (
           <div className="mt-4 pt-4 border-t border-white/5">
+            {context && (
+              <div className="mb-3">
+                <ContextSentence label={contextLabel(media?.source_type)} sentence={context} term={card.front} />
+              </div>
+            )}
             {mySentence && (
               <div className="bg-white/5 rounded-xl px-4 py-3 text-left mb-3">
                 <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Minha frase</p>

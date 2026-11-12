@@ -2,14 +2,15 @@ import { createClient } from "../utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, ChevronRight, Plus, Film, Tv, Music, BookMarked } from "lucide-react"
+import { ArrowRight, ChevronRight, Film, Tv, Music, BookMarked, GraduationCap } from "lucide-react"
 
 const MEDIA_SOURCES = ["movie", "music", "book"]
 
 const quickAdd = [
-  { href: "/movies/new", icon: Film, label: "Filme ou série" },
-  { href: "/music/new", icon: Music, label: "Música" },
-  { href: "/books/new", icon: BookMarked, label: "Livro" },
+  { href: "/movies/new", icon: Film, label: "Filme ou série", primary: true },
+  { href: "/music/new", icon: Music, label: "Música", primary: true },
+  { href: "/books/new", icon: BookMarked, label: "Livro", primary: true },
+  { href: "/lessons/new", icon: GraduationCap, label: "Aula", primary: false },
 ]
 
 export default async function DashboardPage() {
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
         .eq("user_id", user.id)
         .in("source_type", MEDIA_SOURCES)
         .order("created_at", { ascending: false })
-        .limit(4),
+        .limit(8),
     ])
 
   const lessons = lessonsResult.data ?? []
@@ -104,30 +105,37 @@ export default async function DashboardPage() {
           <h1 className="text-lg font-bold text-white">Olá, {firstName}! 👋</h1>
           <p className="text-sm text-[#8B8B98] mt-0.5">O que você está assistindo, ouvindo ou lendo?</p>
 
-          <div className="grid grid-cols-3 gap-2 mt-4">
-            {quickAdd.map(({ href, icon: Icon, label }) => (
+          <p className="text-[10px] font-bold tracking-wider text-[#8B8B98] uppercase mt-5 mb-2">Adicionar</p>
+          <div className="grid grid-cols-2 gap-2">
+            {quickAdd.map(({ href, icon: Icon, label, primary }) => (
               <Link
                 key={href}
                 href={href}
-                className="flex flex-col items-center justify-center gap-1.5 bg-yellow-400 hover:bg-yellow-300 text-black text-xs font-bold py-3 rounded-2xl transition-colors"
+                className="flex items-center gap-3 bg-[#151515] hover:bg-[#1b1b1b] border border-[#292929] rounded-2xl p-3 transition-colors min-w-0"
               >
-                <Icon size={18} />
-                {label}
+                <span
+                  className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${
+                    primary ? "bg-yellow-400 text-black" : "bg-white/5 text-yellow-400"
+                  }`}
+                >
+                  <Icon size={22} />
+                </span>
+                <span className="text-sm font-semibold text-white leading-tight">{label}</span>
               </Link>
             ))}
           </div>
-          <Link
-            href="/lessons/new"
-            className="flex items-center justify-center gap-1.5 mt-2 text-xs font-semibold text-[#8B8B98] hover:text-white py-1.5 transition-colors"
-          >
-            <Plus size={12} />
-            Nova aula
-          </Link>
 
-          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-[#8B8B98]">
-            <span><span className="text-white font-bold">{totalMedia}</span> mídias</span>
-            <span><span className="text-white font-bold">{totalWords}</span> palavras</span>
-            <span><span className="font-bold text-[#FDC700]">{dueCount}</span> revisões</span>
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {[
+              { value: totalMedia, label: "Mídias", accent: false },
+              { value: totalWords, label: "Palavras", accent: false },
+              { value: dueCount, label: "Revisões", accent: true },
+            ].map(({ value, label, accent }) => (
+              <div key={label} className="text-center bg-[#121212] border border-[#242424] rounded-[14px] py-2.5">
+                <p className={`text-lg font-bold leading-none ${accent ? "text-[#FDC700]" : "text-white"}`}>{value}</p>
+                <p className="text-[10px] font-bold text-[#8B8B98] uppercase tracking-wider mt-1">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -137,13 +145,17 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-bold text-white">Olá, {firstName}! 👋</h1>
             <p className="text-sm text-[#8B8B98] mt-1">O que você está assistindo, ouvindo ou lendo?</p>
             <div className="flex flex-wrap gap-2 mt-4">
-              {quickAdd.map(({ href, icon: Icon, label }) => (
+              {quickAdd.map(({ href, icon: Icon, label, primary }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2 rounded-full transition-colors"
+                  className={`inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full transition-colors ${
+                    primary
+                      ? "bg-yellow-400 hover:bg-yellow-300 text-black"
+                      : "bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white"
+                  }`}
                 >
-                  <Icon size={14} />
+                  <Icon size={16} />
                   {label}
                 </Link>
               ))}
@@ -216,11 +228,11 @@ export default async function DashboardPage() {
             {recentMedia.length === 0 ? (
               <p className="text-sm text-[#8B8B98]">Adicione um filme, série, música ou livro para começar a anotar palavras.</p>
             ) : (
-              <div className="space-y-1">
+              <div className="flex gap-3 overflow-x-auto -mx-1 px-1 pb-1">
                 {recentMedia.map((item) => {
                   const thumbnail =
                     item.source_type === "movie" && item.tmdb_poster_path
-                      ? `https://image.tmdb.org/t/p/w92${item.tmdb_poster_path}`
+                      ? `https://image.tmdb.org/t/p/w185${item.tmdb_poster_path}`
                       : item.source_type === "music" && item.music_thumbnail_url
                         ? item.music_thumbnail_url
                         : item.source_type === "book" && item.book_cover_url
@@ -235,22 +247,23 @@ export default async function DashboardPage() {
                           ? Tv
                           : Film
                   return (
-                    <Link
-                      key={item.id}
-                      href={`/lessons/${item.id}`}
-                      className="flex items-center gap-3 py-2 hover:bg-white/[0.02] transition-colors group -mx-1 px-1 rounded-lg"
-                    >
-                      {thumbnail ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={thumbnail} alt={item.title} className="w-7 h-9 rounded object-cover shrink-0" />
-                      ) : (
-                        <div className="w-7 h-9 rounded bg-white/5 flex items-center justify-center shrink-0">
-                          <TypeIcon size={12} className="text-[#FDC700]/50" />
-                        </div>
-                      )}
-                      <span className="text-sm text-gray-300 group-hover:text-white transition-colors truncate flex-1">
+                    <Link key={item.id} href={`/lessons/${item.id}`} className="group shrink-0 w-24">
+                      <div className="relative w-24 h-36 rounded-xl overflow-hidden bg-white/5 mb-1.5">
+                        {thumbnail ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={thumbnail} alt={item.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <TypeIcon size={22} className="text-[#FDC700]/50" />
+                          </div>
+                        )}
+                        <span className="absolute bottom-1.5 right-1.5 flex items-center justify-center w-6 h-6 rounded-full bg-black/70">
+                          <TypeIcon size={12} className="text-[#FDC700]" />
+                        </span>
+                      </div>
+                      <p className="text-xs font-semibold text-gray-300 group-hover:text-white transition-colors line-clamp-2 leading-snug">
                         {item.title}
-                      </span>
+                      </p>
                     </Link>
                   )
                 })}

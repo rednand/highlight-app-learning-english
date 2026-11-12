@@ -2,7 +2,7 @@ import { createClient } from "../../../utils/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Film, Tv, Music, BookMarked } from "lucide-react"
+import { ArrowLeft, Film, Tv, Music, BookMarked, RotateCcw } from "lucide-react"
 import AddItemForm from "./add-item-form"
 import TranscriptExtractor from "./transcript-extractor"
 import EditLessonForm from "./edit-lesson-form"
@@ -10,6 +10,13 @@ import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
 
+
+function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
+  if (sourceType === "movie") return tmdbType === "tv" ? "Revisar palavras desta série" : "Revisar palavras deste filme"
+  if (sourceType === "music") return "Revisar palavras desta música"
+  if (sourceType === "book") return "Revisar palavras deste livro"
+  return "Revisar palavras desta aula"
+}
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -149,6 +156,16 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
         </div>
 
         {items && items.length > 0 && (
+          <Link
+            href={`/review?lesson=${id}`}
+            className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors mb-4"
+          >
+            <RotateCcw size={15} />
+            {reviewLabel(lesson.source_type, lesson.tmdb_type)}
+          </Link>
+        )}
+
+        {items && items.length > 0 && (
           <div className="space-y-2 mb-4">
             {items.map((item) => (
               <ItemCard
@@ -161,8 +178,8 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
         <div className="space-y-2">
           {lesson.source_type === "movie" && <WatchSessionToggle lessonId={id} />}
-          <AddItemForm lessonId={id} />
-          <TranscriptExtractor lessonId={id} />
+          <AddItemForm lessonId={id} sourceType={lesson.source_type} />
+          <TranscriptExtractor lessonId={id} sourceType={lesson.source_type} />
         </div>
       </div>
     </div>
