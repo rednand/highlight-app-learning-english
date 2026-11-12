@@ -27,6 +27,10 @@
 - [x] Exclusao de conta dentro do app: action `deleteAccount`, pagina /account, link na sidebar e no menu Mais
 - [x] Pagina publica /account-deletion (URL de exclusao exigida pelo Play Console)
 - [x] Teste `__tests__/account-actions.test.ts`
+- [x] Pagina publica /about (pagina inicial exigida na verificacao de marca do Google)
+- [ ] Commit e deploy da /about
+- [ ] Google Auth Platform: usar /about como pagina inicial no Branding
+- [ ] Search Console: verificar propriedade do dominio da Vercel e pedir nova verificacao de marca
 - [ ] Teste manual da exclusao de conta com um usuario descartavel
 - [x] Corrigir teste pre-existente translate-actions (mock do MyMemory sem responseStatus)
 - [x] Gerar .aab no PWABuilder e configurar as envs no Vercel (assetlinks.json ok)
