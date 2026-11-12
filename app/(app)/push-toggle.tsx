@@ -11,7 +11,7 @@ function urlBase64ToUint8Array(base64: string) {
   return Uint8Array.from([...raw].map(c => c.charCodeAt(0)))
 }
 
-export default function PushToggle() {
+export default function PushToggle({ showLabel = false }: { showLabel?: boolean }) {
   const [supported, setSupported] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -69,11 +69,12 @@ export default function PushToggle() {
       onClick={toggle}
       disabled={loading}
       title={subscribed ? "Desativar notificações" : "Ativar notificações de revisão"}
-      className={`transition-colors disabled:opacity-40 ${
+      className={`flex items-center gap-2 transition-colors disabled:opacity-40 ${
         subscribed ? "text-yellow-400 hover:text-gray-400" : "text-gray-600 hover:text-white"
-      }`}
+      } ${showLabel ? "text-sm font-semibold" : ""}`}
     >
-      {subscribed ? <Bell size={15} /> : <BellOff size={15} />}
+      {subscribed ? <Bell size={showLabel ? 18 : 15} /> : <BellOff size={showLabel ? 18 : 15} />}
+      {showLabel ? (subscribed ? "Notificações ativadas" : "Ativar notificações de revisão") : null}
     </button>
   )
 }
