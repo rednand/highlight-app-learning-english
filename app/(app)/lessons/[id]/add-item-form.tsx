@@ -6,7 +6,13 @@ import { addLessonItem, addLessonItems } from "../../../actions/items"
 import { fetchExampleSentence } from "../../../actions/examples"
 import { translateTerm } from "../../../actions/translate"
 
-export default function AddItemForm({ lessonId }: { lessonId: string }) {
+const CONTEXT_PLACEHOLDERS: Record<string, string> = {
+  movie: "Frase da cena",
+  music: "Verso da música",
+  book: "Trecho do livro",
+}
+
+export default function AddItemForm({ lessonId, sourceType }: { lessonId: string; sourceType?: string | null }) {
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -232,7 +238,7 @@ export default function AddItemForm({ lessonId }: { lessonId: string }) {
               <div className="relative">
                 <input
                   name="context"
-                  placeholder="Exemplo de uso"
+                  placeholder={CONTEXT_PLACEHOLDERS[sourceType ?? ""] ?? "Exemplo de uso"}
                   value={context}
                   onChange={e => setContext(e.target.value)}
                   className={`${inputClass} pr-9`}

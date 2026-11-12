@@ -8,7 +8,8 @@ type RawCard = {
   lesson_items: { lesson_id: string } | null
 }
 
-export default async function ReviewPage() {
+export default async function ReviewPage({ searchParams }: { searchParams: Promise<{ lesson?: string }> }) {
+  const { lesson: requestedLesson } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -94,6 +95,7 @@ export default async function ReviewPage() {
         lessonStats={lessonStats}
         cinemaTotal={cinemaTotal}
         initialStreak={initialStreak}
+        initialLessonId={requestedLesson && lessonStats[requestedLesson] ? requestedLesson : null}
       />
     </div>
   )
