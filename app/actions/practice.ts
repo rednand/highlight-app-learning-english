@@ -73,7 +73,14 @@ function isPracticeFeedback(value: unknown): value is PracticeFeedback {
   )
 }
 
+const MAX_RULE_FIELD_LENGTH = 200
+
 export async function generatePracticeText(ruleTitle: string, ruleStructure: string): Promise<PracticeText | null> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  if (ruleTitle.length > MAX_RULE_FIELD_LENGTH || ruleStructure.length > MAX_RULE_FIELD_LENGTH) return null
+
   const prompt = `Write a short English text (3 to 4 sentences) for a Brazilian student learning English to translate into Portuguese. The text must use the "${ruleTitle}" grammar structure (${ruleStructure}) naturally and repeatedly, at an intermediate level. Also provide a natural Portuguese (Brazil) translation of that exact text.
 
 Respond with ONLY a JSON object, no markdown, in this exact shape:

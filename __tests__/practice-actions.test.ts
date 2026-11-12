@@ -46,6 +46,23 @@ afterEach(() => {
 })
 
 describe("generatePracticeText", () => {
+  beforeEach(() => {
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }) as never)
+  })
+
+  it("retorna null sem usuario logado e nao chama o modelo", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase(null) as never)
+    expect(await generatePracticeText("Past Perfect", "had + pp")).toBeNull()
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it("retorna null quando regra ou estrutura passam do limite de tamanho", async () => {
+    const long = "a".repeat(201)
+    expect(await generatePracticeText(long, "had + pp")).toBeNull()
+    expect(await generatePracticeText("Past Perfect", long)).toBeNull()
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it("retorna null sem GEMINI_API_KEY", async () => {
     delete process.env.GEMINI_API_KEY
     expect(await generatePracticeText("Past Perfect", "had + pp")).toBeNull()
