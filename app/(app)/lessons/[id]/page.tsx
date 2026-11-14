@@ -50,7 +50,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       <div className="flex items-center justify-between mb-8">
         <Link
           href={lesson.source_type === "movie" ? "/movies" : lesson.source_type === "music" ? "/music" : lesson.source_type === "book" ? "/books" : "/lessons"}
-          className="flex items-center gap-2 text-gray-500 hover:text-white text-sm transition-colors"
+          className="flex items-center gap-2 text-fg-subtle hover:text-white text-sm transition-colors"
         >
           <ArrowLeft size={15} />
           {lesson.source_type === "movie" ? "Filmes & Séries" : lesson.source_type === "music" ? "Música" : lesson.source_type === "book" ? "Livros" : "Aulas"}
@@ -63,41 +63,41 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       <EditLessonForm lesson={{ id, title: lesson.title, lesson_date: lesson.lesson_date, notes: lesson.notes, roadmap_key: lesson.roadmap_key }} />
 
       {lesson.source_type === "music" && lesson.music_artist && (
-        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
+        <div className="flex items-center gap-4 p-3 bg-surface border border-line rounded-[18px] mb-6">
           {lesson.music_thumbnail_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={lesson.music_thumbnail_url} alt={lesson.title} className="w-12 h-12 rounded-lg object-cover shrink-0" />
           ) : (
             <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-              <Music size={18} className="text-gray-600" />
+              <Music size={18} className="text-fg-dim" />
             </div>
           )}
           <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
-            <p className="text-gray-500 text-xs mt-0.5 truncate">{lesson.music_artist}</p>
+            <p className="text-fg-subtle text-xs mt-0.5 truncate">{lesson.music_artist}</p>
           </div>
         </div>
       )}
 
       {lesson.source_type === "book" && lesson.book_author && (
-        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
+        <div className="flex items-center gap-4 p-3 bg-surface border border-line rounded-[18px] mb-6">
           {lesson.book_cover_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={lesson.book_cover_url} alt={lesson.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
           ) : (
             <div className="w-10 h-14 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-              <BookMarked size={18} className="text-gray-600" />
+              <BookMarked size={18} className="text-fg-dim" />
             </div>
           )}
           <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
-            <p className="text-gray-500 text-xs mt-0.5 truncate">{lesson.book_author}</p>
+            <p className="text-fg-subtle text-xs mt-0.5 truncate">{lesson.book_author}</p>
           </div>
         </div>
       )}
 
       {lesson.tmdb_poster_path && (
-        <div className="flex items-center gap-4 p-3 bg-[#151515] border border-[#292929] rounded-[18px] mb-6">
+        <div className="flex items-center gap-4 p-3 bg-surface border border-line rounded-[18px] mb-6">
           <Image
             src={`https://image.tmdb.org/t/p/w92${lesson.tmdb_poster_path}`}
             alt={lesson.title}
@@ -109,9 +109,9 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
             <p className="text-white text-sm font-semibold truncate">{lesson.title}</p>
             <div className="flex items-center gap-1.5 mt-1">
               {lesson.tmdb_type === "movie"
-                ? <Film size={11} className="text-gray-500" />
-                : <Tv size={11} className="text-gray-500" />}
-              <p className="text-gray-500 text-xs">
+                ? <Film size={11} className="text-fg-subtle" />
+                : <Tv size={11} className="text-fg-subtle" />}
+              <p className="text-fg-subtle text-xs">
                 {lesson.tmdb_type === "movie" ? "Filme" : "Série"}
                 {lesson.tmdb_season ? ` · Temporada ${lesson.tmdb_season}` : ""}
               </p>
@@ -122,7 +122,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
       <div className="mb-8">
         {lessonDate && (
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-2 uppercase">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-2 uppercase">
             {lessonDate}
           </p>
         )}
@@ -131,14 +131,14 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           const [level, tema, session] = lesson.roadmap_key.split("||")
           return (
             <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+              <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-brand/10 text-brand border border-brand/20">
                 {level} › {tema} › {session}
               </span>
             </div>
           )
         })()}
         {lesson.notes && (
-          <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-wrap bg-[#151515] border border-[#292929] rounded-[18px] px-4 py-3">
+          <p className="text-fg-muted text-sm leading-relaxed whitespace-pre-wrap bg-surface border border-line rounded-[18px] px-4 py-3">
             {lesson.notes}
           </p>
         )}
@@ -146,10 +146,10 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
       <div className="border-t border-white/5 pt-8">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">
+          <h2 className="text-xs font-bold tracking-[0.2em] text-fg-subtle uppercase">
             Palavras & Expressões
             {items && items.length > 0 && (
-              <span className="ml-2 text-gray-700 font-normal tracking-normal normal-case">
+              <span className="ml-2 text-fg-dim font-normal tracking-normal normal-case">
                 ({items.length})
               </span>
             )}
@@ -159,7 +159,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
         {items && items.some((item) => reviewStateOf(item.flashcards) === "active") && (
           <Link
             href={`/review?lesson=${id}`}
-            className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors mb-4"
+            className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-strong text-black text-sm font-bold py-2.5 rounded-full transition-colors mb-4"
           >
             <RotateCcw size={15} />
             {reviewLabel(lesson.source_type, lesson.tmdb_type)}

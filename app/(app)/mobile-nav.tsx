@@ -40,11 +40,11 @@ export default function MobileNav() {
       )}
 
       {open && (
-        <div className="fixed bottom-16 left-0 right-0 z-50 mx-4 mb-2 bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+        <div className="fixed bottom-16 left-0 right-0 z-50 mx-4 mb-2 bg-sunken border border-white/10 rounded-2xl overflow-hidden shadow-xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-            <span className="text-xs font-bold text-gray-400 tracking-wider uppercase">Mais</span>
+            <span className="text-xs font-bold text-fg-muted tracking-wider uppercase">Mais</span>
             <button onClick={() => setOpen(false)}>
-              <X size={16} className="text-gray-500" />
+              <X size={16} className="text-fg-subtle" />
             </button>
           </div>
           {moreLinks.map(({ href, icon: Icon, label, activeFor }) => {
@@ -58,13 +58,13 @@ export default function MobileNav() {
                 href={href}
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3.5 transition-colors ${
-                  isActive ? "text-yellow-400" : "text-gray-400 hover:text-white"
+                  isActive ? "text-brand" : "text-fg-muted hover:text-white"
                 }`}
               >
                 <Icon size={18} />
                 <span className="text-sm font-semibold">{label}</span>
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand" />
                 )}
               </Link>
             )
@@ -72,7 +72,7 @@ export default function MobileNav() {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-[#0a0a0a]/95 backdrop-blur border-t border-white/10 flex md:hidden pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed bottom-0 left-0 right-0 z-[60] bg-page/95 backdrop-blur border-t border-white/10 flex md:hidden pb-[env(safe-area-inset-bottom)]">
         {mainLinks.map(({ href, icon: Icon, label, exact, activeFor }) => {
           const isActive = exact
             ? pathname === href
@@ -84,12 +84,12 @@ export default function MobileNav() {
               className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
             >
               <span className={`flex items-center justify-center w-11 h-7 rounded-full transition-colors ${
-                isActive ? "bg-yellow-400/15 text-yellow-400" : "text-gray-500"
+                isActive ? "bg-brand/15 text-brand" : "text-fg-subtle"
               }`}>
                 <Icon size={18} />
               </span>
               <span className={`text-[10px] font-bold tracking-wide transition-colors ${
-                isActive ? "text-yellow-400" : "text-gray-600"
+                isActive ? "text-brand" : "text-fg-dim"
               }`}>
                 {label}
               </span>
@@ -103,12 +103,12 @@ export default function MobileNav() {
           className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5"
         >
           <span className={`flex items-center justify-center w-11 h-7 rounded-full transition-colors ${
-            isMoreActive || open ? "bg-yellow-400/15 text-yellow-400" : "text-gray-500"
+            isMoreActive || open ? "bg-brand/15 text-brand" : "text-fg-subtle"
           }`}>
             <Menu size={18} />
           </span>
           <span className={`text-[10px] font-bold tracking-wide transition-colors ${
-            isMoreActive || open ? "text-yellow-400" : "text-gray-600"
+            isMoreActive || open ? "text-brand" : "text-fg-dim"
           }`}>
             Mais
           </span>

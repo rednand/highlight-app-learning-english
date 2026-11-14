@@ -62,13 +62,13 @@ export default async function QuizPage({ params }: { params: Promise<{ slug: str
     <div className="max-w-xl mx-auto p-4 md:p-8">
       <Link
         href="/grammar/quiz"
-        className="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition-colors w-fit"
+        className="flex items-center gap-2 text-fg-subtle hover:text-white text-sm mb-8 transition-colors w-fit"
       >
         <ArrowLeft size={15} />
         Quiz
       </Link>
 
-      <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">QUIZ</p>
+      <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">QUIZ</p>
       <h1 className="text-2xl font-bold text-white mb-8">{RULE_TITLES[slug] ?? slug}</h1>
 
       <QuizClient

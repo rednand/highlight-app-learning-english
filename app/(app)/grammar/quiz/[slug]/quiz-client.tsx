@@ -66,20 +66,20 @@ export default function QuizClient({
 
     return (
       <div className="text-center py-8">
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${perfect ? "bg-yellow-400/20" : "bg-white/5"}`}>
-          <Trophy size={28} className={perfect ? "text-yellow-400" : "text-gray-500"} />
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${perfect ? "bg-brand/20" : "bg-white/5"}`}>
+          <Trophy size={28} className={perfect ? "text-brand" : "text-fg-subtle"} />
         </div>
         <h2 className="text-2xl font-bold text-white mb-1">
           {score}/{questions.length} corretas
         </h2>
-        <p className="text-gray-500 text-sm mb-2">{pct}% de aproveitamento</p>
+        <p className="text-fg-subtle text-sm mb-2">{pct}% de aproveitamento</p>
         {previousBest && (
-          <p className="text-gray-600 text-xs mb-6">
+          <p className="text-fg-dim text-xs mb-6">
             Melhor anterior: {previousBest.correct}/{previousBest.total}
           </p>
         )}
         {perfect ? (
-          <p className="text-yellow-400 text-sm font-bold mb-8">Perfeito! Você domina esse tópico.</p>
+          <p className="text-brand text-sm font-bold mb-8">Perfeito! Você domina esse tópico.</p>
         ) : pct >= 66 ? (
           <p className="text-green-400 text-sm mb-8">Bom resultado! Revise os erros para fixar.</p>
         ) : (
@@ -100,7 +100,7 @@ export default function QuizClient({
                 {!answers[i] && (
                   <p className="text-green-400 text-xs mt-0.5">✓ {q.options[q.answer]}</p>
                 )}
-                <p className="text-gray-600 text-[10px] mt-0.5 italic">{q.tip}</p>
+                <p className="text-fg-dim text-[10px] mt-0.5 italic">{q.tip}</p>
               </div>
             </div>
           ))}
@@ -120,7 +120,7 @@ export default function QuizClient({
           <button
             onClick={() => router.push("/grammar/quiz")}
             disabled={saving}
-            className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-3 rounded-full transition-colors disabled:opacity-50"
+            className="flex-1 bg-brand hover:bg-brand-strong text-black text-sm font-bold py-3 rounded-full transition-colors disabled:opacity-50"
           >
             {saving ? "Salvando..." : "Voltar ao quiz"}
           </button>
@@ -132,36 +132,36 @@ export default function QuizClient({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-fg-subtle">
           Questão {current + 1} de {questions.length}
         </p>
-        <p className="text-xs text-gray-500">{title}</p>
+        <p className="text-xs text-fg-subtle">{title}</p>
       </div>
 
       <div className="h-1.5 bg-white/5 rounded-full overflow-hidden mb-6">
         <div
-          className="h-full bg-yellow-400 rounded-full transition-all duration-300"
+          className="h-full bg-brand rounded-full transition-all duration-300"
           style={{ width: `${((current) / questions.length) * 100}%` }}
         />
       </div>
 
-      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5 mb-4">
+      <div className="bg-surface border border-line rounded-[18px] p-5 mb-4">
         <p className="text-white font-semibold text-base">{question.q}</p>
       </div>
 
       <div className="space-y-2 mb-6">
         {question.options.map((opt, idx) => {
-          let style = "bg-[#0f0f0f] border-white/10 text-gray-300 hover:border-yellow-400/30 hover:text-white"
+          let style = "bg-sunken border-white/10 text-fg-soft hover:border-brand/30 hover:text-white"
           if (isAnswered) {
             if (idx === question.answer) {
               style = "bg-green-400/10 border-green-400/30 text-green-400"
             } else if (idx === selected) {
               style = "bg-red-400/10 border-red-400/30 text-red-400"
             } else {
-              style = "bg-[#0f0f0f] border-white/5 text-gray-600"
+              style = "bg-sunken border-white/5 text-fg-dim"
             }
           } else if (idx === selected) {
-            style = "bg-yellow-400/10 border-yellow-400/30 text-yellow-400"
+            style = "bg-brand/10 border-brand/30 text-brand"
           }
 
           return (
@@ -186,7 +186,7 @@ export default function QuizClient({
             <p className={`text-sm font-bold ${isCorrect ? "text-green-400" : "text-red-400"}`}>
               {isCorrect ? "Correto!" : "Errado!"}
             </p>
-            <p className="text-gray-400 text-xs mt-0.5">{question.tip}</p>
+            <p className="text-fg-muted text-xs mt-0.5">{question.tip}</p>
           </div>
         </div>
       )}
@@ -194,7 +194,7 @@ export default function QuizClient({
       {isAnswered && (
         <button
           onClick={handleNext}
-          className="w-full flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
+          className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-strong text-black font-bold py-3 rounded-full transition-colors text-sm"
         >
           {current + 1 === questions.length ? "Ver resultado" : "Próxima"}
           <ArrowRight size={15} />

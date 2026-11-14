@@ -50,14 +50,14 @@ export default function EditLessonForm({ lesson }: Props) {
     })
   }
 
-  const inputClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
-  const selectClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-yellow-400/50 transition-colors"
+  const inputClass = "w-full bg-page border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors text-sm"
+  const selectClass = "w-full bg-page border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-brand/50 transition-colors"
 
   if (!open) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-white transition-colors"
+        className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-white transition-colors"
       >
         <Pencil size={13} />
         Editar
@@ -66,10 +66,10 @@ export default function EditLessonForm({ lesson }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 bg-[#0f0f0f] border border-white/10 rounded-xl p-5 space-y-4">
+    <form onSubmit={handleSubmit} className="mb-8 bg-sunken border border-white/10 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Editar aula</span>
-        <button type="button" onClick={() => setOpen(false)} className="text-gray-600 hover:text-white transition-colors">
+        <span className="text-xs font-bold text-fg-subtle uppercase tracking-wider">Editar aula</span>
+        <button type="button" onClick={() => setOpen(false)} className="text-fg-dim hover:text-white transition-colors">
           <X size={15} />
         </button>
       </div>
@@ -83,7 +83,7 @@ export default function EditLessonForm({ lesson }: Props) {
       <textarea name="notes" rows={3} defaultValue={lesson.notes ?? ""} placeholder="Notas (opcional)" className={`${inputClass} resize-none`} />
 
       <div className="space-y-2">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Roadmap</p>
+        <p className="text-xs font-bold text-fg-subtle uppercase tracking-wider">Roadmap</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <select value={level} onChange={e => handleLevelChange(e.target.value)} className={selectClass}>
             <option value="">Nível</option>
@@ -103,7 +103,7 @@ export default function EditLessonForm({ lesson }: Props) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-white text-sm font-bold py-2.5 rounded-full transition-colors"
+        className="w-full bg-brand hover:bg-brand-strong disabled:opacity-50 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
       >
         {isPending ? "Salvando…" : "Salvar"}
       </button>

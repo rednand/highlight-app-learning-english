@@ -17,7 +17,7 @@ export default function WatchSessionToggle({ lessonId }: { lessonId: string }) {
     return (
       <button
         onClick={endWatchSession}
-        className="flex items-center gap-2 w-full justify-center bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-xs font-bold py-2.5 rounded-full transition-colors hover:bg-yellow-400/20"
+        className="flex items-center gap-2 w-full justify-center bg-brand/10 border border-brand/30 text-brand-strong text-xs font-bold py-2.5 rounded-full transition-colors hover:bg-brand/20"
       >
         <Square size={12} />
         Sessão ativa — encerrar
@@ -28,7 +28,7 @@ export default function WatchSessionToggle({ lessonId }: { lessonId: string }) {
   return (
     <button
       onClick={() => startWatchSession(lessonId)}
-      className="flex items-center gap-2 w-full justify-center bg-[#151515] border border-[#292929] text-gray-400 hover:text-white text-xs font-bold py-2.5 rounded-full transition-colors"
+      className="flex items-center gap-2 w-full justify-center bg-surface border border-line text-fg-muted hover:text-white text-xs font-bold py-2.5 rounded-full transition-colors"
     >
       <Play size={12} />
       Iniciar sessão (reabrir o app direto aqui)

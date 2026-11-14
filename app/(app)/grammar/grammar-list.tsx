@@ -24,7 +24,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function levelColor(level: string) {
   if (level.startsWith("A")) return "bg-green-400/10 text-green-400 border-green-400/20"
-  if (level.startsWith("B")) return "bg-yellow-400/10 text-yellow-400 border-yellow-400/20"
+  if (level.startsWith("B")) return "bg-brand/10 text-brand border-brand/20"
   return "bg-orange-400/10 text-orange-400 border-orange-400/20"
 }
 
@@ -38,21 +38,21 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">HIGHLIGHT</p>
           <h1 className="text-2xl font-bold text-white">Gramática</h1>
-          <p className="text-[#8B8B98] text-sm mt-1">{rules.length} regras · clique para ver detalhes</p>
+          <p className="text-fg-subtle text-sm mt-1">{rules.length} regras · clique para ver detalhes</p>
         </div>
         <div className="grid grid-cols-2 md:flex md:items-center gap-2 md:shrink-0">
           <Link
             href="/grammar/practice"
-            className="flex items-center justify-center gap-2 bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
+            className="flex items-center justify-center gap-2 bg-raised hover:bg-raised-strong border border-line text-white text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
           >
-            <Sparkles size={14} className="text-yellow-400" />
+            <Sparkles size={14} className="text-brand" />
             Praticar com IA
           </Link>
           <Link
             href="/grammar/quiz"
-            className="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
+            className="flex items-center justify-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-4 py-2.5 rounded-full transition-colors"
           >
             Fazer Quiz
           </Link>
@@ -66,8 +66,8 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
             onClick={() => setActive(cat)}
             className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-colors border ${
               active === cat
-                ? "bg-yellow-400 text-black border-yellow-400"
-                : "bg-transparent text-[#8B8B98] border-[#292929] hover:border-white/20 hover:text-white"
+                ? "bg-brand text-black border-brand"
+                : "bg-transparent text-fg-subtle border-line hover:border-white/20 hover:text-white"
             }`}
           >
             {cat === "all" ? "Todos" : CATEGORY_LABELS[cat] ?? cat}
@@ -80,24 +80,24 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
           <Link
             key={rule.slug}
             href={`/grammar/${rule.slug}`}
-            className="group bg-[#151515] border border-[#292929] rounded-[18px] p-4 hover:border-yellow-400/30 transition-all"
+            className="group bg-surface border border-line rounded-[18px] p-4 hover:border-brand/30 transition-all"
           >
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h2 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors leading-snug">
+              <h2 className="text-sm font-bold text-white group-hover:text-brand transition-colors leading-snug">
                 {rule.title}
               </h2>
               <span className={`shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded border ${levelColor(rule.level)}`}>
                 {rule.level}
               </span>
             </div>
-            <p className="text-[10px] font-bold tracking-wider text-gray-600 uppercase mb-2">
+            <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-2">
               {CATEGORY_LABELS[rule.category] ?? rule.category}
             </p>
             {rule.structure && (
-              <p className="text-xs text-gray-500 font-mono truncate">{rule.structure}</p>
+              <p className="text-xs text-fg-subtle font-mono truncate">{rule.structure}</p>
             )}
             {rule.usage && rule.usage.length > 0 && (
-              <p className="text-xs text-gray-600 mt-1.5 line-clamp-2">{rule.usage[0]}</p>
+              <p className="text-xs text-fg-dim mt-1.5 line-clamp-2">{rule.usage[0]}</p>
             )}
           </Link>
         ))}

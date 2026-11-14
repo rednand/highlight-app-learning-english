@@ -316,15 +316,15 @@ export default function ReviewClient({
       <div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
-            { icon: <Zap size={15} className="text-yellow-400" />, value: totalDue, label: "Para revisar" },
-            { icon: <BookOpen size={15} className="text-yellow-400" />, value: totalFlashcards, label: "Total flashcards" },
+            { icon: <Zap size={15} className="text-brand" />, value: totalDue, label: "Para revisar" },
+            { icon: <BookOpen size={15} className="text-brand" />, value: totalFlashcards, label: "Total flashcards" },
             { icon: <CheckCircle size={15} className="text-green-400" />, value: `${avgDominio}%`, label: "Domínio médio" },
             { icon: <span className="text-base leading-none">🔥</span>, value: streak, label: "Dias seguidos" },
           ].map(({ icon, value, label }) => (
-            <div key={label} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
+            <div key={label} className="bg-surface border border-line rounded-[18px] p-4">
               <div className="flex items-center gap-2 mb-2">{icon}</div>
               <p className="text-2xl font-bold text-white">{value}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+              <p className="text-xs text-fg-subtle mt-0.5">{label}</p>
             </div>
           ))}
         </div>
@@ -332,28 +332,28 @@ export default function ReviewClient({
         {totalDue > 0 && (
           <button
             onClick={() => startReview(null)}
-            className="w-full flex items-center justify-between gap-3 p-4 bg-yellow-400/10 border border-yellow-400/20 rounded-xl hover:bg-yellow-400/15 transition-colors mb-6"
+            className="w-full flex items-center justify-between gap-3 p-4 bg-brand/10 border border-brand/20 rounded-xl hover:bg-brand/15 transition-colors mb-6"
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center shrink-0">
                 <Play size={16} className="text-black fill-black" />
               </div>
               <div className="text-left min-w-0">
                 <p className="text-white text-sm font-semibold">Revisão Rápida</p>
-                <p className="text-gray-500 text-xs mt-0.5 truncate">{totalDue} palavras aguardando revisão</p>
+                <p className="text-fg-subtle text-xs mt-0.5 truncate">{totalDue} palavras aguardando revisão</p>
               </div>
             </div>
-            <span className="hidden sm:flex items-center gap-1.5 bg-yellow-400 text-black text-sm font-bold px-4 py-2 rounded-full shrink-0">
+            <span className="hidden sm:flex items-center gap-1.5 bg-brand text-black text-sm font-bold px-4 py-2 rounded-full shrink-0">
               Começar <ArrowRight size={14} />
             </span>
-            <ArrowRight size={18} className="sm:hidden text-yellow-400 shrink-0" />
+            <ArrowRight size={18} className="sm:hidden text-brand shrink-0" />
           </button>
         )}
 
         {cinemaTotal > 0 && (
           <button
             onClick={startCinema}
-            className="w-full flex items-center justify-between gap-3 p-4 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-white/10 transition-colors mb-6"
+            className="w-full flex items-center justify-between gap-3 p-4 bg-surface border border-line rounded-[18px] hover:border-white/10 transition-colors mb-6"
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0">
@@ -361,12 +361,12 @@ export default function ReviewClient({
               </div>
               <div className="text-left min-w-0">
                 <p className="text-white text-sm font-semibold">Modo Cinema</p>
-                <p className="text-gray-500 text-xs mt-0.5">
+                <p className="text-fg-subtle text-xs mt-0.5">
                   {cinemaTotal} {cinemaTotal === 1 ? "palavra" : "palavras"} de filmes & músicas
                 </p>
               </div>
             </div>
-            <ArrowRight size={18} className="text-gray-600 shrink-0" />
+            <ArrowRight size={18} className="text-fg-dim shrink-0" />
           </button>
         )}
 
@@ -377,8 +377,8 @@ export default function ReviewClient({
               onClick={() => setTab(t)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-colors capitalize ${
                 tab === t
-                  ? "bg-yellow-400/10 text-yellow-400 border-yellow-400/20"
-                  : "text-gray-500 border-white/10 hover:text-white hover:border-white/20"
+                  ? "bg-brand/10 text-brand border-brand/20"
+                  : "text-fg-subtle border-white/10 hover:text-white hover:border-white/20"
               }`}
             >
               {t === "todas" ? "Todas" : t === "urgentes" ? "Urgentes" : "Concluídas"}
@@ -387,7 +387,7 @@ export default function ReviewClient({
         </div>
 
         {lessonsWithCards.length > 0 && (
-          <p className="text-[10px] font-bold tracking-[0.2em] text-gray-600 uppercase mb-3">Por aula e mídia</p>
+          <p className="text-[10px] font-bold tracking-[0.2em] text-fg-dim uppercase mb-3">Por aula e mídia</p>
         )}
 
         <div className="space-y-2">
@@ -398,13 +398,13 @@ export default function ReviewClient({
             return (
               <div
                 key={lesson.id}
-                className="flex items-center gap-3 p-3 sm:p-4 bg-[#151515] border border-[#292929] rounded-[18px]"
+                className="flex items-center gap-3 p-3 sm:p-4 bg-surface border border-line rounded-[18px]"
               >
-                <div className="hidden sm:flex w-8 h-8 rounded-lg bg-yellow-400/10 items-center justify-center shrink-0">
-                  {lesson.source_type === "movie" ? <Film size={14} className="text-yellow-400" />
-                    : lesson.source_type === "music" ? <Music size={14} className="text-yellow-400" />
-                    : lesson.source_type === "book" ? <BookMarked size={14} className="text-yellow-400" />
-                    : <BookOpen size={14} className="text-yellow-400" />}
+                <div className="hidden sm:flex w-8 h-8 rounded-lg bg-brand/10 items-center justify-center shrink-0">
+                  {lesson.source_type === "movie" ? <Film size={14} className="text-brand" />
+                    : lesson.source_type === "music" ? <Music size={14} className="text-brand" />
+                    : lesson.source_type === "book" ? <BookMarked size={14} className="text-brand" />
+                    : <BookOpen size={14} className="text-brand" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5 min-w-0">
@@ -415,23 +415,23 @@ export default function ReviewClient({
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-fg-subtle">
                     {stat?.totalCount ?? 0} palavras&nbsp; · &nbsp;Próxima: {next}
                   </p>
                 </div>
                 <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 w-24">
-                  <span className="text-xs text-gray-400 font-semibold">{stat?.dominio ?? 0}%</span>
+                  <span className="text-xs text-fg-muted font-semibold">{stat?.dominio ?? 0}%</span>
                   <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-yellow-400 rounded-full"
+                      className="h-full bg-brand rounded-full"
                       style={{ width: `${stat?.dominio ?? 0}%` }}
                     />
                   </div>
-                  <span className="text-[9px] text-gray-600">domínio</span>
+                  <span className="text-[9px] text-fg-dim">domínio</span>
                 </div>
                 <button
                   onClick={() => startReview(lesson.id)}
-                  className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-full transition-colors shrink-0"
+                  className="flex items-center gap-1.5 text-xs text-fg-muted hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-full transition-colors shrink-0"
                 >
                   <Play size={11} />
                   Revisar
@@ -440,7 +440,7 @@ export default function ReviewClient({
             )
           })}
           {filteredLessons.length === 0 && (
-            <p className="text-sm text-gray-500 py-6 text-center">
+            <p className="text-sm text-fg-subtle py-6 text-center">
               {tab === "urgentes" ? "Nenhuma aula urgente. Tudo em dia!" : "Nenhuma aula concluída ainda."}
             </p>
           )}
@@ -462,12 +462,12 @@ export default function ReviewClient({
       <div className="text-center py-20">
         <p className="text-4xl mb-4">📚</p>
         <p className="text-white font-semibold text-lg mb-2">Vocabulário insuficiente</p>
-        <p className="text-gray-500 text-sm">
+        <p className="text-fg-subtle text-sm">
           Adicione mais palavras ao seu vocabulário para ativar a revisão.
         </p>
         <button
           onClick={() => { setInsufficientPool(false); setStep("filter") }}
-          className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+          className="inline-flex items-center gap-2 mt-6 text-brand hover:text-brand-strong text-sm transition-colors"
         >
           Voltar ao filtro <ArrowRight size={14} />
         </button>
@@ -480,10 +480,10 @@ export default function ReviewClient({
       <div className="text-center py-20">
         <p className="text-4xl mb-4">🎉</p>
         <p className="text-white font-semibold text-lg mb-2">Nada para revisar!</p>
-        <p className="text-gray-500 text-sm">Todos os flashcards estão em dia.</p>
+        <p className="text-fg-subtle text-sm">Todos os flashcards estão em dia.</p>
         <button
           onClick={() => { router.refresh(); setStep("filter") }}
-          className="inline-flex items-center gap-2 mt-6 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+          className="inline-flex items-center gap-2 mt-6 text-brand hover:text-brand-strong text-sm transition-colors"
         >
           Voltar ao filtro <ArrowRight size={14} />
         </button>
@@ -496,19 +496,19 @@ export default function ReviewClient({
       <div className="text-center py-20">
         <p className="text-4xl mb-4">✅</p>
         <p className="text-white font-semibold text-lg mb-2">Sessão concluída!</p>
-        <p className="text-gray-500 text-sm">
+        <p className="text-fg-subtle text-sm">
           Você revisou <strong className="text-white">{reviewed}</strong> flashcard{reviewed !== 1 ? "s" : ""}.
         </p>
         <div className="flex items-center justify-center gap-3 mt-6">
           <button
             onClick={() => startReview(selectedLesson)}
-            className="text-sm text-gray-400 hover:text-white transition-colors border border-white/10 hover:border-white/20 px-4 py-2 rounded-full"
+            className="text-sm text-fg-muted hover:text-white transition-colors border border-white/10 hover:border-white/20 px-4 py-2 rounded-full"
           >
             Revisar novamente
           </button>
           <button
             onClick={() => { router.refresh(); setStep("filter") }}
-            className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 text-sm transition-colors"
+            className="inline-flex items-center gap-2 text-brand hover:text-brand-strong text-sm transition-colors"
           >
             Voltar <ArrowRight size={14} />
           </button>
@@ -530,26 +530,26 @@ export default function ReviewClient({
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => { router.refresh(); setStep("filter") }}
-          className="text-xs text-gray-600 hover:text-white transition-colors shrink-0"
+          className="text-xs text-fg-dim hover:text-white transition-colors shrink-0"
         >
           ← filtro
         </button>
-        <span className="text-xs text-gray-500 tabular-nums">{index + 1}/{cards.length}</span>
+        <span className="text-xs text-fg-subtle tabular-nums">{index + 1}/{cards.length}</span>
         <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
           <div
-            className="h-full bg-yellow-400 rounded-full transition-all duration-300"
+            className="h-full bg-brand rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
       {practiceOnly && (
-        <p className="text-xs text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 mb-3">
+        <p className="text-xs text-fg-muted bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 mb-3">
           Nenhuma palavra pendente aqui. Modo treino: suas respostas não mudam a agenda de revisão.
         </p>
       )}
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-6 mb-3">
+      <div className="bg-sunken border border-white/5 rounded-2xl p-6 mb-3">
         <div className="text-center mb-5">
           <span
             className={`text-[10px] font-bold tracking-[0.2em] uppercase ${cardMode === "cinema" ? "text-blue-400/60" : ""}`}
@@ -560,9 +560,9 @@ export default function ReviewClient({
           </span>
           <div className="flex items-center justify-center gap-3 mt-2">
             <p className="text-3xl font-semibold text-white leading-snug">{card.front}</p>
-            <SpeakButton text={card.front} className="text-gray-600 hover:text-yellow-400 transition-colors mt-1" />
+            <SpeakButton text={card.front} className="text-fg-dim hover:text-brand transition-colors mt-1" />
           </div>
-          {phonetic && <p className="text-gray-600 text-sm mt-1 font-mono">{phonetic}</p>}
+          {phonetic && <p className="text-fg-dim text-sm mt-1 font-mono">{phonetic}</p>}
           {cardMode === "cinema" && context && (
             <div className="mt-4">
               <ContextSentence label="Exemplo" sentence={context} term={card.front} />
@@ -583,8 +583,8 @@ export default function ReviewClient({
             )}
             {mySentence && (
               <div className="bg-white/5 rounded-xl px-4 py-3 text-left mb-3">
-                <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Minha frase</p>
-                <p className="text-gray-300 text-sm italic">&ldquo;{mySentence}&rdquo;</p>
+                <p className="text-[10px] text-fg-dim uppercase font-bold tracking-wider mb-1">Minha frase</p>
+                <p className="text-fg-soft text-sm italic">&ldquo;{mySentence}&rdquo;</p>
               </div>
             )}
             {media?.tmdb_poster_path && (
@@ -598,9 +598,9 @@ export default function ReviewClient({
                 />
                 <div className="flex items-center gap-1.5 min-w-0">
                   {media.tmdb_type === "movie"
-                    ? <Film size={10} className="text-gray-600 shrink-0" />
-                    : <Tv size={10} className="text-gray-600 shrink-0" />}
-                  <p className="text-[11px] text-gray-500 truncate">
+                    ? <Film size={10} className="text-fg-dim shrink-0" />
+                    : <Tv size={10} className="text-fg-dim shrink-0" />}
+                  <p className="text-[11px] text-fg-subtle truncate">
                     {media.title}
                     {media.tmdb_type === "tv" && media.tmdb_season ? ` T${media.tmdb_season}` : ""}
                   </p>
@@ -613,7 +613,7 @@ export default function ReviewClient({
         {selection !== null && cardMode === "cinema" && (
           <div className="mt-4 pt-4 border-t border-white/5 text-center space-y-3">
             <div className="pb-1">
-              <p className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Tradução</p>
+              <p className="text-[10px] text-fg-dim uppercase font-bold tracking-wider mb-1">Tradução</p>
               <p className="text-white text-lg font-semibold">{card.back}</p>
             </div>
             {isMusic ? (
@@ -627,14 +627,14 @@ export default function ReviewClient({
                   />
                 ) : (
                   <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
-                    <Music size={24} className="text-gray-600" />
+                    <Music size={24} className="text-fg-dim" />
                   </div>
                 )}
                 <div>
                   <p className="text-white text-lg font-semibold">{media?.title}</p>
                   <div className="flex items-center justify-center gap-1.5 mt-1">
-                    <Music size={11} className="text-gray-500" />
-                    <p className="text-gray-500 text-sm">{media?.music_artist}</p>
+                    <Music size={11} className="text-fg-subtle" />
+                    <p className="text-fg-subtle text-sm">{media?.music_artist}</p>
                   </div>
                 </div>
               </>
@@ -651,17 +651,17 @@ export default function ReviewClient({
                 ) : (
                   <div className="w-18 h-24 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
                     {media?.tmdb_type === "tv"
-                      ? <Tv size={22} className="text-gray-600" />
-                      : <Film size={22} className="text-gray-600" />}
+                      ? <Tv size={22} className="text-fg-dim" />
+                      : <Film size={22} className="text-fg-dim" />}
                   </div>
                 )}
                 <div>
                   <p className="text-white text-lg font-semibold">{media?.title ?? "—"}</p>
                   <div className="flex items-center justify-center gap-1.5 mt-1">
                     {media?.tmdb_type === "movie"
-                      ? <Film size={11} className="text-gray-500" />
-                      : <Tv size={11} className="text-gray-500" />}
-                    <p className="text-gray-500 text-sm">
+                      ? <Film size={11} className="text-fg-subtle" />
+                      : <Tv size={11} className="text-fg-subtle" />}
+                    <p className="text-fg-subtle text-sm">
                       {media?.tmdb_type === "movie" ? "Filme" : "Série"}
                       {media?.tmdb_season ? ` · T${media.tmdb_season}` : ""}
                     </p>
@@ -677,7 +677,7 @@ export default function ReviewClient({
         <button
           onClick={handleSkip}
           disabled={selection !== null}
-          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-fg-muted transition-colors"
         >
           <SkipForward size={12} />
           Pular
@@ -687,7 +687,7 @@ export default function ReviewClient({
           onClick={handleDiscard}
           disabled={selection !== null || discarding}
           title="Já sei esta palavra: não mostrar mais na revisão"
-          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-red-400 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-red-400 disabled:opacity-50 transition-colors"
         >
           <EyeOff size={12} />
           {discarding ? "Descartando…" : "Já sei, descartar"}

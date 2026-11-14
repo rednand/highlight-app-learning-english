@@ -32,20 +32,20 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
     <div>
       <div className="flex items-center gap-3 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-dim" />
           <input
             type="text"
             placeholder="Buscar aulas..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#151515] border border-[#292929] rounded-[18px] pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-yellow-400/30 transition-colors"
+            className="w-full bg-surface border border-line rounded-[18px] pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-fg-faint focus:outline-none focus:border-brand/30 transition-colors"
           />
         </div>
-        <div className="flex items-center gap-1 bg-[#151515] border border-[#292929] rounded-[18px] p-1">
+        <div className="flex items-center gap-1 bg-surface border border-line rounded-[18px] p-1">
           <button
             onClick={() => setView("grid")}
             className={`p-1.5 rounded-lg transition-colors ${
-              view === "grid" ? "bg-yellow-400/10 text-yellow-400" : "text-gray-600 hover:text-gray-400"
+              view === "grid" ? "bg-brand/10 text-brand" : "text-fg-dim hover:text-fg-muted"
             }`}
           >
             <LayoutGrid size={15} />
@@ -53,7 +53,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
           <button
             onClick={() => setView("list")}
             className={`p-1.5 rounded-lg transition-colors ${
-              view === "list" ? "bg-yellow-400/10 text-yellow-400" : "text-gray-600 hover:text-gray-400"
+              view === "list" ? "bg-brand/10 text-brand" : "text-fg-dim hover:text-fg-muted"
             }`}
           >
             <List size={15} />
@@ -62,7 +62,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
       </div>
 
       {filtered.length === 0 && lessons.length > 0 && (
-        <p className="text-sm text-gray-500 py-8 text-center">Nenhuma aula encontrada.</p>
+        <p className="text-sm text-fg-subtle py-8 text-center">Nenhuma aula encontrada.</p>
       )}
 
       <div className={view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"}>
@@ -84,18 +84,18 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
               <Link
                 key={lesson.id}
                 href={`/lessons/${lesson.id}`}
-                className="flex items-center gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all group"
+                className="flex items-center gap-4 p-4 bg-surface border border-line rounded-[18px] hover:border-brand/20 transition-all group"
               >
-                <div className="w-8 h-8 rounded-lg bg-yellow-400/10 flex items-center justify-center shrink-0">
-                  <BookOpen size={14} className="text-yellow-400" />
+                <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center shrink-0">
+                  <BookOpen size={14} className="text-brand" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm group-hover:text-yellow-400 transition-colors truncate">
+                  <p className="text-white font-semibold text-sm group-hover:text-brand transition-colors truncate">
                     {lesson.title}
                   </p>
-                  <p className="text-xs text-gray-600 mt-0.5">{date}</p>
+                  <p className="text-xs text-fg-dim mt-0.5">{date}</p>
                 </div>
-                <span className="text-xs text-gray-600 shrink-0 max-w-[40%] truncate">
+                <span className="text-xs text-fg-dim shrink-0 max-w-[40%] truncate">
                   {lessonPreview(lesson)}
                 </span>
               </Link>
@@ -106,15 +106,15 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
             <Link
               key={lesson.id}
               href={`/lessons/${lesson.id}`}
-              className="block p-5 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 hover:bg-white/[0.02] transition-all group"
+              className="block p-5 bg-surface border border-line rounded-[18px] hover:border-brand/20 hover:bg-white/[0.02] transition-all group"
             >
-              <div className="w-9 h-9 rounded-xl bg-yellow-400/10 flex items-center justify-center mb-4">
-                <BookOpen size={16} className="text-yellow-400" />
+              <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center mb-4">
+                <BookOpen size={16} className="text-brand" />
               </div>
-              <h2 className="text-white font-semibold text-base mb-2 group-hover:text-yellow-400 transition-colors line-clamp-2">
+              <h2 className="text-white font-semibold text-base mb-2 group-hover:text-brand transition-colors line-clamp-2">
                 {lesson.title}
               </h2>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
+              <div className="flex items-center gap-2 text-xs text-fg-dim">
                 <span className="shrink-0">{date}</span>
                 <span className="shrink-0">·</span>
                 <span className="truncate">{lessonPreview(lesson)}</span>
@@ -126,7 +126,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
         {view === "grid" && (
           <Link
             href="/lessons/new"
-            className="flex flex-col items-center justify-center gap-2 p-5 bg-[#0f0f0f] border border-dashed border-white/5 rounded-xl hover:border-yellow-400/20 transition-all min-h-[80px] sm:min-h-[148px] text-gray-600 hover:text-gray-400"
+            className="flex flex-col items-center justify-center gap-2 p-5 bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all min-h-[80px] sm:min-h-[148px] text-fg-dim hover:text-fg-muted"
           >
             <Plus size={20} />
             <span className="text-sm">Adicionar nova aula</span>

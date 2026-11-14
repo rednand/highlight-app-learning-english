@@ -47,9 +47,9 @@ export default async function WordsPage() {
   return (
     <div className="pt-4 px-[18px] pb-6 md:p-8 max-w-3xl">
       <div className="mb-5">
-        <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">VOCABULÁRIO</p>
+        <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">VOCABULÁRIO</p>
         <h1 className="text-2xl font-bold text-white">Palavras</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <p className="text-fg-subtle text-sm mt-1">
           Toque no olho para tirar uma palavra da revisão ou trazer de volta.
         </p>
       </div>

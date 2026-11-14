@@ -57,30 +57,30 @@ export default async function LessonsPage() {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">HIGHLIGHT</p>
           <h1 className="text-2xl font-bold text-white">Minhas Aulas</h1>
         </div>
         <Link
           href="/lessons/new"
-          className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2 rounded-full transition-colors"
+          className="flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-4 py-2 rounded-full transition-colors"
         >
           <Plus size={15} />
           Nova Aula
         </Link>
       </div>
 
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-sm text-fg-dim mb-6">
         {lessonsWithCounts.length} aulas&nbsp; · &nbsp;{totalWords ?? 0} palavras no total
       </p>
 
       {lessonsWithCounts.length === 0 ? (
         <div className="text-center py-20">
-          <BookOpen size={36} className="text-gray-700 mx-auto mb-4" />
-          <p className="text-gray-400 font-medium mb-1">Nenhuma aula ainda</p>
-          <p className="text-gray-600 text-sm mb-6">Comece registrando sua primeira aula.</p>
+          <BookOpen size={36} className="text-fg-faint mx-auto mb-4" />
+          <p className="text-fg-muted font-medium mb-1">Nenhuma aula ainda</p>
+          <p className="text-fg-dim text-sm mb-6">Comece registrando sua primeira aula.</p>
           <Link
             href="/lessons/new"
-            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
           >
             <Plus size={15} />
             Nova Aula

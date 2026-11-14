@@ -45,22 +45,22 @@ export default function MediaPicker({ onSelect }: { onSelect: (s: Selection | nu
 
   if (selected) {
     return (
-      <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-yellow-400/20 rounded-xl">
+      <div className="flex items-center gap-4 p-3 bg-sunken border border-brand/20 rounded-xl">
         {selected.poster_path ? (
           <Image src={posterUrl(selected.poster_path)} alt={selected.title} width={40} height={60} className="rounded-lg object-cover shrink-0" />
         ) : (
           <div className="w-10 h-15 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            {selected.tmdb_type === "movie" ? <Film size={16} className="text-gray-600" /> : <Tv size={16} className="text-gray-600" />}
+            {selected.tmdb_type === "movie" ? <Film size={16} className="text-fg-dim" /> : <Tv size={16} className="text-fg-dim" />}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-white text-sm font-semibold truncate">{selected.title}</p>
-          <p className="text-gray-500 text-xs mt-0.5">
+          <p className="text-fg-subtle text-xs mt-0.5">
             {selected.tmdb_type === "movie" ? "Filme" : "Série"} · {selected.year}
             {selected.tmdb_type === "tv" && selected.season && ` · Temporada ${selected.season}`}
           </p>
         </div>
-        <button type="button" onClick={clear} className="text-gray-600 hover:text-white transition-colors shrink-0">
+        <button type="button" onClick={clear} className="text-fg-dim hover:text-white transition-colors shrink-0">
           <X size={16} />
         </button>
         <input type="hidden" name="tmdb_id" value={selected.tmdb_id} />
@@ -74,17 +74,17 @@ export default function MediaPicker({ onSelect }: { onSelect: (s: Selection | nu
   return (
     <div className="space-y-2">
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-dim pointer-events-none" />
         <input
           type="text"
           value={query}
           onChange={(e) => handleQuery(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault() }}
           placeholder="Buscar filme ou série..."
-          className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl pl-9 pr-10 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
+          className="w-full bg-sunken border border-white/10 rounded-xl pl-9 pr-10 py-3 text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors text-sm"
         />
         {isPending && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-white/10 border-t-yellow-400 rounded-full animate-spin" />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-white/10 border-t-brand rounded-full animate-spin" />
         )}
       </div>
 
@@ -95,18 +95,18 @@ export default function MediaPicker({ onSelect }: { onSelect: (s: Selection | nu
               key={`${r.tmdb_type}-${r.tmdb_id}`}
               type="button"
               onClick={() => pick(r)}
-              className="flex items-center gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all text-left"
+              className="flex items-center gap-3 p-3 bg-surface border border-line rounded-[18px] hover:border-brand/20 transition-all text-left"
             >
               {r.poster_path ? (
                 <Image src={posterUrl(r.poster_path)} alt={r.title} width={32} height={48} className="rounded object-cover shrink-0" />
               ) : (
                 <div className="w-8 h-12 bg-white/5 rounded flex items-center justify-center shrink-0">
-                  {r.tmdb_type === "movie" ? <Film size={12} className="text-gray-600" /> : <Tv size={12} className="text-gray-600" />}
+                  {r.tmdb_type === "movie" ? <Film size={12} className="text-fg-dim" /> : <Tv size={12} className="text-fg-dim" />}
                 </div>
               )}
               <div className="min-w-0">
                 <p className="text-white text-xs font-semibold line-clamp-2 leading-tight">{r.title}</p>
-                <p className="text-gray-600 text-[10px] mt-0.5">
+                <p className="text-fg-dim text-[10px] mt-0.5">
                   {r.tmdb_type === "movie" ? "Filme" : "Série"}{r.year ? ` · ${r.year}` : ""}
                 </p>
               </div>

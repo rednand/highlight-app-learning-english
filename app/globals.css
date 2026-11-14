@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #f8fafc;
-  --surface: #111111;
-  --surface-strong: #1a1a1a;
-  --border: rgba(255, 255, 255, 0.05);
-  --primary: #facc15;
-  --primary-contrast: #000000;
-  --muted: #6b7280;
-  --radius: 12px;
-  --shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+/* Paleta do Highlight. Use estas cores (bg-surface, text-fg-muted, bg-brand…)
+   em vez de hex soltos.
+   Contraste mínimo medido contra todos os fundos e a borda (page…line):
+   fg-soft 9,8:1 · fg-muted 7:1 · fg-subtle 5,6:1 · fg-dim 4,6:1 (todos para texto)
+   fg-faint 3,1:1: só ícones decorativos e placeholders. */
+@theme {
+  --color-page: #0a0a0a;
+  --color-sunken: #0f0f0f;
+  --color-surface: #151515;
+  --color-raised: #1a1a1a;
+  --color-raised-strong: #222222;
+  --color-line: #292929;
 
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #9ca3af;
-  --color-text-tertiary: #6b7280;
-  --color-background-primary: #111111;
-  --color-background-secondary: #1a1a1a;
-  --color-border-secondary: rgba(255, 255, 255, 0.1);
-  --color-border-tertiary: rgba(255, 255, 255, 0.05);
-  --color-text-success: #4ade80;
-  --color-text-danger: #f87171;
+  --color-fg-soft: #d4d4d8;
+  --color-fg-muted: #b4b4bc;
+  --color-fg-subtle: #a0a0a8;
+  --color-fg-dim: #909098;
+  --color-fg-faint: #74747c;
+
+  --color-brand: #facc15;
+  --color-brand-strong: #fde047;
 }
 
 * {
@@ -34,8 +34,8 @@ body {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-page);
+  color: #f8fafc;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -53,75 +53,6 @@ a {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.page-center {
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 1rem;
-  text-align: center;
-}
-
-.page-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
-  gap: 1rem;
-}
-
-.card {
-  width: 100%;
-  max-width: 520px;
-  padding: 2rem;
-  background: var(--surface-strong);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.button-primary,
-.button-secondary {
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.button-primary {
-  background: var(--primary);
-  color: var(--primary-contrast);
-  border-color: transparent;
-  padding: 0.85rem 1.4rem;
-}
-
-.button-primary:hover {
-  filter: brightness(1.05);
-}
-
-.button-secondary {
-  background: transparent;
-  color: var(--foreground);
-  border-color: var(--border);
-  padding: 0.85rem 1.3rem;
-}
-
-.button-secondary:hover {
-  background: var(--surface);
-}
-
-.link-muted {
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.link-muted:hover {
-  color: var(--foreground);
 }
 
 @utility scrollbar-none {

@@ -119,13 +119,13 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
     })
   }
 
-  const inputClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
+  const inputClass = "w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors"
 
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-yellow-400/30 text-gray-600 hover:text-yellow-400 text-sm rounded-xl transition-colors justify-center"
+        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-dim hover:text-brand text-sm rounded-xl transition-colors justify-center"
       >
         <Plus size={15} />
         Adicionar palavra ou expressão
@@ -139,29 +139,29 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-lg bg-sunken border border-white/10 rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold text-white">Adicionar palavra</h2>
-              <button type="button" onClick={closeModal} className="text-gray-600 hover:text-white transition-colors">
+              <button type="button" onClick={closeModal} className="text-fg-dim hover:text-white transition-colors">
                 <X size={16} />
               </button>
             </div>
 
             <input type="hidden" name="lesson_id" value={lessonId} />
 
-            <div className="grid grid-cols-2 gap-1 p-1 bg-[#0a0a0a] border border-white/10 rounded-full">
+            <div className="grid grid-cols-2 gap-1 p-1 bg-page border border-white/10 rounded-full">
               <button
                 type="button"
                 onClick={() => setBulk(false)}
-                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${!bulk ? "bg-yellow-400 text-black" : "text-gray-500 hover:text-white"}`}
+                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${!bulk ? "bg-brand text-black" : "text-fg-subtle hover:text-white"}`}
               >
                 Uma palavra
               </button>
               <button
                 type="button"
                 onClick={() => setBulk(true)}
-                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${bulk ? "bg-yellow-400 text-black" : "text-gray-500 hover:text-white"}`}
+                className={`text-xs font-bold py-1.5 rounded-full transition-colors ${bulk ? "bg-brand text-black" : "text-fg-subtle hover:text-white"}`}
               >
                 Várias de uma vez
               </button>
@@ -177,7 +177,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
                   className={`${inputClass} resize-none`}
                   autoFocus
                 />
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-fg-dim">
                   Use &ldquo;=&rdquo; ou &ldquo; - &rdquo; para separar a tradução. Sem tradução, ela é sugerida automaticamente.
                 </p>
               </div>
@@ -199,7 +199,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
                   onClick={toggleListening}
                   title={isListening ? "Parar gravação" : "Falar palavra"}
                   className={`absolute right-2 top-1/2 -translate-y-1/2 transition-colors ${
-                    isListening ? "text-red-400 animate-pulse" : "text-gray-500 hover:text-yellow-400"
+                    isListening ? "text-red-400 animate-pulse" : "text-fg-subtle hover:text-brand"
                   }`}
                 >
                   {isListening ? <MicOff size={14} /> : <Mic size={14} />}
@@ -218,7 +218,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
                   onClick={suggestTranslation}
                   disabled={isSuggesting || !term.trim()}
                   title="Sugerir tradução"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors"
                 >
                   <Wand2 size={14} className={isSuggesting ? "animate-pulse" : ""} />
                 </button>
@@ -229,7 +229,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
               <select
                 name="type"
                 defaultValue="word"
-                className="bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-yellow-400/50 transition-colors"
+                className="bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-fg-soft outline-none focus:border-brand/50 transition-colors"
               >
                 <option value="word">Palavra</option>
                 <option value="expression">Expressão</option>
@@ -248,7 +248,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
                   onClick={fetchExample}
                   disabled={isFetchingExample || !term.trim()}
                   title="Buscar exemplo de uso"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors"
                 >
                   <Wand2 size={14} className={isFetchingExample ? "animate-pulse" : ""} />
                 </button>
@@ -257,14 +257,14 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
 
             <input type="hidden" name="phonetic" value={phonetic} />
 
-            {!bulk && phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+            {!bulk && phonetic && <p className="text-xs font-mono text-fg-subtle">{phonetic}</p>}
             {!bulk && translationError && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-fg-subtle">
                 Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
               </p>
             )}
             {!bulk && exampleError && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-fg-subtle">
                 Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
               </p>
             )}
@@ -285,7 +285,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
             <button
               type="submit"
               disabled={isPending || (bulk && !bulkText.trim())}
-              className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+              className="w-full bg-brand hover:bg-brand-strong disabled:opacity-50 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
             >
               {isPending ? "Salvando…" : bulk ? "Salvar todas" : "Salvar"}
             </button>

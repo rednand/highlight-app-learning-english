@@ -138,7 +138,7 @@ export function urgencyLabel(
   if (!stat.minNextReview) return null
   const diffMs = new Date(stat.minNextReview).getTime() - Date.now()
   const diffDays = diffMs / (1000 * 60 * 60 * 24)
-  if (diffDays <= 2) return { label: "Moderado", color: "bg-yellow-500/20 text-yellow-400" }
+  if (diffDays <= 2) return { label: "Moderado", color: "bg-brand/20 text-brand" }
   return { label: "Tranquilo", color: "bg-green-500/20 text-green-400" }
 }
 

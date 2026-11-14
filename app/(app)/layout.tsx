@@ -36,7 +36,7 @@ export default async function AppLayout({
   const initials = user.email?.slice(0, 2).toUpperCase() ?? "??";
 
   return (
-    <div className="flex h-screen bg-[#0a0a0a] text-white overflow-hidden">
+    <div className="flex h-screen bg-page text-white overflow-hidden">
       <aside className="hidden md:flex w-56 border-r border-white/5 flex-col shrink-0">
         <div className="px-5 py-5 border-b border-white/5">
           <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export default async function AppLayout({
             icon={<RotateCcw size={16} />}
             label="Revisar"
           />
-          <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-gray-600 uppercase">
+          <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-fg-dim uppercase">
             Mais
           </p>
           <NavLink
@@ -94,14 +94,14 @@ export default async function AppLayout({
         <div className="p-3 space-y-2">
           <Link
             href="/media"
-            className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+            className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-strong text-black text-sm font-bold py-2.5 rounded-full transition-colors"
           >
             <Plus size={15} />
             Adicionar mídia
           </Link>
           <Link
             href="/lessons/new"
-            className="flex items-center justify-center gap-2 w-full text-xs font-semibold text-gray-500 hover:text-white py-1 transition-colors"
+            className="flex items-center justify-center gap-2 w-full text-xs font-semibold text-fg-subtle hover:text-white py-1 transition-colors"
           >
             <Plus size={12} />
             Nova aula
@@ -109,12 +109,12 @@ export default async function AppLayout({
         </div>
         <div className="p-4 border-t border-white/5">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-7 h-7 rounded-full bg-yellow-400/20 text-yellow-400 flex items-center justify-center text-xs font-bold shrink-0">
+            <div className="w-7 h-7 rounded-full bg-brand/20 text-brand flex items-center justify-center text-xs font-bold shrink-0">
               {initials}
             </div>
             <Link
               href="/account"
-              className="text-xs text-gray-500 truncate hover:text-white transition-colors"
+              className="text-xs text-fg-subtle truncate hover:text-white transition-colors"
             >
               {user.email}
             </Link>
@@ -122,7 +122,7 @@ export default async function AppLayout({
           <div className="flex items-center gap-3">
             <PushToggle />
             <form action={signOut}>
-              <button className="text-xs text-gray-600 hover:text-white transition-colors">
+              <button className="text-xs text-fg-dim hover:text-white transition-colors">
                 Sair
               </button>
             </form>

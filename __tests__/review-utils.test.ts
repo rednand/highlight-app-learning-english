@@ -108,7 +108,7 @@ describe("urgencyLabel", () => {
     const stat: LessonStat = { dueCount: 0, totalCount: 5, minNextReview: soon, dominio: 70 }
     expect(urgencyLabel(stat)).toEqual({
       label: "Moderado",
-      color: "bg-yellow-500/20 text-yellow-400",
+      color: "bg-brand/20 text-brand",
     })
   })
 

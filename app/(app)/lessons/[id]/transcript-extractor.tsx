@@ -113,7 +113,7 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-yellow-400/30 text-gray-600 hover:text-yellow-400 text-sm rounded-xl transition-colors justify-center"
+        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-dim hover:text-brand text-sm rounded-xl transition-colors justify-center"
       >
         {isMusic ? <Music size={15} /> : <FileText size={15} />}
         {isMusic ? "Extrair da letra" : "Extrair de um texto"}
@@ -122,14 +122,14 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
   }
 
   return (
-    <div className="bg-[#0f0f0f] border border-white/10 rounded-xl p-5 space-y-4">
+    <div className="bg-sunken border border-white/10 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+        <span className="text-xs font-bold text-fg-subtle uppercase tracking-wider">
           {step === "input"
             ? (isMusic ? "Letra da música" : "Colar texto")
             : `${words.length} ${words.length === 1 ? "palavra encontrada" : "palavras encontradas"}${isTranslating ? " — traduzindo…" : ""}`}
         </span>
-        <button onClick={handleClose} className="text-gray-600 hover:text-white transition-colors">
+        <button onClick={handleClose} className="text-fg-dim hover:text-white transition-colors">
           <X size={15} />
         </button>
       </div>
@@ -138,8 +138,8 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
         <div className="text-center py-4 space-y-2">
           <Check size={24} className="text-green-400 mx-auto" />
           <p className="text-white text-sm font-medium">Palavras adicionadas!</p>
-          <p className="text-gray-500 text-xs">Cada uma foi salva com a frase onde apareceu.</p>
-          <button onClick={handleClose} className="text-xs text-gray-500 hover:text-white transition-colors">
+          <p className="text-fg-subtle text-xs">Cada uma foi salva com a frase onde apareceu.</p>
+          <button onClick={handleClose} className="text-xs text-fg-subtle hover:text-white transition-colors">
             Fechar
           </button>
         </div>
@@ -150,9 +150,9 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
               type="button"
               onClick={handleFetchLyrics}
               disabled={isFetchingLyrics}
-              className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] disabled:opacity-50 text-white text-sm font-bold py-2.5 rounded-full transition-colors"
+              className="w-full flex items-center justify-center gap-2 bg-raised hover:bg-raised-strong border border-line disabled:opacity-50 text-white text-sm font-bold py-2.5 rounded-full transition-colors"
             >
-              <Music size={14} className={`text-yellow-400 ${isFetchingLyrics ? "animate-pulse" : ""}`} />
+              <Music size={14} className={`text-brand ${isFetchingLyrics ? "animate-pulse" : ""}`} />
               {isFetchingLyrics ? "Buscando letra…" : "Buscar letra automaticamente"}
             </button>
           )}
@@ -162,12 +162,12 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
             onChange={e => setTranscript(e.target.value)}
             placeholder={PLACEHOLDERS[sourceType ?? ""] ?? "Cole aqui o transcript da aula, podcast, série ou qualquer texto em inglês..."}
             rows={6}
-            className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none"
+            className="w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors resize-none"
           />
           <button
             onClick={handleExtract}
             disabled={!transcript.trim()}
-            className="w-full flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-40 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-strong disabled:opacity-40 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
           >
             <Wand2 size={14} />
             Extrair palavras
@@ -175,7 +175,7 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
         </>
       ) : (
         <>
-          <p className="text-xs text-gray-500">Selecione as palavras que quer adicionar à aula:</p>
+          <p className="text-xs text-fg-subtle">Selecione as palavras que quer adicionar à aula:</p>
           <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
             {words.map(({ term, sentence, selected, translation, translating }) => (
               <button
@@ -184,8 +184,8 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
                 onClick={() => toggleWord(term)}
                 className={`flex flex-col items-start px-3 py-2 rounded-xl text-xs border transition-colors text-left ${
                   selected
-                    ? "bg-yellow-400/10 border-yellow-400/30 text-yellow-400"
-                    : "bg-transparent border-white/10 text-gray-600"
+                    ? "bg-brand/10 border-brand/30 text-brand"
+                    : "bg-transparent border-white/10 text-fg-dim"
                 }`}
               >
                 <span className="font-medium">{term}</span>
@@ -200,18 +200,18 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={() => setStep("input")}
-              className="text-xs text-gray-600 hover:text-white transition-colors"
+              className="text-xs text-fg-dim hover:text-white transition-colors"
             >
               Voltar
             </button>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-fg-dim">
                 {words.filter(w => w.selected).length} selecionadas
               </span>
               <button
                 onClick={handleAdd}
                 disabled={isPending || isTranslating || words.filter(w => w.selected).length === 0}
-                className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-40 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors"
+                className="flex items-center gap-2 bg-brand hover:bg-brand-strong disabled:opacity-40 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors"
               >
                 <Plus size={13} />
                 {isPending ? "Adicionando…" : "Adicionar"}

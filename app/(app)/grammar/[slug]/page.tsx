@@ -23,13 +23,13 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function levelColor(level: string) {
   if (level.startsWith("A")) return "bg-green-400/10 text-green-400 border-green-400/20"
-  if (level.startsWith("B")) return "bg-yellow-400/10 text-yellow-400 border-yellow-400/20"
+  if (level.startsWith("B")) return "bg-brand/10 text-brand border-brand/20"
   return "bg-orange-400/10 text-orange-400 border-orange-400/20"
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase mb-3">{children}</h3>
+    <h3 className="text-[10px] font-bold tracking-[0.2em] text-fg-subtle uppercase mb-3">{children}</h3>
   )
 }
 
@@ -42,7 +42,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
     <div className="max-w-2xl mx-auto p-4 md:p-8">
       <Link
         href="/grammar"
-        className="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition-colors w-fit"
+        className="flex items-center gap-2 text-fg-subtle hover:text-white text-sm mb-8 transition-colors w-fit"
       >
         <ArrowLeft size={15} />
         Gramática
@@ -54,23 +54,23 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           {rule.level}
         </span>
       </div>
-      <p className="text-[10px] font-bold tracking-wider text-gray-600 uppercase mb-8">
+      <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-8">
         {CATEGORY_LABELS[rule.category] ?? rule.category}
       </p>
 
       {/* Structure */}
       {rule.structure && (
-        <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 mb-6">
+        <div className="bg-surface border border-line rounded-[18px] p-4 mb-6">
           <SectionTitle>Estrutura</SectionTitle>
-          <p className="text-yellow-400 font-mono text-sm">{rule.structure}</p>
+          <p className="text-brand font-mono text-sm">{rule.structure}</p>
           {rule.negative && (
-            <p className="text-gray-400 font-mono text-sm mt-2">
-              <span className="text-gray-600 text-xs mr-2">Negativa:</span>{rule.negative}
+            <p className="text-fg-muted font-mono text-sm mt-2">
+              <span className="text-fg-dim text-xs mr-2">Negativa:</span>{rule.negative}
             </p>
           )}
           {rule.question && (
-            <p className="text-gray-400 font-mono text-sm mt-2">
-              <span className="text-gray-600 text-xs mr-2">Pergunta:</span>{rule.question}
+            <p className="text-fg-muted font-mono text-sm mt-2">
+              <span className="text-fg-dim text-xs mr-2">Pergunta:</span>{rule.question}
             </p>
           )}
         </div>
@@ -82,8 +82,8 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Quando usar</SectionTitle>
           <ul className="space-y-1.5">
             {rule.usage.map((u, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                <span className="text-yellow-400 mt-0.5 shrink-0">·</span>
+              <li key={i} className="flex items-start gap-2 text-sm text-fg-soft">
+                <span className="text-brand mt-0.5 shrink-0">·</span>
                 {u}
               </li>
             ))}
@@ -97,7 +97,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Exemplos</SectionTitle>
           <div className="space-y-2">
             {rule.examples.map((ex, i) => (
-              <div key={i} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-4 py-2.5">
+              <div key={i} className="bg-sunken border border-white/5 rounded-lg px-4 py-2.5">
                 <p className="text-white text-sm italic">{ex}</p>
               </div>
             ))}
@@ -111,7 +111,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Expressões de tempo</SectionTitle>
           <div className="flex flex-wrap gap-2">
             {rule.time_expressions.map((t, i) => (
-              <span key={i} className="bg-white/5 border border-white/10 text-gray-300 text-xs px-2.5 py-1 rounded-full">
+              <span key={i} className="bg-white/5 border border-white/10 text-fg-soft text-xs px-2.5 py-1 rounded-full">
                 {t}
               </span>
             ))}
@@ -125,9 +125,9 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Regras</SectionTitle>
           <div className="space-y-2">
             {Object.entries(rule.rules).map(([key, val]) => (
-              <div key={key} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-4 py-3">
-                <span className="text-yellow-400 font-mono text-xs font-bold">{key}</span>
-                <p className="text-gray-300 text-sm mt-1">{val}</p>
+              <div key={key} className="bg-sunken border border-white/5 rounded-lg px-4 py-3">
+                <span className="text-brand font-mono text-xs font-bold">{key}</span>
+                <p className="text-fg-soft text-sm mt-1">{val}</p>
               </div>
             ))}
           </div>
@@ -142,13 +142,13 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
             {Object.entries(rule.tense_changes).map(([change, example]) => {
               const [from, to] = change.split(" → ")
               return (
-                <div key={change} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-4 py-3">
+                <div key={change} className="bg-sunken border border-white/5 rounded-lg px-4 py-3">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-green-400 text-xs font-bold">{from}</span>
-                    <span className="text-gray-600 text-xs">→</span>
-                    <span className="text-yellow-400 text-xs font-bold">{to}</span>
+                    <span className="text-fg-dim text-xs">→</span>
+                    <span className="text-brand text-xs font-bold">{to}</span>
                   </div>
-                  <p className="text-gray-400 text-xs italic">{example}</p>
+                  <p className="text-fg-muted text-xs italic">{example}</p>
                 </div>
               )
             })}
@@ -162,15 +162,15 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Modais</SectionTitle>
           <div className="space-y-2">
             {Object.entries(rule.modals).map(([modal, data]) => (
-              <div key={modal} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
-                <p className="text-yellow-400 font-mono font-bold text-sm mb-2">{modal}</p>
+              <div key={modal} className="bg-surface border border-line rounded-[18px] p-4">
+                <p className="text-brand font-mono font-bold text-sm mb-2">{modal}</p>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {data.usage.map((u, i) => (
-                    <span key={i} className="bg-white/5 text-gray-400 text-[10px] px-2 py-0.5 rounded-full">{u}</span>
+                    <span key={i} className="bg-white/5 text-fg-muted text-[10px] px-2 py-0.5 rounded-full">{u}</span>
                   ))}
                 </div>
                 {data.examples.map((ex, i) => (
-                  <p key={i} className="text-gray-300 text-xs italic">· {ex}</p>
+                  <p key={i} className="text-fg-soft text-xs italic">· {ex}</p>
                 ))}
               </div>
             ))}
@@ -184,11 +184,11 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Formas</SectionTitle>
           <div className="space-y-3">
             {Object.entries(rule.forms).map(([formKey, data]) => (
-              <div key={formKey} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
-                <p className="text-yellow-400 font-mono text-xs font-bold mb-1">{data.structure}</p>
-                <p className="text-gray-400 text-xs mb-2">{data.usage}</p>
+              <div key={formKey} className="bg-surface border border-line rounded-[18px] p-4">
+                <p className="text-brand font-mono text-xs font-bold mb-1">{data.structure}</p>
+                <p className="text-fg-muted text-xs mb-2">{data.usage}</p>
                 {data.examples.map((ex, i) => (
-                  <p key={i} className="text-gray-300 text-xs italic">· {ex}</p>
+                  <p key={i} className="text-fg-soft text-xs italic">· {ex}</p>
                 ))}
               </div>
             ))}
@@ -202,16 +202,16 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Verbos com duplo significado</SectionTitle>
           <div className="space-y-3">
             {Object.entries(rule.both_with_meaning_change).map(([verb, data]) => (
-              <div key={verb} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
-                <p className="text-yellow-400 font-bold text-sm mb-2">{verb}</p>
+              <div key={verb} className="bg-surface border border-line rounded-[18px] p-4">
+                <p className="text-brand font-bold text-sm mb-2">{verb}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="bg-white/5 rounded-lg p-2.5">
-                    <p className="text-[10px] text-gray-600 font-bold uppercase mb-1">Gerúndio</p>
-                    <p className="text-gray-300 text-xs italic">{data.gerund}</p>
+                    <p className="text-[10px] text-fg-dim font-bold uppercase mb-1">Gerúndio</p>
+                    <p className="text-fg-soft text-xs italic">{data.gerund}</p>
                   </div>
                   <div className="bg-white/5 rounded-lg p-2.5">
-                    <p className="text-[10px] text-gray-600 font-bold uppercase mb-1">Infinitivo</p>
-                    <p className="text-gray-300 text-xs italic">{data.infinitive}</p>
+                    <p className="text-[10px] text-fg-dim font-bold uppercase mb-1">Infinitivo</p>
+                    <p className="text-fg-soft text-xs italic">{data.infinitive}</p>
                   </div>
                 </div>
               </div>
@@ -226,12 +226,12 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Phrasal Verbs comuns</SectionTitle>
           <div className="space-y-2">
             {rule.common_phrasal_verbs.map((pv, i) => (
-              <div key={i} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-4 py-3">
+              <div key={i} className="bg-sunken border border-white/5 rounded-lg px-4 py-3">
                 <div className="flex items-baseline gap-3 flex-wrap">
-                  <span className="text-yellow-400 font-mono font-bold text-sm">{pv.verb}</span>
-                  <span className="text-gray-500 text-xs">{pv.meaning}</span>
+                  <span className="text-brand font-mono font-bold text-sm">{pv.verb}</span>
+                  <span className="text-fg-subtle text-xs">{pv.meaning}</span>
                 </div>
-                <p className="text-gray-300 text-xs italic mt-1">{pv.example}</p>
+                <p className="text-fg-soft text-xs italic mt-1">{pv.example}</p>
               </div>
             ))}
           </div>
@@ -244,14 +244,14 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Tipos</SectionTitle>
           <div className="space-y-4">
             {Object.entries(rule.types).map(([typeKey, data]) => (
-              <div key={typeKey} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
+              <div key={typeKey} className="bg-surface border border-line rounded-[18px] p-4">
                 <p className="text-white text-sm font-bold capitalize mb-1">
                   {typeKey.replace(/_/g, " ")}
                 </p>
-                {data.structure && <p className="text-yellow-400 font-mono text-xs mb-2">{data.structure}</p>}
-                {data.description && <p className="text-gray-400 text-xs mb-2">{data.description}</p>}
+                {data.structure && <p className="text-brand font-mono text-xs mb-2">{data.structure}</p>}
+                {data.description && <p className="text-fg-muted text-xs mb-2">{data.description}</p>}
                 {data.examples && data.examples.map((ex, i) => (
-                  <p key={i} className="text-gray-300 text-xs italic">· {ex}</p>
+                  <p key={i} className="text-fg-soft text-xs italic">· {ex}</p>
                 ))}
               </div>
             ))}
@@ -265,9 +265,9 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <SectionTitle>Pronomes relativos</SectionTitle>
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(rule.relative_pronouns).map(([pronoun, usage]) => (
-              <div key={pronoun} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-3 py-2.5">
-                <span className="text-yellow-400 font-mono font-bold text-sm">{pronoun}</span>
-                <p className="text-gray-500 text-xs mt-0.5">{usage}</p>
+              <div key={pronoun} className="bg-sunken border border-white/5 rounded-lg px-3 py-2.5">
+                <span className="text-brand font-mono font-bold text-sm">{pronoun}</span>
+                <p className="text-fg-subtle text-xs mt-0.5">{usage}</p>
               </div>
             ))}
           </div>
@@ -282,11 +282,11 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
             {rule.common_errors.map((err, i) => {
               const parts = err.split(" → ")
               return (
-                <div key={i} className="bg-[#0f0f0f] border border-white/5 rounded-lg px-4 py-2.5 flex items-center gap-3 flex-wrap">
+                <div key={i} className="bg-sunken border border-white/5 rounded-lg px-4 py-2.5 flex items-center gap-3 flex-wrap">
                   <span className="text-red-400 text-xs line-through">{parts[0]}</span>
                   {parts[1] && (
                     <>
-                      <span className="text-gray-600 text-xs">→</span>
+                      <span className="text-fg-dim text-xs">→</span>
                       <span className="text-green-400 text-xs">{parts[1]}</span>
                     </>
                   )}
@@ -299,9 +299,9 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
 
       {/* Notes */}
       {rule.notes && (
-        <div className="bg-yellow-400/5 border border-yellow-400/10 rounded-xl px-4 py-3">
-          <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider mb-1">Nota</p>
-          <p className="text-gray-300 text-sm">{rule.notes}</p>
+        <div className="bg-brand/5 border border-brand/10 rounded-xl px-4 py-3">
+          <p className="text-[10px] font-bold text-brand uppercase tracking-wider mb-1">Nota</p>
+          <p className="text-fg-soft text-sm">{rule.notes}</p>
         </div>
       )}
     </div>

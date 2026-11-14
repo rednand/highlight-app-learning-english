@@ -16,7 +16,7 @@ export default function SpeakButton({ text, className }: { text: string; classNa
       type="button"
       onClick={speak}
       title="Ouvir pronúncia"
-      className={className ?? "text-gray-600 hover:text-yellow-400 transition-colors shrink-0"}
+      className={className ?? "text-fg-dim hover:text-brand transition-colors shrink-0"}
     >
       <Volume2 size={13} />
     </button>
