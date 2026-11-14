@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   const { data: due } = await supabase
     .from("flashcards")
     .select("user_id")
+    .is("discarded_at", null)
     .lte("next_review_at", new Date().toISOString())
 
   if (!due?.length) return NextResponse.json({ ok: true, sent: 0 })

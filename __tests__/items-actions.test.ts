@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { addLessonItem, updateLessonItem, deleteLessonItem } from "../app/actions/items"
+import { addLessonItem, updateLessonItem, deleteLessonItem, setItemInReview } from "../app/actions/items"
 
 vi.mock("../app/utils/supabase/server", () => ({ createClient: vi.fn() }))
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
@@ -140,5 +140,38 @@ describe("deleteLessonItem", () => {
     await deleteLessonItem("item-1", "lesson-1")
     expect(b.delete).toHaveBeenCalled()
     expect(mockRevalidatePath).toHaveBeenCalledWith("/lessons/lesson-1")
+  })
+})
+
+describe("setItemInReview", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it("exige usuário autenticado", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase(null) as never)
+    await expect(setItemInReview("item-1", "lesson-1", false)).rejects.toThrow("Não autenticado")
+  })
+
+  it("tira da revisão marcando discarded_at no card do item", async () => {
+    const b = makeBuilder()
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, b) as never)
+    await setItemInReview("item-1", "lesson-1", false)
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: expect.any(String) })
+    expect(b.eq).toHaveBeenCalledWith("lesson_item_id", "item-1")
+    expect(b.eq).toHaveBeenCalledWith("user_id", "u1")
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/lessons/lesson-1")
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/")
+  })
+
+  it("volta para a revisão limpando discarded_at sem mexer na agenda", async () => {
+    const b = makeBuilder()
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, b) as never)
+    await setItemInReview("item-1", "lesson-1", true)
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: null })
+  })
+
+  it("propaga erro do banco", async () => {
+    const b = makeBuilder({ error: { message: "falhou" } })
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, b) as never)
+    await expect(setItemInReview("item-1", "lesson-1", false)).rejects.toThrow("falhou")
   })
 })

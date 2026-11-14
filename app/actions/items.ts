@@ -144,6 +144,23 @@ export async function updateLessonItem(formData: FormData) {
   revalidatePath(`/lessons/${lesson_id}`)
 }
 
+export async function setItemInReview(itemId: string, lessonId: string, inReview: boolean) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Não autenticado")
+
+  const { error } = await supabase
+    .from("flashcards")
+    .update({ discarded_at: inReview ? null : new Date().toISOString() })
+    .eq("lesson_item_id", itemId)
+    .eq("user_id", user.id)
+
+  if (error) throw new Error(error.message)
+  revalidatePath(`/lessons/${lessonId}`)
+  revalidatePath("/")
+  revalidatePath("/review")
+}
+
 export async function deleteLessonItem(id: string, lessonId: string) {
   const supabase = await createClient()
   await supabase.from("lesson_items").delete().eq("id", id)
