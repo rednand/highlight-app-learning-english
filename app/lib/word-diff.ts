@@ -1,7 +1,9 @@
+import { foldAccents } from "./text"
+
 export type DiffToken = { text: string; match: boolean }
 
 function normalize(word: string): string {
-  return word.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\p{L}\p{N}']/gu, "")
+  return foldAccents(word).replace(/[^\p{L}\p{N}']/gu, "")
 }
 
 export function wordDiff(mine: string, reference: string): { mine: DiffToken[]; reference: DiffToken[] } {

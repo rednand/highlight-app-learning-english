@@ -1,21 +1,11 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { Search, Eye, EyeOff, Film, Music, BookMarked, BookOpen } from "lucide-react"
 import { toast } from "sonner"
 import { setItemInReview } from "../../actions/items"
-import { filterWords, type ReviewState, type WordFilter } from "../../lib/words-utils"
-
-export type WordItem = {
-  id: string
-  lessonId: string
-  term: string
-  translation: string | null
-  sourceTitle: string | null
-  sourceType: string | null
-  reviewState: ReviewState
-}
+import { filterWords, countByFilter, type ReviewState, type WordFilter, type WordItem } from "../../lib/words-utils"
 
 const FILTERS: { value: WordFilter; label: string }[] = [
   { value: "todas", label: "Todas" },
@@ -31,36 +21,41 @@ function SourceIcon({ type }: { type: string | null }) {
   return <BookOpen size={11} className={className} />
 }
 
-export default function WordsClient({ words: initialWords }: { words: WordItem[] }) {
-  const [words, setWords] = useState(initialWords)
+export default function WordsClient({ words: serverWords }: { words: WordItem[] }) {
+  const [overrides, setOverrides] = useState<Record<string, ReviewState>>({})
+  const [pending, setPending] = useState<Set<string>>(() => new Set())
   const [query, setQuery] = useState("")
   const [filter, setFilter] = useState<WordFilter>("todas")
-  const [pendingId, setPendingId] = useState<string | null>(null)
-  const [, startTransition] = useTransition()
 
-  const visible = filterWords(words, query, filter)
-  const counts = {
-    todas: words.length,
-    revisao: words.filter((w) => w.reviewState === "active").length,
-    fora: words.filter((w) => w.reviewState === "discarded").length,
+  const words = useMemo(
+    () => serverWords.map((w) => (overrides[w.id] ? { ...w, reviewState: overrides[w.id] } : w)),
+    [serverWords, overrides],
+  )
+  const counts = useMemo(() => countByFilter(words), [words])
+  const visible = useMemo(() => filterWords(words, query, filter), [words, query, filter])
+
+  function setPendingFor(id: string, on: boolean) {
+    setPending((prev) => {
+      const next = new Set(prev)
+      if (on) next.add(id)
+      else next.delete(id)
+      return next
+    })
   }
 
-  function toggle(word: WordItem) {
+  async function toggle(word: WordItem) {
+    if (pending.has(word.id)) return
     const inReview = word.reviewState === "discarded"
-    setPendingId(word.id)
-    startTransition(async () => {
-      try {
-        await setItemInReview(word.id, word.lessonId, inReview)
-        setWords((prev) =>
-          prev.map((w) => (w.id === word.id ? { ...w, reviewState: inReview ? "active" : "discarded" } : w)),
-        )
-        toast(inReview ? `"${word.term}" voltou para a revisão` : `"${word.term}" saiu da revisão`)
-      } catch {
-        toast.error("Não foi possível alterar a revisão")
-      } finally {
-        setPendingId(null)
-      }
-    })
+    setPendingFor(word.id, true)
+    try {
+      await setItemInReview(word.id, word.lessonId, inReview)
+      setOverrides((prev) => ({ ...prev, [word.id]: inReview ? "active" : "discarded" }))
+      toast(inReview ? `"${word.term}" voltou para a revisão` : `"${word.term}" saiu da revisão`)
+    } catch {
+      toast.error("Não foi possível alterar a revisão")
+    } finally {
+      setPendingFor(word.id, false)
+    }
   }
 
   return (
@@ -127,7 +122,7 @@ export default function WordsClient({ words: initialWords }: { words: WordItem[]
                 {word.reviewState !== "none" && (
                   <button
                     onClick={() => toggle(word)}
-                    disabled={pendingId === word.id}
+                    disabled={pending.has(word.id)}
                     title={discarded ? "Voltar para a revisão" : "Tirar da revisão"}
                     aria-label={discarded ? `Voltar ${word.term} para a revisão` : `Tirar ${word.term} da revisão`}
                     className={`flex items-center justify-center w-10 h-10 rounded-full shrink-0 transition-colors disabled:opacity-40 ${

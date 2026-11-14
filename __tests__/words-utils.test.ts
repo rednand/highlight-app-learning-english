@@ -1,5 +1,19 @@
 import { describe, it, expect } from "vitest"
-import { reviewStateOf, filterWords, normalizeSearch, type WordRow } from "../app/lib/words-utils"
+import {
+  reviewStateOf,
+  filterWords,
+  normalizeSearch,
+  buildSearchText,
+  countByFilter,
+  type WordItem,
+} from "../app/lib/words-utils"
+import { foldAccents } from "../app/lib/text"
+
+describe("foldAccents", () => {
+  it("remove acentos e deixa minúsculo", () => {
+    expect(foldAccents("ÁRBITRO Cônjuge ação")).toBe("arbitro conjuge acao")
+  })
+})
 
 describe("reviewStateOf", () => {
   it("sem card é 'none'", () => {
@@ -12,19 +26,43 @@ describe("reviewStateOf", () => {
     expect(reviewStateOf({ discarded_at: null })).toBe("active")
     expect(reviewStateOf([{ discarded_at: "2026-11-14T00:00:00Z" }])).toBe("discarded")
   })
-})
 
-describe("normalizeSearch", () => {
-  it("ignora acentos, maiúsculas e espaços nas pontas", () => {
-    expect(normalizeSearch("  Cônjuge ")).toBe("conjuge")
+  it("com vários cards, está na revisão se algum estiver ativo", () => {
+    expect(reviewStateOf([{ discarded_at: "2026-11-14" }, { discarded_at: null }])).toBe("active")
+    expect(reviewStateOf([{ discarded_at: "2026-11-14" }, { discarded_at: "2026-11-13" }])).toBe("discarded")
   })
 })
 
+describe("normalizeSearch e buildSearchText", () => {
+  it("ignora acentos, maiúsculas e espaços nas pontas", () => {
+    expect(normalizeSearch("  Cônjuge ")).toBe("conjuge")
+  })
+
+  it("junta só os campos preenchidos", () => {
+    const text = buildSearchText(["Spouse", null, "A Última Casa", undefined])
+    expect(text).toContain("spouse")
+    expect(text).toContain("a ultima casa")
+  })
+
+  it("não deixa a busca casar entre dois campos", () => {
+    const text = buildSearchText(["spouse", "conjuge"])
+    expect(text.includes("spouse conjuge")).toBe(false)
+  })
+})
+
+function word(id: string, fields: [string, string | null, string | null], reviewState: WordItem["reviewState"]): WordItem {
+  const [term, translation, sourceTitle] = fields
+  return {
+    id, lessonId: `l${id}`, term, translation, sourceTitle, sourceType: null, reviewState,
+    searchText: buildSearchText(fields),
+  }
+}
+
 describe("filterWords", () => {
-  const words: WordRow[] = [
-    { id: "1", term: "Spouse", translation: "Cônjuge", reviewState: "active", sourceTitle: "A Última Casa" },
-    { id: "2", term: "Referee", translation: "Árbitro", reviewState: "discarded", sourceTitle: "Crystal Lake" },
-    { id: "3", term: "besieged", translation: null, reviewState: "none", sourceTitle: null },
+  const words = [
+    word("1", ["Spouse", "Cônjuge", "A Última Casa"], "active"),
+    word("2", ["Referee", "Árbitro", "Crystal Lake"], "discarded"),
+    word("3", ["besieged", null, null], "none"),
   ]
 
   it("'todas' sem busca devolve tudo", () => {
@@ -45,5 +83,9 @@ describe("filterWords", () => {
 
   it("combina busca e filtro", () => {
     expect(filterWords(words, "referee", "revisao")).toEqual([])
+  })
+
+  it("conta por filtro", () => {
+    expect(countByFilter(words)).toEqual({ todas: 3, revisao: 1, fora: 1 })
   })
 })

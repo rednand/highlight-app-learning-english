@@ -1,7 +1,7 @@
 import { createClient } from "../../utils/supabase/server"
 import { redirect } from "next/navigation"
-import { reviewStateOf, type CardState } from "../../lib/words-utils"
-import WordsClient, { type WordItem } from "./words-client"
+import { reviewStateOf, buildSearchText, type CardState, type WordItem } from "../../lib/words-utils"
+import WordsClient from "./words-client"
 
 type Row = {
   id: string
@@ -12,19 +12,28 @@ type Row = {
   flashcards: CardState | CardState[] | null
 }
 
+const PAGE_SIZE = 1000
+
 export default async function WordsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  const { data } = await supabase
-    .from("lesson_items")
-    .select("id, lesson_id, term, translation, lessons(title, source_type), flashcards(discarded_at)")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(2000)
+  const rows: Row[] = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from("lesson_items")
+      .select("id, lesson_id, term, translation, lessons(title, source_type), flashcards(discarded_at)")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: true })
+      .range(from, from + PAGE_SIZE - 1)
+    if (error || !data) break
+    rows.push(...(data as unknown as Row[]))
+    if (data.length < PAGE_SIZE) break
+  }
 
-  const words: WordItem[] = ((data ?? []) as unknown as Row[]).map((row) => ({
+  const words: WordItem[] = rows.map((row) => ({
     id: row.id,
     lessonId: row.lesson_id,
     term: row.term,
@@ -32,6 +41,7 @@ export default async function WordsPage() {
     sourceTitle: row.lessons?.title ?? null,
     sourceType: row.lessons?.source_type ?? null,
     reviewState: reviewStateOf(row.flashcards),
+    searchText: buildSearchText([row.term, row.translation, row.lessons?.title]),
   }))
 
   return (
