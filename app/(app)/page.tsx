@@ -301,7 +301,7 @@ export default async function DashboardPage() {
           <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-white">Últimas palavras</h2>
-              <Link href="/lessons" className="flex items-center gap-1 text-xs text-[#8B8B98] hover:text-[#FDC700] transition-colors">
+              <Link href="/words" className="flex items-center gap-1 text-xs text-[#8B8B98] hover:text-[#FDC700] transition-colors">
                 Ver todas
                 <ArrowRight size={12} />
               </Link>

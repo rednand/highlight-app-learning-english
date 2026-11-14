@@ -11,6 +11,7 @@ import {
   Library,
   ScrollText,
   Plus,
+  ListChecks,
 } from "lucide-react";
 import NavLink from "./nav-link";
 import MobileNav from "./mobile-nav";
@@ -75,6 +76,11 @@ export default async function AppLayout({
           <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-gray-600 uppercase">
             Mais
           </p>
+          <NavLink
+            href="/words"
+            icon={<ListChecks size={16} />}
+            label="Palavras"
+          />
           <NavLink
             href="/grammar"
             icon={<ScrollText size={16} />}

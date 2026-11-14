@@ -9,15 +9,8 @@ import EditLessonForm from "./edit-lesson-form"
 import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
+import { reviewStateOf } from "../../../lib/words-utils"
 
-
-type ItemFlashcard = { discarded_at: string | null }
-
-function reviewState(cards: ItemFlashcard | ItemFlashcard[] | null): "active" | "discarded" | "none" {
-  const card = Array.isArray(cards) ? cards[0] : cards
-  if (!card) return "none"
-  return card.discarded_at ? "discarded" : "active"
-}
 
 function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
   if (sourceType === "movie") return tmdbType === "tv" ? "Revisar palavras desta série" : "Revisar palavras deste filme"
@@ -163,7 +156,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           </h2>
         </div>
 
-        {items && items.some((item) => reviewState(item.flashcards) === "active") && (
+        {items && items.some((item) => reviewStateOf(item.flashcards) === "active") && (
           <Link
             href={`/review?lesson=${id}`}
             className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors mb-4"
@@ -179,7 +172,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
               <ItemCard
                 key={item.id}
                 item={{ id: item.id, lesson_id: id, term: item.term, translation: item.translation, type: item.type, context: item.context, phonetic: item.phonetic ?? null, my_sentence: item.my_sentence ?? null }}
-                reviewState={reviewState(item.flashcards)}
+                reviewState={reviewStateOf(item.flashcards)}
               />
             ))}
           </div>

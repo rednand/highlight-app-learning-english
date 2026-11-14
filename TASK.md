@@ -77,3 +77,8 @@
 - [x] Descartadas saem da revisão, dos contadores da home e da notificação diária
 - [x] Corrigido: "Pular" parava de funcionar depois da primeira resposta
 - [ ] Teste manual no celular
+
+## Página de palavras
+- [x] Nova página `/words` com todas as palavras: busca, filtros (Todas / Na revisão / Fora da revisão) e botão de olho para tirar ou voltar para a revisão
+- [x] "Ver todas" de "Últimas palavras" na home leva para `/words`; "Palavras" no menu Mais e na sidebar
+- [ ] Teste manual no celular
