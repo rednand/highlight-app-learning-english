@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { sm2, formatNextReview, urgencyLabel } from "../app/lib/review-utils"
+import { sm2, formatNextReview, urgencyLabel, lapseInterval, pickDistractors, buildMultipleChoiceOptions } from "../app/lib/review-utils"
 import type { Grade, LessonStat } from "../app/lib/review-utils"
 
 // ─── sm2 ────────────────────────────────────────────────────────────────────
@@ -119,5 +119,74 @@ describe("urgencyLabel", () => {
       label: "Tranquilo",
       color: "bg-green-500/20 text-green-400",
     })
+  })
+})
+
+// ─── erro em palavra madura ──────────────────────────────────────────────────
+
+describe("lapseInterval", () => {
+  it("palavra nova ou recém-aprendida volta amanhã", () => {
+    expect(lapseInterval(1)).toBe(1)
+    expect(lapseInterval(5)).toBe(1)
+  })
+
+  it("palavra madura perde metade do intervalo", () => {
+    expect(lapseInterval(6)).toBe(3)
+    expect(lapseInterval(15)).toBe(8)
+    expect(lapseInterval(90)).toBe(45)
+  })
+})
+
+describe("sm2 com erro", () => {
+  it("erro numa palavra com intervalo de 40 dias volta em 20, não em 1", () => {
+    const result = sm2({ ease_factor: 2.5, interval_days: 40 }, 1)
+    expect(result.interval_days).toBe(20)
+    expect(result.ease_factor).toBeLessThan(2.5)
+  })
+})
+
+// ─── alternativas ────────────────────────────────────────────────────────────
+
+function seq(values: number[]) {
+  let i = 0
+  return () => values[i++ % values.length]
+}
+
+describe("pickDistractors", () => {
+  it("nunca inclui a resposta certa nem repetidas, ignorando maiúsculas", () => {
+    const picked = pickDistractors("Alvará", ["alvará", "Cônjuge", "cônjuge", "Árbitro", "Norte", " "], new Map(), seq([0.1, 0.2, 0.3, 0.4]))
+    expect(picked).toHaveLength(3)
+    expect(picked.map((p) => p.toLowerCase())).not.toContain("alvará")
+    expect(new Set(picked.map((p) => p.toLowerCase())).size).toBe(3)
+  })
+
+  it("devolve menos de 3 quando não há candidatos suficientes", () => {
+    expect(pickDistractors("a", ["a", "b"])).toEqual(["b"])
+  })
+
+  it("prefere as alternativas menos usadas na sessão", () => {
+    const usage = new Map([["Alvará", 5], ["Norte", 3]])
+    const picked = pickDistractors("Cônjuge", ["Alvará", "Norte", "Árbitro", "Cerco", "Voo"], usage, seq([0.5]))
+    expect(picked).not.toContain("Alvará")
+    expect(picked).not.toContain("Norte")
+    expect(usage.get("Árbitro")).toBe(1)
+  })
+
+  it("ao longo de uma sessão, cada alternativa aparece um número parecido de vezes", () => {
+    const pool = Array.from({ length: 30 }, (_, i) => `t${i}`)
+    const usage = new Map<string, number>()
+    for (let i = 0; i < 40; i++) pickDistractors(`t${i % 30}`, pool, usage)
+    const counts = [...usage.values()]
+    expect(Math.max(...counts) - Math.min(...counts)).toBeLessThanOrEqual(2)
+  })
+})
+
+describe("buildMultipleChoiceOptions com uso compartilhado", () => {
+  it("tem exatamente uma alternativa certa e registra o uso", () => {
+    const usage = new Map<string, number>()
+    const options = buildMultipleChoiceOptions("Cônjuge", ["Alvará", "Norte", "Árbitro", "Cerco"], usage)
+    expect(options).toHaveLength(4)
+    expect(options.filter((o) => o.isCorrect)).toHaveLength(1)
+    expect([...usage.values()].reduce((a, b) => a + b, 0)).toBe(3)
   })
 })

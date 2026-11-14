@@ -5,6 +5,8 @@ import {
   normalizeSearch,
   buildSearchText,
   countByFilter,
+  countDuplicates,
+  termKey,
   type WordItem,
 } from "../app/lib/words-utils"
 import { foldAccents } from "../app/lib/text"
@@ -50,11 +52,11 @@ describe("normalizeSearch e buildSearchText", () => {
   })
 })
 
-function word(id: string, fields: [string, string | null, string | null], reviewState: WordItem["reviewState"]): WordItem {
+function word(id: string, fields: [string, string | null, string | null], reviewState: WordItem["reviewState"], duplicates = 1): WordItem {
   const [term, translation, sourceTitle] = fields
   return {
     id, lessonId: `l${id}`, term, translation, sourceTitle, sourceType: null, reviewState,
-    searchText: buildSearchText(fields),
+    searchText: buildSearchText(fields), duplicates,
   }
 }
 
@@ -86,6 +88,29 @@ describe("filterWords", () => {
   })
 
   it("conta por filtro", () => {
-    expect(countByFilter(words)).toEqual({ todas: 3, revisao: 1, fora: 1 })
+    expect(countByFilter(words)).toEqual({ todas: 3, revisao: 1, fora: 1, repetidas: 0 })
+  })
+})
+
+describe("palavras repetidas", () => {
+  it("termKey ignora maiúsculas, acentos, apóstrofo curvo e espaços extras", () => {
+    expect(termKey("  Don’t  give UP ")).toBe(termKey("don't give up"))
+    expect(termKey("Café")).toBe("cafe")
+  })
+
+  it("conta quantas vezes cada termo aparece", () => {
+    const counts = countDuplicates(["Spouse", "spouse ", "Referee", "SPOUSE"])
+    expect(counts.get("spouse")).toBe(3)
+    expect(counts.get("referee")).toBe(1)
+  })
+
+  it("filtro 'repetidas' mostra só as que aparecem mais de uma vez", () => {
+    const words = [
+      word("1", ["Spouse", "Cônjuge", null], "active", 2),
+      word("2", ["spouse", "Esposa", null], "active", 2),
+      word("3", ["Referee", "Árbitro", null], "active", 1),
+    ]
+    expect(filterWords(words, "", "repetidas").map((w) => w.id)).toEqual(["1", "2"])
+    expect(countByFilter(words).repetidas).toBe(2)
   })
 })

@@ -42,6 +42,7 @@ export async function fetchDistractorPool(): Promise<string[]> {
     .from("flashcards")
     .select("back")
     .eq("user_id", user.id)
+    .is("discarded_at", null)
   if (!data) return []
   return [...new Set(data.map((f) => f.back).filter(Boolean) as string[])]
 }

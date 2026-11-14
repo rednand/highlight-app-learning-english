@@ -33,7 +33,7 @@ export function sm2(
     ease_factor + 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02),
   )
   if (grade < 3) {
-    interval_days = 1
+    interval_days = lapseInterval(interval_days)
   } else {
     interval_days = interval_days === 1 ? 6 : Math.round(interval_days * ease_factor)
   }
@@ -46,19 +46,57 @@ export function sm2(
   }
 }
 
+/**
+ * Intervalo depois de um erro. Palavra nova ou recém-aprendida (intervalo
+ * menor que 6 dias) volta amanhã. Palavra que já tinha sido acertada várias
+ * vezes perde metade do intervalo em vez de recomeçar do zero.
+ */
+export function lapseInterval(intervalDays: number): number {
+  if (intervalDays < 6) return 1
+  return Math.max(1, Math.round(intervalDays / 2))
+}
+
+function sameText(a: string, b: string): boolean {
+  return a.trim().toLowerCase() === b.trim().toLowerCase()
+}
+
+/**
+ * Sorteia até 3 alternativas erradas preferindo as que foram menos usadas
+ * nesta sessão (`usage`), para a mesma tradução não aparecer em toda pergunta.
+ * Atualiza `usage` com as escolhidas.
+ */
+export function pickDistractors(
+  correct: string,
+  pool: string[],
+  usage: Map<string, number> = new Map(),
+  random: () => number = Math.random,
+): string[] {
+  const seen = new Set<string>()
+  const candidates: string[] = []
+  for (const text of pool) {
+    const key = text.trim().toLowerCase()
+    if (!key || seen.has(key) || sameText(text, correct)) continue
+    seen.add(key)
+    candidates.push(text)
+  }
+
+  const ranked = candidates
+    .map((text) => ({ text, uses: usage.get(text) ?? 0, tie: random() }))
+    .sort((a, b) => a.uses - b.uses || a.tie - b.tie)
+    .slice(0, 3)
+    .map((c) => c.text)
+
+  for (const text of ranked) usage.set(text, (usage.get(text) ?? 0) + 1)
+  return ranked
+}
+
 export function buildMultipleChoiceOptions(
   correct: string,
   pool: string[],
+  usage?: Map<string, number>,
 ): ChoiceOption[] {
   const labels: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D']
-  const candidates = [...new Set(pool.filter((t) => t !== correct))]
-
-  const distractors: string[] = []
-  const available = [...candidates]
-  while (distractors.length < 3 && available.length > 0) {
-    const idx = Math.floor(Math.random() * available.length)
-    distractors.push(available.splice(idx, 1)[0])
-  }
+  const distractors = pickDistractors(correct, pool, usage)
 
   const all = [correct, ...distractors]
   for (let i = all.length - 1; i > 0; i--) {

@@ -116,6 +116,7 @@ export default function ReviewClient({
       setInsufficientPool(true)
       return []
     }
+    const usage = new Map<string, number>()
     return fetched.map((card) => {
       const correct =
         mode === "cinema"
@@ -123,7 +124,7 @@ export default function ReviewClient({
           : card.back
       return {
         ...card,
-        options: buildMultipleChoiceOptions(correct, pool.filter((t) => t !== correct)),
+        options: buildMultipleChoiceOptions(correct, pool, usage),
       }
     })
   }

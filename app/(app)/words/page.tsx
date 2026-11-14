@@ -1,6 +1,6 @@
 import { createClient } from "../../utils/supabase/server"
 import { redirect } from "next/navigation"
-import { reviewStateOf, buildSearchText, type CardState, type WordItem } from "../../lib/words-utils"
+import { reviewStateOf, buildSearchText, countDuplicates, termKey, type CardState, type WordItem } from "../../lib/words-utils"
 import WordsClient from "./words-client"
 
 type Row = {
@@ -33,6 +33,8 @@ export default async function WordsPage() {
     if (!data || data.length < PAGE_SIZE) break
   }
 
+  const duplicates = countDuplicates(rows.map((row) => row.term))
+
   const words: WordItem[] = rows.map((row) => ({
     id: row.id,
     lessonId: row.lesson_id,
@@ -42,6 +44,7 @@ export default async function WordsPage() {
     sourceType: row.lessons?.source_type ?? null,
     reviewState: reviewStateOf(row.flashcards),
     searchText: buildSearchText([row.term, row.translation, row.lessons?.title]),
+    duplicates: duplicates.get(termKey(row.term)) ?? 1,
   }))
 
   return (

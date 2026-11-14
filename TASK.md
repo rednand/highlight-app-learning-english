@@ -82,3 +82,9 @@
 - [x] Nova página `/words` com todas as palavras: busca, filtros (Todas / Na revisão / Fora da revisão) e botão de olho para tirar ou voltar para a revisão
 - [x] "Ver todas" de "Últimas palavras" na home leva para `/words`; "Palavras" no menu Mais e na sidebar
 - [ ] Teste manual no celular
+
+## Palavras que aparecem toda hora na revisão
+- [x] Alternativas erradas variam ao longo da sessão (as menos usadas têm preferência) e não incluem palavras descartadas
+- [x] Erro em palavra madura (intervalo de 6 dias ou mais) corta o intervalo pela metade em vez de voltar para 1 dia
+- [x] Página Palavras marca "Repetida N×" e tem o filtro "Repetidas"
+- [ ] Teste manual da revisão no celular

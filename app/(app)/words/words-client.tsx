@@ -11,6 +11,7 @@ const FILTERS: { value: WordFilter; label: string }[] = [
   { value: "todas", label: "Todas" },
   { value: "revisao", label: "Na revisão" },
   { value: "fora", label: "Fora da revisão" },
+  { value: "repetidas", label: "Repetidas" },
 ]
 
 function SourceIcon({ type }: { type: string | null }) {
@@ -72,7 +73,7 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
       </div>
 
       <div className="flex gap-1.5 mb-4 overflow-x-auto">
-        {FILTERS.map(({ value, label }) => (
+        {FILTERS.filter(({ value }) => value !== "repetidas" || counts.repetidas > 0).map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
@@ -108,6 +109,14 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
                     {discarded && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-400 bg-white/5 shrink-0">
                         Fora da revisão
+                      </span>
+                    )}
+                    {word.duplicates > 1 && (
+                      <span
+                        title="Esta palavra está salva mais de uma vez e aparece repetida na revisão"
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full text-orange-300 bg-orange-400/10 shrink-0"
+                      >
+                        Repetida {word.duplicates}×
                       </span>
                     )}
                   </div>

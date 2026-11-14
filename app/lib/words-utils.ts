@@ -10,7 +10,7 @@ export function reviewStateOf(cards: CardState | CardState[] | null | undefined)
   return list.some((card) => !card.discarded_at) ? "active" : "discarded"
 }
 
-export type WordFilter = "todas" | "revisao" | "fora"
+export type WordFilter = "todas" | "revisao" | "fora" | "repetidas"
 
 export type WordItem = {
   id: string
@@ -21,6 +21,21 @@ export type WordItem = {
   sourceType: string | null
   reviewState: ReviewState
   searchText: string
+  duplicates: number
+}
+
+export function termKey(term: string): string {
+  return foldAccents(term).replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim()
+}
+
+/** Quantas vezes cada termo aparece na lista (mesmo termo, sem diferenciar maiúsculas e acentos). */
+export function countDuplicates(terms: string[]): Map<string, number> {
+  const counts = new Map<string, number>()
+  for (const term of terms) {
+    const key = termKey(term)
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  return counts
 }
 
 export function normalizeSearch(value: string): string {
@@ -31,7 +46,7 @@ export function buildSearchText(fields: (string | null | undefined)[]): string {
   return normalizeSearch(fields.filter(Boolean).join(" \u0000 "))
 }
 
-export function filterWords<T extends Pick<WordItem, "reviewState" | "searchText">>(
+export function filterWords<T extends Pick<WordItem, "reviewState" | "searchText" | "duplicates">>(
   words: T[],
   query: string,
   filter: WordFilter,
@@ -40,16 +55,19 @@ export function filterWords<T extends Pick<WordItem, "reviewState" | "searchText
   return words.filter((word) => {
     if (filter === "revisao" && word.reviewState !== "active") return false
     if (filter === "fora" && word.reviewState !== "discarded") return false
+    if (filter === "repetidas" && word.duplicates < 2) return false
     return !q || word.searchText.includes(q)
   })
 }
 
-export function countByFilter(words: Pick<WordItem, "reviewState">[]): Record<WordFilter, number> {
+export function countByFilter(words: Pick<WordItem, "reviewState" | "duplicates">[]): Record<WordFilter, number> {
   let revisao = 0
   let fora = 0
+  let repetidas = 0
   for (const word of words) {
     if (word.reviewState === "active") revisao++
     else if (word.reviewState === "discarded") fora++
+    if (word.duplicates > 1) repetidas++
   }
-  return { todas: words.length, revisao, fora }
+  return { todas: words.length, revisao, fora, repetidas }
 }
