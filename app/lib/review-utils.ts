@@ -1,4 +1,4 @@
-import { foldAccents } from "./text"
+import { textKey } from "./text"
 
 export type Grade = 0 | 1 | 2 | 3 | 4 | 5
 
@@ -54,13 +54,11 @@ export function sm2(
  * vezes perde metade do intervalo em vez de recomeçar do zero.
  */
 export function lapseInterval(intervalDays: number): number {
-  if (intervalDays < 6) return 1
+  if (!Number.isFinite(intervalDays) || intervalDays < 6) return 1
   return Math.round(intervalDays / 2)
 }
 
-export function optionKey(text: string): string {
-  return foldAccents(text).replace(/\s+/g, " ").trim()
-}
+export const optionKey = textKey
 
 /**
  * Sorteia até 3 alternativas erradas preferindo as que foram menos usadas

@@ -130,6 +130,10 @@ describe("lapseInterval", () => {
     expect(lapseInterval(5)).toBe(1)
   })
 
+  it("valor inválido volta amanhã", () => {
+    expect(lapseInterval(Number.NaN)).toBe(1)
+  })
+
   it("palavra madura perde metade do intervalo", () => {
     expect(lapseInterval(6)).toBe(3)
     expect(lapseInterval(15)).toBe(8)
@@ -214,5 +218,6 @@ describe("alternativas: casos do review", () => {
     ])
     expect(pool.sort()).toEqual(["Cônjuge", "Esposa", "Solta", "Árbitro"].sort())
     expect(byTerm[optionKey("Spouse")]).toEqual(["Cônjuge", "Esposa"])
+    expect(optionKey("Don’t")).toBe(optionKey("don't"))
   })
 })

@@ -1,4 +1,4 @@
-import { foldAccents } from "./text"
+import { foldAccents, textKey } from "./text"
 
 export type ReviewState = "active" | "discarded" | "none"
 
@@ -25,9 +25,7 @@ export type WordItem = {
 
 export type WordWithDuplicates = WordItem & { duplicates: number }
 
-export function termKey(term: string): string {
-  return foldAccents(term).replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim()
-}
+export const termKey = textKey
 
 /** Quantas vezes cada termo aparece na lista (mesmo termo, sem diferenciar maiúsculas e acentos). */
 export function countDuplicates(terms: string[]): Map<string, number> {
