@@ -101,7 +101,7 @@ export default async function DashboardPage() {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="mb-6">
         <div className="md:hidden">
-          <Image src="/highlight-logo.png" alt="Highlight" width={100} height={29} className="h-7 w-auto mb-2" />
+          <Image src="/highlight-logo.png" alt="Highlight" width={140} height={40} className="h-10 w-auto mb-3" priority />
           <h1 className="text-lg font-bold text-white">Olá, {firstName}! 👋</h1>
           <p className="text-sm text-[#8B8B98] mt-0.5">O que você está assistindo, ouvindo ou lendo?</p>
 

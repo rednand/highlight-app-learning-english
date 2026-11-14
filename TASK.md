@@ -64,3 +64,6 @@
 ## Ícone da notificação
 - [x] Badge monocromático (`public/badge-96.png`, branco com transparência) no lugar do ícone colorido, que aparecia como quadrado na barra de status do Android
 - [ ] Teste manual: receber uma notificação no celular depois do deploy
+
+## Logo maior na home
+- [x] Logo da home no celular de 28px para 40px de altura
