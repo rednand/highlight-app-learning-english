@@ -101,9 +101,14 @@ export default async function DashboardPage() {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="mb-6">
         <div className="md:hidden">
-          <Image src="/highlight-logo.png" alt="Highlight" width={140} height={40} className="h-10 w-auto mb-3" priority />
-          <h1 className="text-lg font-bold text-white">Olá, {firstName}! 👋</h1>
-          <p className="text-sm text-[#8B8B98] mt-0.5">O que você está assistindo, ouvindo ou lendo?</p>
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <Image src="/highlight-logo.png" alt="Highlight" width={140} height={40} className="h-10 w-auto shrink-0" priority />
+            <h1 className="min-w-0 text-right leading-tight">
+              <span className="block text-xs text-[#8B8B98]">Olá 👋</span>
+              <span className="block text-lg font-bold text-white truncate">{firstName}</span>
+            </h1>
+          </div>
+          <p className="text-sm text-[#8B8B98]">O que você está assistindo, ouvindo ou lendo?</p>
 
           <p className="text-[10px] font-bold tracking-wider text-[#8B8B98] uppercase mt-5 mb-2">Adicionar</p>
           <div className="grid grid-cols-2 gap-2">
