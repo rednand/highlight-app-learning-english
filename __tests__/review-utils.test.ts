@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { sm2, formatNextReview, urgencyLabel, lapseInterval, pickDistractors, buildMultipleChoiceOptions } from "../app/lib/review-utils"
+import { sm2, formatNextReview, urgencyLabel, lapseInterval, pickDistractors, buildMultipleChoiceOptions, buildDistractorPool, optionKey } from "../app/lib/review-utils"
 import type { Grade, LessonStat } from "../app/lib/review-utils"
 
 // ─── sm2 ────────────────────────────────────────────────────────────────────
@@ -165,11 +165,11 @@ describe("pickDistractors", () => {
   })
 
   it("prefere as alternativas menos usadas na sessão", () => {
-    const usage = new Map([["Alvará", 5], ["Norte", 3]])
+    const usage = new Map([["alvara", 5], ["norte", 3]])
     const picked = pickDistractors("Cônjuge", ["Alvará", "Norte", "Árbitro", "Cerco", "Voo"], usage, seq([0.5]))
     expect(picked).not.toContain("Alvará")
     expect(picked).not.toContain("Norte")
-    expect(usage.get("Árbitro")).toBe(1)
+    expect(usage.get("arbitro")).toBe(1)
   })
 
   it("ao longo de uma sessão, cada alternativa aparece um número parecido de vezes", () => {
@@ -182,11 +182,37 @@ describe("pickDistractors", () => {
 })
 
 describe("buildMultipleChoiceOptions com uso compartilhado", () => {
-  it("tem exatamente uma alternativa certa e registra o uso", () => {
+  it("tem exatamente uma alternativa certa e registra o uso, inclusive da certa", () => {
     const usage = new Map<string, number>()
     const options = buildMultipleChoiceOptions("Cônjuge", ["Alvará", "Norte", "Árbitro", "Cerco"], usage)
     expect(options).toHaveLength(4)
     expect(options.filter((o) => o.isCorrect)).toHaveLength(1)
-    expect([...usage.values()].reduce((a, b) => a + b, 0)).toBe(3)
+    expect([...usage.values()].reduce((a, b) => a + b, 0)).toBe(4)
+    expect(usage.get("conjuge")).toBe(1)
+  })
+})
+
+describe("alternativas: casos do review", () => {
+  it("não repete a resposta certa escrita sem acento", () => {
+    const picked = pickDistractors("Cônjuge", ["Conjuge", "Alvará", "Norte", "Cerco"])
+    expect(picked.map(optionKey)).not.toContain("conjuge")
+  })
+
+  it("não usa outra tradução da mesma palavra como alternativa errada", () => {
+    const picked = pickDistractors("Cônjuge", ["Esposa", "Alvará", "Norte", "Cerco"], new Map(), Math.random, ["Esposa", "Cônjuge"])
+    expect(picked).not.toContain("Esposa")
+    expect(picked).toHaveLength(3)
+  })
+
+  it("buildDistractorPool agrupa as traduções por termo e ignora vazias", () => {
+    const { pool, byTerm } = buildDistractorPool([
+      { front: "Spouse", back: "Cônjuge" },
+      { front: "spouse ", back: "Esposa" },
+      { front: "Referee", back: "Árbitro" },
+      { front: "Empty", back: null },
+      { front: null, back: "Solta" },
+    ])
+    expect(pool.sort()).toEqual(["Cônjuge", "Esposa", "Solta", "Árbitro"].sort())
+    expect(byTerm[optionKey("Spouse")]).toEqual(["Cônjuge", "Esposa"])
   })
 })

@@ -1,3 +1,5 @@
+import { foldAccents } from "./text"
+
 export type Grade = 0 | 1 | 2 | 3 | 4 | 5
 
 export type ChoiceOption = {
@@ -53,50 +55,58 @@ export function sm2(
  */
 export function lapseInterval(intervalDays: number): number {
   if (intervalDays < 6) return 1
-  return Math.max(1, Math.round(intervalDays / 2))
+  return Math.round(intervalDays / 2)
 }
 
-function sameText(a: string, b: string): boolean {
-  return a.trim().toLowerCase() === b.trim().toLowerCase()
+export function optionKey(text: string): string {
+  return foldAccents(text).replace(/\s+/g, " ").trim()
 }
 
 /**
  * Sorteia até 3 alternativas erradas preferindo as que foram menos usadas
- * nesta sessão (`usage`), para a mesma tradução não aparecer em toda pergunta.
- * Atualiza `usage` com as escolhidas.
+ * nesta sessão (`usage`, chaveado por optionKey), para a mesma tradução não
+ * aparecer em toda pergunta. Ignora a resposta certa e tudo em `exclude`
+ * (por exemplo, outras traduções da mesma palavra). Atualiza `usage` com as
+ * escolhidas.
  */
 export function pickDistractors(
   correct: string,
   pool: string[],
   usage: Map<string, number> = new Map(),
   random: () => number = Math.random,
+  exclude: string[] = [],
 ): string[] {
+  const blocked = new Set([correct, ...exclude].map(optionKey))
   const seen = new Set<string>()
-  const candidates: string[] = []
+  const candidates: { text: string; key: string }[] = []
   for (const text of pool) {
-    const key = text.trim().toLowerCase()
-    if (!key || seen.has(key) || sameText(text, correct)) continue
+    const key = optionKey(text)
+    if (!key || seen.has(key) || blocked.has(key)) continue
     seen.add(key)
-    candidates.push(text)
+    candidates.push({ text, key })
   }
 
   const ranked = candidates
-    .map((text) => ({ text, uses: usage.get(text) ?? 0, tie: random() }))
+    .map((c) => ({ ...c, uses: usage.get(c.key) ?? 0, tie: random() }))
     .sort((a, b) => a.uses - b.uses || a.tie - b.tie)
     .slice(0, 3)
-    .map((c) => c.text)
 
-  for (const text of ranked) usage.set(text, (usage.get(text) ?? 0) + 1)
-  return ranked
+  for (const { key } of ranked) usage.set(key, (usage.get(key) ?? 0) + 1)
+  return ranked.map((c) => c.text)
 }
 
 export function buildMultipleChoiceOptions(
   correct: string,
   pool: string[],
   usage?: Map<string, number>,
+  exclude: string[] = [],
 ): ChoiceOption[] {
   const labels: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D']
-  const distractors = pickDistractors(correct, pool, usage)
+  const distractors = pickDistractors(correct, pool, usage, Math.random, exclude)
+  if (usage) {
+    const key = optionKey(correct)
+    usage.set(key, (usage.get(key) ?? 0) + 1)
+  }
 
   const all = [correct, ...distractors]
   for (let i = all.length - 1; i > 0; i--) {
@@ -132,4 +142,20 @@ export function urgencyLabel(
   const diffDays = diffMs / (1000 * 60 * 60 * 24)
   if (diffDays <= 2) return { label: "Moderado", color: "bg-yellow-500/20 text-yellow-400" }
   return { label: "Tranquilo", color: "bg-green-500/20 text-green-400" }
+}
+
+/** Traduções únicas para o sorteio e, por termo, todas as traduções salvas dele. */
+export function buildDistractorPool(
+  rows: { front: string | null; back: string | null }[],
+): { pool: string[]; byTerm: Record<string, string[]> } {
+  const pool = new Set<string>()
+  const byTerm: Record<string, string[]> = {}
+  for (const { front, back } of rows) {
+    if (!back) continue
+    pool.add(back)
+    if (!front) continue
+    const key = optionKey(front)
+    ;(byTerm[key] ??= []).push(back)
+  }
+  return { pool: [...pool], byTerm }
 }

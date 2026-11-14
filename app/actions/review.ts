@@ -3,6 +3,7 @@
 import { createClient } from "../utils/supabase/server"
 import { revalidatePath } from "next/cache"
 import { computeStreak, computeNewDays, todayAndYesterday } from "../lib/streak-utils"
+import { buildDistractorPool } from "../lib/review-utils"
 
 export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean) {
   const supabase = await createClient()
@@ -34,17 +35,19 @@ export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean
   return { cards: data ?? [] }
 }
 
-export async function fetchDistractorPool(): Promise<string[]> {
+export type DistractorPool = { pool: string[]; byTerm: Record<string, string[]> }
+
+export async function fetchDistractorPool(): Promise<DistractorPool> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return []
+  if (!user) return { pool: [], byTerm: {} }
   const { data } = await supabase
     .from("flashcards")
-    .select("back")
+    .select("front, back")
     .eq("user_id", user.id)
     .is("discarded_at", null)
-  if (!data) return []
-  return [...new Set(data.map((f) => f.back).filter(Boolean) as string[])]
+  if (!data) return { pool: [], byTerm: {} }
+  return buildDistractorPool(data as { front: string | null; back: string | null }[])
 }
 
 export async function fetchTitlePool(): Promise<string[]> {

@@ -21,8 +21,9 @@ export type WordItem = {
   sourceType: string | null
   reviewState: ReviewState
   searchText: string
-  duplicates: number
 }
+
+export type WordWithDuplicates = WordItem & { duplicates: number }
 
 export function termKey(term: string): string {
   return foldAccents(term).replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim()
@@ -38,6 +39,18 @@ export function countDuplicates(terms: string[]): Map<string, number> {
   return counts
 }
 
+/**
+ * Marca quantas cópias de cada palavra estão na revisão. Só conta as que
+ * estão ativas: descartar uma cópia resolve a repetição.
+ */
+export function withDuplicates<T extends Pick<WordItem, "term" | "reviewState">>(words: T[]): (T & { duplicates: number })[] {
+  const active = countDuplicates(words.filter((w) => w.reviewState === "active").map((w) => w.term))
+  return words.map((w) => ({
+    ...w,
+    duplicates: w.reviewState === "active" ? (active.get(termKey(w.term)) ?? 1) : 1,
+  }))
+}
+
 export function normalizeSearch(value: string): string {
   return foldAccents(value).trim()
 }
@@ -46,7 +59,7 @@ export function buildSearchText(fields: (string | null | undefined)[]): string {
   return normalizeSearch(fields.filter(Boolean).join(" \u0000 "))
 }
 
-export function filterWords<T extends Pick<WordItem, "reviewState" | "searchText" | "duplicates">>(
+export function filterWords<T extends Pick<WordWithDuplicates, "reviewState" | "searchText" | "duplicates">>(
   words: T[],
   query: string,
   filter: WordFilter,
@@ -60,7 +73,7 @@ export function filterWords<T extends Pick<WordItem, "reviewState" | "searchText
   })
 }
 
-export function countByFilter(words: Pick<WordItem, "reviewState" | "duplicates">[]): Record<WordFilter, number> {
+export function countByFilter(words: Pick<WordWithDuplicates, "reviewState" | "duplicates">[]): Record<WordFilter, number> {
   let revisao = 0
   let fora = 0
   let repetidas = 0

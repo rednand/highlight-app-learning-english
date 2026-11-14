@@ -7,7 +7,8 @@ import {
   countByFilter,
   countDuplicates,
   termKey,
-  type WordItem,
+  withDuplicates,
+  type WordWithDuplicates,
 } from "../app/lib/words-utils"
 import { foldAccents } from "../app/lib/text"
 
@@ -52,7 +53,7 @@ describe("normalizeSearch e buildSearchText", () => {
   })
 })
 
-function word(id: string, fields: [string, string | null, string | null], reviewState: WordItem["reviewState"], duplicates = 1): WordItem {
+function word(id: string, fields: [string, string | null, string | null], reviewState: WordWithDuplicates["reviewState"], duplicates = 1): WordWithDuplicates {
   const [term, translation, sourceTitle] = fields
   return {
     id, lessonId: `l${id}`, term, translation, sourceTitle, sourceType: null, reviewState,
@@ -112,5 +113,26 @@ describe("palavras repetidas", () => {
     ]
     expect(filterWords(words, "", "repetidas").map((w) => w.id)).toEqual(["1", "2"])
     expect(countByFilter(words).repetidas).toBe(2)
+  })
+})
+
+describe("withDuplicates", () => {
+  const base = (id: string, term: string, reviewState: WordWithDuplicates["reviewState"]) => ({
+    id, term, reviewState,
+  })
+
+  it("conta só as cópias que estão na revisão", () => {
+    const result = withDuplicates([
+      base("1", "Spouse", "active"),
+      base("2", "spouse", "active"),
+      base("3", "SPOUSE", "discarded"),
+      base("4", "Referee", "active"),
+    ])
+    expect(result.map((w) => w.duplicates)).toEqual([2, 2, 1, 1])
+  })
+
+  it("descartar uma das duas cópias resolve a repetição", () => {
+    const result = withDuplicates([base("1", "Spouse", "active"), base("2", "spouse", "discarded")])
+    expect(result.map((w) => w.duplicates)).toEqual([1, 1])
   })
 })

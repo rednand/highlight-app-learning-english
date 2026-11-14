@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation"
 import { ArrowRight, BookOpen, BookMarked, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward, EyeOff } from "lucide-react"
 import Image from "next/image"
 import SpeakButton from "../speak-button"
-import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel } from "../../lib/review-utils"
+import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel, optionKey } from "../../lib/review-utils"
 import type { Grade, LessonStat, ChoiceOption, SelectionState } from "../../lib/review-utils"
 import MultipleChoiceOptions from "../../../components/review/multiple-choice-options"
 import ContextSentence from "../../../components/review/context-sentence"
@@ -99,6 +99,7 @@ export default function ReviewClient({
     mode: "standard" | "cinema",
   ): Promise<MultipleChoiceCard[]> {
     let pool: string[]
+    let byTerm: Record<string, string[]> = {}
     if (mode === "cinema") {
       pool = await fetchTitlePool()
       if (pool.length < 3) {
@@ -106,7 +107,9 @@ export default function ReviewClient({
         pool = [...new Set([...pool, ...fallback])]
       }
     } else {
-      pool = await fetchDistractorPool()
+      const fetchedPool = await fetchDistractorPool()
+      pool = fetchedPool.pool
+      byTerm = fetchedPool.byTerm
       if (pool.length < 3) {
         const fallback = await fetchFallbackDistractors()
         pool = [...new Set([...pool, ...fallback])]
@@ -122,9 +125,10 @@ export default function ReviewClient({
         mode === "cinema"
           ? (card.lesson_items?.lessons?.title ?? card.back)
           : card.back
+      const sameTerm = mode === "cinema" ? [] : (byTerm[optionKey(card.front)] ?? [])
       return {
         ...card,
-        options: buildMultipleChoiceOptions(correct, pool, usage),
+        options: buildMultipleChoiceOptions(correct, pool, usage, sameTerm),
       }
     })
   }
