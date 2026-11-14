@@ -27,9 +27,9 @@ export default async function RoadmapPage() {
   return (
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="mb-8">
-        <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">TRILHA</p>
+        <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">TRILHA</p>
         <h1 className="text-2xl font-bold text-white">Roadmap de Inglês</h1>
-        <p className="text-gray-500 text-sm mt-1">Marque as sessões conforme for estudando.</p>
+        <p className="text-fg-subtle text-sm mt-1">Marque as sessões conforme for estudando.</p>
       </div>
       <RoadmapClient lessonCountByKey={lessonCountByKey} initialDone={doneSessions} />
     </div>

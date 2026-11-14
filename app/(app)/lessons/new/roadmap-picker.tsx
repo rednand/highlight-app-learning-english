@@ -24,12 +24,12 @@ export default function RoadmapPicker() {
     setSession("")
   }
 
-  const selectClass = "w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-yellow-400/50 transition-colors"
+  const selectClass = "w-full bg-sunken border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-brand/50 transition-colors"
 
   return (
     <div className="space-y-3">
-      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
-        Associar ao Roadmap <span className="text-gray-700 normal-case font-normal tracking-normal">(opcional)</span>
+      <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider">
+        Associar ao Roadmap <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
       </label>
 
       <input type="hidden" name="roadmap_key" value={key} />
@@ -58,7 +58,7 @@ export default function RoadmapPicker() {
       </div>
 
       {key && (
-        <p className="text-xs text-yellow-400/70">
+        <p className="text-xs text-brand/70">
           ✓ {level} › {temas.find(t => t.tema === tema)?.label ?? tema} › {session}
         </p>
       )}

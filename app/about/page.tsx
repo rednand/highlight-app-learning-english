@@ -29,7 +29,7 @@ const features = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] px-4 py-12">
+    <div className="min-h-screen bg-page px-4 py-12">
       <div className="mx-auto w-full max-w-2xl">
         <div className="mb-10 flex items-center gap-2">
           <Image
@@ -47,14 +47,14 @@ export default function AboutPage() {
         <h1 className="mb-3 text-3xl font-bold text-white">
           Aprenda inglês registrando o que você estuda
         </h1>
-        <p className="mb-8 text-base leading-relaxed text-gray-400">
+        <p className="mb-8 text-base leading-relaxed text-fg-muted">
           O Highlight ajuda você a guardar o vocabulário das suas aulas e a
           memorizá-lo com flashcards e repetição espaçada.
         </p>
 
         <Link
           href="/login"
-          className="mb-12 inline-block rounded-full bg-yellow-400 px-6 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
+          className="mb-12 inline-block rounded-full bg-brand px-6 py-3 text-sm font-bold text-black transition-colors hover:bg-brand-strong"
         >
           Entrar com Google
         </Link>
@@ -63,19 +63,19 @@ export default function AboutPage() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-2xl border border-white/5 bg-[#0f0f0f] p-5"
+              className="rounded-2xl border border-white/5 bg-sunken p-5"
             >
               <h2 className="mb-1 text-sm font-semibold text-white">
                 {feature.title}
               </h2>
-              <p className="text-sm leading-relaxed text-gray-400">
+              <p className="text-sm leading-relaxed text-fg-muted">
                 {feature.text}
               </p>
             </div>
           ))}
         </div>
 
-        <footer className="flex flex-wrap gap-4 border-t border-white/5 pt-6 text-xs text-gray-500">
+        <footer className="flex flex-wrap gap-4 border-t border-white/5 pt-6 text-xs text-fg-subtle">
           <Link href="/privacy" className="hover:text-white">
             Política de Privacidade
           </Link>

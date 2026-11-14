@@ -11,7 +11,7 @@ export default function AccountDeletionPage() {
   const contactEmail = process.env.PRIVACY_CONTACT_EMAIL
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] px-4 py-10">
+    <div className="min-h-screen bg-page px-4 py-10">
       <div className="mx-auto w-full max-w-2xl">
         <Link href="/" className="mb-8 flex items-center gap-2">
           <Image
@@ -30,7 +30,7 @@ export default function AccountDeletionPage() {
           Excluir conta e dados
         </h1>
 
-        <div className="space-y-6 text-sm leading-relaxed text-gray-400">
+        <div className="space-y-6 text-sm leading-relaxed text-fg-muted">
           <section>
             <h2 className="mb-2 text-base font-semibold text-white">
               Pelo aplicativo
@@ -62,7 +62,7 @@ export default function AccountDeletionPage() {
                 Envie a solicitação, a partir do e-mail cadastrado, para{" "}
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="text-yellow-400 hover:underline"
+                  className="text-brand hover:underline"
                 >
                   {contactEmail}
                 </a>
@@ -73,7 +73,7 @@ export default function AccountDeletionPage() {
 
           <p>
             Veja também a{" "}
-            <Link href="/privacy" className="text-yellow-400 hover:underline">
+            <Link href="/privacy" className="text-brand hover:underline">
               Política de Privacidade
             </Link>
             .

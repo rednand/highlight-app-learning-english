@@ -7,7 +7,7 @@ import { toggleRoadmapSession } from "../../actions/roadmap"
 
 const LEVEL_COLOR: Record<RoadmapLevel, string> = {
   Basic: "text-green-400 border-green-400/30 bg-green-400/10",
-  Intermediate: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10",
+  Intermediate: "text-brand border-brand/30 bg-brand/10",
   Advanced: "text-red-400 border-red-400/30 bg-red-400/10",
 }
 
@@ -56,7 +56,7 @@ export default function RoadmapClient({
             className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-colors ${
               activeLevel === level
                 ? LEVEL_COLOR[level]
-                : "text-gray-500 border-white/10 hover:text-white hover:border-white/20"
+                : "text-fg-subtle border-white/10 hover:text-white hover:border-white/20"
             }`}
           >
             {level}
@@ -64,22 +64,22 @@ export default function RoadmapClient({
         ))}
       </div>
 
-      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5">
+      <div className="bg-surface border border-line rounded-[18px] p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-yellow-400/10 flex items-center justify-center">
-              <Trophy size={17} className="text-yellow-400" />
+            <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center">
+              <Trophy size={17} className="text-brand" />
             </div>
             <div>
               <p className="text-sm font-bold text-white">Progresso Geral</p>
-              <p className="text-xs text-gray-500 mt-0.5">{completed} de {total} sessões concluídas</p>
+              <p className="text-xs text-fg-subtle mt-0.5">{completed} de {total} sessões concluídas</p>
             </div>
           </div>
-          <span className="text-2xl font-bold text-yellow-400">{pct}%</span>
+          <span className="text-2xl font-bold text-brand">{pct}%</span>
         </div>
         <div className="mt-4 h-2 bg-white/5 rounded-full overflow-hidden">
           <div
-            className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+            className="h-full bg-brand rounded-full transition-all duration-500"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -92,17 +92,17 @@ export default function RoadmapClient({
           const temaPct = temaTotal > 0 ? Math.round((temaDone / temaTotal) * 100) : 0
 
           return (
-            <div key={tema} className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
+            <div key={tema} className="bg-surface border border-line rounded-[18px] p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{label}</span>
-                <span className="text-[10px] text-gray-500">
+                <span className="text-xs font-bold text-fg-muted uppercase tracking-wider">{label}</span>
+                <span className="text-[10px] text-fg-subtle">
                   {temaDone}/{temaTotal}&nbsp;
-                  <span className="text-yellow-400 font-bold">{temaPct}%</span>
+                  <span className="text-brand font-bold">{temaPct}%</span>
                 </span>
               </div>
               <div className="h-1 bg-white/5 rounded-full overflow-hidden mb-3">
                 <div
-                  className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                  className="h-full bg-brand rounded-full transition-all duration-500"
                   style={{ width: `${temaPct}%` }}
                 />
               </div>
@@ -118,7 +118,7 @@ export default function RoadmapClient({
                       className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-colors ${
                         isDone
                           ? "text-green-400 border-green-400/30 bg-green-400/10"
-                          : "text-gray-400 border-white/10 hover:text-white hover:border-white/20"
+                          : "text-fg-muted border-white/10 hover:text-white hover:border-white/20"
                       }`}
                     >
                       {isDone ? (
@@ -129,7 +129,7 @@ export default function RoadmapClient({
                       {session}
                       {lessonCountByKey[key] > 0 && (
                         <span className="group/badge absolute -top-1.5 -right-1.5">
-                          <span className="bg-yellow-400 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                          <span className="bg-brand text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                             {lessonCountByKey[key]}
                           </span>
                           <span className="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-lg bg-white px-2 py-1 text-[10px] font-semibold text-black opacity-0 group-hover/badge:opacity-100 transition-opacity shadow-lg">
@@ -146,18 +146,18 @@ export default function RoadmapClient({
         })}
       </div>
 
-      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4">
-        <p className="text-xs font-bold text-gray-400 mb-3">Legenda</p>
+      <div className="bg-surface border border-line rounded-[18px] p-4">
+        <p className="text-xs font-bold text-fg-muted mb-3">Legenda</p>
         <div className="flex items-center gap-5">
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 text-xs text-fg-muted">
             <CheckCircle size={13} className="text-green-400" />
             Concluído
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 text-xs text-fg-muted">
             <Circle size={13} className="opacity-50" />
             Disponível
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 text-xs text-fg-muted">
             <Lock size={13} className="opacity-30" />
             Bloqueado
           </div>

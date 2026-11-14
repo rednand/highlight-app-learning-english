@@ -105,42 +105,42 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
   return (
     <div className="pt-4 px-[18px] pb-6 md:p-8 max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <Link href="/grammar" className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors">
+        <Link href="/grammar" className="inline-flex items-center gap-1.5 text-xs text-fg-subtle hover:text-white transition-colors">
           <ArrowLeft size={12} />
           Voltar
         </Link>
         <Link
           href="/grammar/practice/history"
-          className="inline-flex items-center gap-1.5 bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+          className="inline-flex items-center gap-1.5 bg-raised hover:bg-raised-strong border border-line text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
         >
-          <History size={13} className="text-yellow-400" />
+          <History size={13} className="text-brand" />
           Histórico
         </Link>
       </div>
 
-      <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
+      <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">HIGHLIGHT</p>
       <h1 className="text-2xl font-bold text-white mb-1">Praticar com IA</h1>
-      <p className="text-gray-500 text-sm mb-6">
+      <p className="text-fg-subtle text-sm mb-6">
         Escolha um tema de gramática e a direção da tradução, e receba um texto curto gerado por IA.
       </p>
 
-      <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5 mb-6">
+      <div className="bg-surface border border-line rounded-[18px] p-5 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider">
             Temas ({selectedRules.length} selecionados)
           </label>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setSelectedSlugs(new Set(rules.map((r) => r.slug)))}
-              className="text-[10px] font-bold text-gray-500 hover:text-yellow-400 transition-colors"
+              className="text-[10px] font-bold text-fg-subtle hover:text-brand transition-colors"
             >
               Selecionar todos
             </button>
             <button
               type="button"
               onClick={() => setSelectedSlugs(new Set())}
-              className="text-[10px] font-bold text-gray-500 hover:text-red-400 transition-colors"
+              className="text-[10px] font-bold text-fg-subtle hover:text-red-400 transition-colors"
             >
               Limpar
             </button>
@@ -156,7 +156,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
                 <button
                   type="button"
                   onClick={() => toggleCategory(category, allSelected)}
-                  className="text-[10px] font-bold tracking-wider uppercase text-gray-500 hover:text-yellow-400 transition-colors mb-1.5"
+                  className="text-[10px] font-bold tracking-wider uppercase text-fg-subtle hover:text-brand transition-colors mb-1.5"
                 >
                   {CATEGORY_LABELS[category] ?? category}
                 </button>
@@ -166,8 +166,8 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
                       key={r.slug}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs cursor-pointer border transition-colors ${
                         selectedSlugs.has(r.slug)
-                          ? "bg-yellow-400/10 border-yellow-400/30 text-yellow-400"
-                          : "bg-transparent border-white/10 text-gray-500 hover:border-white/20"
+                          ? "bg-brand/10 border-brand/30 text-brand"
+                          : "bg-transparent border-white/10 text-fg-subtle hover:border-white/20"
                       }`}
                     >
                       <input
@@ -185,7 +185,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
           })}
         </div>
 
-        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
           Direção da tradução
         </label>
         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -194,8 +194,8 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
             onClick={() => setDirection("en-pt")}
             className={`px-3 py-2.5 rounded-lg text-xs font-bold transition-colors border ${
               direction === "en-pt"
-                ? "bg-yellow-400 text-black border-yellow-400"
-                : "bg-transparent text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                ? "bg-brand text-black border-brand"
+                : "bg-transparent text-fg-muted border-white/10 hover:border-white/20 hover:text-white"
             }`}
           >
             Inglês → Português
@@ -205,8 +205,8 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
             onClick={() => setDirection("pt-en")}
             className={`px-3 py-2.5 rounded-lg text-xs font-bold transition-colors border ${
               direction === "pt-en"
-                ? "bg-yellow-400 text-black border-yellow-400"
-                : "bg-transparent text-gray-400 border-white/10 hover:border-white/20 hover:text-white"
+                ? "bg-brand text-black border-brand"
+                : "bg-transparent text-fg-muted border-white/10 hover:border-white/20 hover:text-white"
             }`}
           >
             Português → Inglês
@@ -216,7 +216,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
         <button
           onClick={handleGenerate}
           disabled={isGenerating || selectedRules.length === 0}
-          className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-bold py-3 rounded-full transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-strong disabled:opacity-50 text-black text-sm font-bold py-3 rounded-full transition-colors"
         >
           {isGenerating ? (
             <RefreshCw size={15} className="animate-spin" />
@@ -229,7 +229,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
         </button>
 
         {selectedRules.length === 0 && (
-          <p className="text-xs text-gray-500 mt-3">Selecione ao menos um tema.</p>
+          <p className="text-xs text-fg-subtle mt-3">Selecione ao menos um tema.</p>
         )}
 
         {error && (
@@ -240,11 +240,11 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
       </div>
 
       {practice && activeRule && (
-        <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-5 space-y-4">
+        <div className="bg-surface border border-line rounded-[18px] p-5 space-y-4">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{promptLabel}</p>
-              <span className="text-[10px] font-bold bg-yellow-400/10 text-yellow-400 px-2 py-0.5 rounded-full">
+              <p className="text-xs font-bold text-fg-subtle uppercase tracking-wider">{promptLabel}</p>
+              <span className="text-[10px] font-bold bg-brand/10 text-brand px-2 py-0.5 rounded-full">
                 {activeRule.title}
               </span>
             </div>
@@ -252,7 +252,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
               Sua tradução
             </label>
             <textarea
@@ -260,7 +260,7 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
               onChange={(e) => { setMyTranslation(e.target.value); setSaved(false) }}
               rows={4}
               placeholder={`Traduza o texto acima para o ${targetLanguage}...`}
-              className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none"
+              className="w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors resize-none"
             />
           </div>
 
@@ -274,9 +274,9 @@ export default function PracticeClient({ rules }: { rules: GrammarRule[] }) {
           </button>
 
           {showReference ? (
-            <div className="bg-yellow-400/5 border border-yellow-400/20 rounded-lg p-4">
-              <p className="text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Tradução de referência</p>
-              <p className="text-gray-300 text-sm leading-relaxed">{referenceText}</p>
+            <div className="bg-brand/5 border border-brand/20 rounded-lg p-4">
+              <p className="text-xs font-bold text-brand uppercase tracking-wider mb-2">Tradução de referência</p>
+              <p className="text-fg-soft text-sm leading-relaxed">{referenceText}</p>
             </div>
           ) : (
             <button

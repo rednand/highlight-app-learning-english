@@ -24,7 +24,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-page flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-10 justify-center">
           <Image
@@ -39,9 +39,9 @@ export default function LoginPage() {
           </span>
         </div>
 
-        <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-8">
+        <div className="bg-sunken border border-white/5 rounded-2xl p-8">
           <h1 className="text-xl font-bold text-white mb-1">Entrar</h1>
-          <p className="text-gray-500 text-sm mb-8">
+          <p className="text-fg-subtle text-sm mb-8">
             Aprenda inglês com filmes, séries, músicas e livros.
           </p>
 

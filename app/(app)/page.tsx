@@ -106,23 +106,23 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between gap-3 mb-3">
             <Image src="/highlight-logo.svg" alt="Highlight" width={132} height={40} className="h-10 w-auto shrink-0" priority unoptimized />
             <h1 className="min-w-0 text-right leading-tight">
-              <span className="block text-xs text-[#8B8B98]">Olá 👋</span>
+              <span className="block text-xs text-fg-subtle">Olá 👋</span>
               <span className="block text-lg font-bold text-white truncate">{firstName}</span>
             </h1>
           </div>
-          <p className="text-sm text-[#8B8B98]">O que você está assistindo, ouvindo ou lendo?</p>
+          <p className="text-sm text-fg-subtle">O que você está assistindo, ouvindo ou lendo?</p>
 
-          <p className="text-[10px] font-bold tracking-wider text-[#8B8B98] uppercase mt-5 mb-2">Adicionar</p>
+          <p className="text-[10px] font-bold tracking-wider text-fg-subtle uppercase mt-5 mb-2">Adicionar</p>
           <div className="grid grid-cols-2 gap-2">
             {quickAdd.map(({ href, icon: Icon, label, primary }) => (
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-3 bg-[#151515] hover:bg-[#1b1b1b] border border-[#292929] rounded-2xl p-3 transition-colors min-w-0"
+                className="flex items-center gap-3 bg-surface hover:bg-raised border border-line rounded-2xl p-3 transition-colors min-w-0"
               >
                 <span
                   className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${
-                    primary ? "bg-yellow-400 text-black" : "bg-white/5 text-yellow-400"
+                    primary ? "bg-brand/10 text-brand" : "bg-white/5 text-fg-muted"
                   }`}
                 >
                   <Icon size={22} />
@@ -138,9 +138,9 @@ export default async function DashboardPage() {
               { value: totalWords, label: "Palavras", accent: false },
               { value: dueCount, label: "Revisões", accent: true },
             ].map(({ value, label, accent }) => (
-              <div key={label} className="text-center bg-[#121212] border border-[#242424] rounded-[14px] py-2.5">
-                <p className={`text-lg font-bold leading-none ${accent ? "text-[#FDC700]" : "text-white"}`}>{value}</p>
-                <p className="text-[10px] font-bold text-[#8B8B98] uppercase tracking-wider mt-1">{label}</p>
+              <div key={label} className="text-center bg-surface border border-line rounded-[14px] py-2.5">
+                <p className={`text-lg font-bold leading-none ${accent ? "text-brand" : "text-white"}`}>{value}</p>
+                <p className="text-[10px] font-bold text-fg-subtle uppercase tracking-wider mt-1">{label}</p>
               </div>
             ))}
           </div>
@@ -148,9 +148,9 @@ export default async function DashboardPage() {
 
         <div className="hidden md:flex md:items-start md:justify-between md:gap-6">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">DASHBOARD</p>
+            <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">DASHBOARD</p>
             <h1 className="text-2xl font-bold text-white">Olá, {firstName}! 👋</h1>
-            <p className="text-sm text-[#8B8B98] mt-1">O que você está assistindo, ouvindo ou lendo?</p>
+            <p className="text-sm text-fg-subtle mt-1">O que você está assistindo, ouvindo ou lendo?</p>
             <div className="flex flex-wrap gap-2 mt-4">
               {quickAdd.map(({ href, icon: Icon, label, primary }) => (
                 <Link
@@ -158,8 +158,8 @@ export default async function DashboardPage() {
                   href={href}
                   className={`inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full transition-colors ${
                     primary
-                      ? "bg-yellow-400 hover:bg-yellow-300 text-black"
-                      : "bg-[#171717] hover:bg-[#1f1f1f] border border-[#2D2D2D] text-white"
+                      ? "bg-brand hover:bg-brand-strong text-black"
+                      : "bg-raised hover:bg-raised-strong border border-line text-white"
                   }`}
                 >
                   <Icon size={16} />
@@ -169,17 +169,17 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <div className="text-center bg-[#121212] border border-[#242424] rounded-[14px] px-5 py-3 min-w-[88px]">
+            <div className="text-center bg-surface border border-line rounded-[14px] px-5 py-3 min-w-[88px]">
               <p className="text-2xl font-bold text-white leading-none">{totalMedia}</p>
-              <p className="text-[10px] font-bold text-[#8B8B98] uppercase tracking-wider mt-1.5">Mídias</p>
+              <p className="text-[10px] font-bold text-fg-subtle uppercase tracking-wider mt-1.5">Mídias</p>
             </div>
-            <div className="text-center bg-[#121212] border border-[#242424] rounded-[14px] px-5 py-3 min-w-[88px]">
+            <div className="text-center bg-surface border border-line rounded-[14px] px-5 py-3 min-w-[88px]">
               <p className="text-2xl font-bold text-white leading-none">{totalWords}</p>
-              <p className="text-[10px] font-bold text-[#8B8B98] uppercase tracking-wider mt-1.5">Palavras</p>
+              <p className="text-[10px] font-bold text-fg-subtle uppercase tracking-wider mt-1.5">Palavras</p>
             </div>
-            <div className="text-center bg-[#121212] border border-[#242424] rounded-[14px] px-5 py-3 min-w-[88px]">
-              <p className="text-2xl font-bold text-[#FDC700] leading-none">{dueCount}</p>
-              <p className="text-[10px] font-bold text-[#8B8B98] uppercase tracking-wider mt-1.5">Revisões</p>
+            <div className="text-center bg-surface border border-line rounded-[14px] px-5 py-3 min-w-[88px]">
+              <p className="text-2xl font-bold text-brand leading-none">{dueCount}</p>
+              <p className="text-[10px] font-bold text-fg-subtle uppercase tracking-wider mt-1.5">Revisões</p>
             </div>
           </div>
         </div>
@@ -187,34 +187,34 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2 space-y-4 md:space-y-6">
-          <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
+          <div className="bg-surface border border-line rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-2">
               <div>
-                <p className="text-[10px] font-bold tracking-wider text-[#8B8B98] uppercase mb-1">Seu próximo passo</p>
+                <p className="text-[10px] font-bold tracking-wider text-fg-subtle uppercase mb-1">Seu próximo passo</p>
                 <h2 className="text-base font-bold text-white">Sessão de revisão</h2>
               </div>
               {dueCount > 0 && (
-                <span className="text-[10px] font-bold bg-[#FDC700]/10 text-[#FDC700] px-2.5 py-1 rounded-full shrink-0">
+                <span className="text-[10px] font-bold bg-brand/10 text-brand px-2.5 py-1 rounded-full shrink-0">
                   {dueCount} pendentes
                 </span>
               )}
             </div>
 
             {dueCount === 0 ? (
-              <p className="text-sm text-[#8B8B98] py-2">Nenhum flashcard para revisar hoje.</p>
+              <p className="text-sm text-fg-subtle py-2">Nenhum flashcard para revisar hoje.</p>
             ) : (
               <>
                 <div className="divide-y divide-white/5 my-3">
                   {dueCards.map((card) => (
                     <div key={card.id} className="flex items-center justify-between gap-3 py-2.5">
                       <p className="text-white text-sm font-semibold truncate">{card.front}</p>
-                      {card.back && <p className="text-[#FDC700] text-xs italic truncate shrink-0">{card.back}</p>}
+                      {card.back && <p className="text-brand text-xs italic truncate shrink-0">{card.back}</p>}
                     </div>
                   ))}
                 </div>
                 <Link
                   href="/review"
-                  className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors"
+                  className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-strong text-black text-sm font-bold py-2.5 rounded-full transition-colors"
                 >
                   Continuar revisão
                   <ArrowRight size={15} />
@@ -223,17 +223,17 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
+          <div className="bg-surface border border-line rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-white">Mídias recentes</h2>
-              <Link href="/media" className="flex items-center gap-1 text-xs text-[#8B8B98] hover:text-[#FDC700] transition-colors">
+              <Link href="/media" className="flex items-center gap-1 text-xs text-fg-subtle hover:text-brand transition-colors">
                 Ver todas
                 <ArrowRight size={12} />
               </Link>
             </div>
 
             {recentMedia.length === 0 ? (
-              <p className="text-sm text-[#8B8B98]">Adicione um filme, série, música ou livro para começar a anotar palavras.</p>
+              <p className="text-sm text-fg-subtle">Adicione um filme, série, música ou livro para começar a anotar palavras.</p>
             ) : (
               <div className="flex gap-3 overflow-x-auto -mx-1 px-1 pb-1">
                 {recentMedia.map((item) => {
@@ -261,14 +261,14 @@ export default async function DashboardPage() {
                           <img src={thumbnail} alt={item.title} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <TypeIcon size={22} className="text-[#FDC700]/50" />
+                            <TypeIcon size={22} className="text-brand/50" />
                           </div>
                         )}
                         <span className="absolute bottom-1.5 right-1.5 flex items-center justify-center w-6 h-6 rounded-full bg-black/70">
-                          <TypeIcon size={12} className="text-[#FDC700]" />
+                          <TypeIcon size={12} className="text-brand" />
                         </span>
                       </div>
-                      <p className="text-xs font-semibold text-gray-300 group-hover:text-white transition-colors line-clamp-2 leading-snug">
+                      <p className="text-xs font-semibold text-fg-soft group-hover:text-white transition-colors line-clamp-2 leading-snug">
                         {item.title}
                       </p>
                     </Link>
@@ -277,18 +277,18 @@ export default async function DashboardPage() {
               </div>
             )}
           </div>
-          <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
+          <div className="bg-surface border border-line rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-white">Meta diária</h2>
-              <span className="text-sm font-bold text-white">{todayProgress}<span className="text-[#8B8B98] font-normal">/{DAILY_GOAL}</span></span>
+              <span className="text-sm font-bold text-white">{todayProgress}<span className="text-fg-subtle font-normal">/{DAILY_GOAL}</span></span>
             </div>
             <div className="h-2.5 bg-white/10 rounded-full overflow-hidden mb-2">
               <div
-                className="h-full bg-[#FDC700] rounded-full transition-all duration-500"
+                className="h-full bg-brand rounded-full transition-all duration-500"
                 style={{ width: `${goalPct}%` }}
               />
             </div>
-            <p className="text-xs text-[#8B8B98]">
+            <p className="text-xs text-fg-subtle">
               {todayProgress >= DAILY_GOAL
                 ? "Meta concluída! Ótimo trabalho."
                 : `Faltam ${DAILY_GOAL - todayProgress} palavras para completar sua meta hoje.`}
@@ -298,27 +298,27 @@ export default async function DashboardPage() {
         </div>
 
         <div className="space-y-4 md:space-y-6">
-          <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
+          <div className="bg-surface border border-line rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-white">Últimas palavras</h2>
-              <Link href="/words" className="flex items-center gap-1 text-xs text-[#8B8B98] hover:text-[#FDC700] transition-colors">
+              <Link href="/words" className="flex items-center gap-1 text-xs text-fg-subtle hover:text-brand transition-colors">
                 Ver todas
                 <ArrowRight size={12} />
               </Link>
             </div>
 
             {recentItems.length === 0 ? (
-              <p className="text-sm text-[#8B8B98]">Nenhuma palavra ainda.</p>
+              <p className="text-sm text-fg-subtle">Nenhuma palavra ainda.</p>
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 {recentItems.map((item) => (
-                  <div key={item.id} className="relative min-w-0 bg-[#0C0C0C] rounded-xl p-3">
+                  <div key={item.id} className="relative min-w-0 bg-sunken rounded-xl p-3">
                     {isItemDue(item) && (
-                      <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#FDC700]" title="Pendente de revisão" />
+                      <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-brand" title="Pendente de revisão" />
                     )}
                     <p className="text-white text-sm font-semibold truncate pr-3">{item.term}</p>
                     {item.translation && (
-                      <p className="text-[#8B8B98] text-xs mt-0.5 truncate">{item.translation}</p>
+                      <p className="text-fg-subtle text-xs mt-0.5 truncate">{item.translation}</p>
                     )}
                   </div>
                 ))}
@@ -326,17 +326,17 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          <div className="bg-[#151515] border border-[#292929] rounded-[18px] p-4 sm:p-5">
+          <div className="bg-surface border border-line rounded-[18px] p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-white">Aulas recentes</h2>
-              <Link href="/lessons" className="flex items-center gap-1 text-xs text-[#8B8B98] hover:text-[#FDC700] transition-colors">
+              <Link href="/lessons" className="flex items-center gap-1 text-xs text-fg-subtle hover:text-brand transition-colors">
                 Ver todas
                 <ArrowRight size={12} />
               </Link>
             </div>
 
             {lessons.length === 0 ? (
-              <p className="text-sm text-[#8B8B98]">Nenhuma aula ainda.</p>
+              <p className="text-sm text-fg-subtle">Nenhuma aula ainda.</p>
             ) : (
               <div className="divide-y divide-white/5">
                 {lessons.map((lesson) => {
@@ -351,14 +351,14 @@ export default async function DashboardPage() {
                       className="flex items-center gap-3 py-2.5 hover:bg-white/[0.02] transition-colors group -mx-1 px-1 rounded-lg"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-semibold text-sm group-hover:text-[#FDC700] transition-colors truncate">
+                        <p className="text-white font-semibold text-sm group-hover:text-brand transition-colors truncate">
                           {lesson.title}
                         </p>
-                        <p className="text-[#8B8B98] text-xs mt-0.5">
+                        <p className="text-fg-subtle text-xs mt-0.5">
                           {date} · {count} {count === 1 ? "item" : "itens"}
                         </p>
                       </div>
-                      <ChevronRight size={16} className="text-[#8B8B98] shrink-0" />
+                      <ChevronRight size={16} className="text-fg-subtle shrink-0" />
                     </Link>
                   )
                 })}

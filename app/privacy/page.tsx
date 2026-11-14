@@ -67,7 +67,7 @@ export default function PrivacyPage() {
   const contactEmail = process.env.PRIVACY_CONTACT_EMAIL
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] px-4 py-10">
+    <div className="min-h-screen bg-page px-4 py-10">
       <div className="mx-auto w-full max-w-2xl">
         <Link href="/" className="mb-8 flex items-center gap-2">
           <Image
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
         <h1 className="mb-1 text-2xl font-bold text-white">
           Política de Privacidade
         </h1>
-        <p className="mb-8 text-sm text-gray-500">
+        <p className="mb-8 text-sm text-fg-subtle">
           Última atualização: {UPDATED_AT}
         </p>
 
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
               </h2>
               <div className="space-y-2">
                 {section.body.map((paragraph) => (
-                  <p key={paragraph} className="text-sm leading-relaxed text-gray-400">
+                  <p key={paragraph} className="text-sm leading-relaxed text-fg-muted">
                     {paragraph}
                   </p>
                 ))}
@@ -110,11 +110,11 @@ export default function PrivacyPage() {
               <h2 className="mb-2 text-base font-semibold text-white">
                 Contato
               </h2>
-              <p className="text-sm leading-relaxed text-gray-400">
+              <p className="text-sm leading-relaxed text-fg-muted">
                 Dúvidas ou solicitações sobre seus dados:{" "}
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="text-yellow-400 hover:underline"
+                  className="text-brand hover:underline"
                 >
                   {contactEmail}
                 </a>

@@ -42,7 +42,7 @@ describe("MobileNav", () => {
   it("Mídia ativo nas rotas de filmes, músicas e livros", () => {
     mockPathname.mockReturnValue("/movies/new")
     render(<MobileNav />)
-    expect(screen.getByText("Mídia")).toHaveClass("text-yellow-400")
+    expect(screen.getByText("Mídia")).toHaveClass("text-brand")
   })
 
   it("renderiza o botão Mais", () => {
@@ -83,28 +83,28 @@ describe("MobileNav", () => {
     mockPathname.mockReturnValue("/")
     render(<MobileNav />)
     const label = screen.getByText("Início")
-    expect(label).toHaveClass("text-yellow-400")
+    expect(label).toHaveClass("text-brand")
   })
 
   it("Aulas ativo quando pathname começa com /lessons", () => {
     mockPathname.mockReturnValue("/lessons")
     render(<MobileNav />)
     const label = screen.getByText("Aulas")
-    expect(label).toHaveClass("text-yellow-400")
+    expect(label).toHaveClass("text-brand")
   })
 
   it("Revisar ativo quando pathname começa com /review", () => {
     mockPathname.mockReturnValue("/review")
     render(<MobileNav />)
     const label = screen.getByText("Revisar")
-    expect(label).toHaveClass("text-yellow-400")
+    expect(label).toHaveClass("text-brand")
   })
 
   it("Início não ativo em outras rotas", () => {
     mockPathname.mockReturnValue("/lessons")
     render(<MobileNav />)
     const label = screen.getByText("Início")
-    expect(label).not.toHaveClass("text-yellow-400")
+    expect(label).not.toHaveClass("text-brand")
   })
 
   it("clicar em link do menu Mais fecha o menu", () => {

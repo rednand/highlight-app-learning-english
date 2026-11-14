@@ -95,3 +95,12 @@
 - [x] Badge das notificações com o mesmo "h"
 - [ ] Gerar de novo o `.aab` no PWABuilder para o ícone novo ir para o app Android
 - [ ] Conferir o ícone na tela inicial do celular (reinstalar o app)
+
+## Paleta de cores
+- [x] Paleta única no `@theme` (fundos, borda, 4 cinzas de texto, amarelo principal e de destaque)
+- [x] Hex soltos e `gray-*`/`yellow-*` trocados pela paleta em todo o app
+- [x] Textos com contraste >= 4,5:1 (antes `gray-600` tinha 2,6:1)
+- [x] Atalhos da home com ícone amarelo sobre fundo escuro
+- [x] Botões amarelos com texto branco corrigidos para texto preto
+- [x] Regra da paleta em `.claude/rules/stack.md`
+- [ ] Conferir as telas no celular

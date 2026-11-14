@@ -17,13 +17,13 @@ export default function MultipleChoiceOptions({ options, selection, onSelect }: 
 
         if (selection === null) {
           style +=
-            " text-gray-300 border-white/10 bg-white/3 hover:bg-white/8 hover:border-white/20 cursor-pointer"
+            " text-fg-soft border-white/10 bg-white/3 hover:bg-white/8 hover:border-white/20 cursor-pointer"
         } else if (option.isCorrect) {
           style += " text-green-300 border-green-500/40 bg-green-500/10 cursor-default"
         } else if (option.label === selection.selectedLabel) {
           style += " text-red-300 border-red-500/40 bg-red-500/10 cursor-default"
         } else {
-          style += " text-gray-600 border-white/5 bg-transparent cursor-default opacity-40"
+          style += " text-fg-subtle border-white/5 bg-transparent cursor-default opacity-40"
         }
 
         return (

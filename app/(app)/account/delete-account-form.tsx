@@ -11,7 +11,7 @@ export default function DeleteAccountForm() {
 
   return (
     <form action={action} className="space-y-3">
-      <label htmlFor="confirmation" className="block text-sm text-gray-400">
+      <label htmlFor="confirmation" className="block text-sm text-fg-muted">
         Para confirmar, digite <span className="font-bold text-white">EXCLUIR</span>
       </label>
       <input

@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* Paleta do Highlight. Use estas cores (bg-surface, text-fg-muted, bg-brand…)
+   em vez de hex soltos. Textos fg-* têm contraste >= 4,5:1 em todos os fundos;
+   fg-faint é só para ícones decorativos e placeholders (>= 3:1). */
+@theme {
+  --color-page: #0a0a0a;
+  --color-sunken: #0f0f0f;
+  --color-surface: #151515;
+  --color-raised: #1a1a1a;
+  --color-raised-strong: #222222;
+  --color-line: #292929;
+
+  --color-fg-soft: #d4d4d8;
+  --color-fg-muted: #a1a1aa;
+  --color-fg-subtle: #8e8e96;
+  --color-fg-faint: #6f6f78;
+
+  --color-brand: #facc15;
+  --color-brand-strong: #fde047;
+}
+
 :root {
   --background: #0a0a0a;
   --foreground: #f8fafc;

@@ -33,7 +33,7 @@ export default function PendingItemsBuilder() {
   const [translationError, setTranslationError] = useState(false)
   const [exampleError, setExampleError] = useState(false)
 
-  const inputClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
+  const inputClass = "w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors"
 
   async function suggestTranslation() {
     if (!term.trim()) return
@@ -89,23 +89,23 @@ export default function PendingItemsBuilder() {
     <div className="space-y-3">
       <input type="hidden" name="items" value={JSON.stringify([...items, ...draft])} />
 
-      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+      <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider">
         Palavras / expressões{" "}
-        <span className="text-gray-700 normal-case font-normal tracking-normal">(opcional)</span>
+        <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
       </label>
 
       {items.length > 0 && (
         <ul className="space-y-2">
           {items.map((item, i) => (
-            <li key={i} className="flex items-center justify-between gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px]">
+            <li key={i} className="flex items-center justify-between gap-3 p-3 bg-surface border border-line rounded-[18px]">
               <div className="min-w-0">
                 <p className="text-white text-sm truncate">
                   {item.term}
-                  {item.translation && <span className="text-gray-400"> — {item.translation}</span>}
+                  {item.translation && <span className="text-fg-muted"> — {item.translation}</span>}
                 </p>
-                <span className="text-[10px] text-gray-600">{TYPE_LABEL[item.type] ?? item.type}</span>
+                <span className="text-[10px] text-fg-subtle">{TYPE_LABEL[item.type] ?? item.type}</span>
               </div>
-              <button type="button" onClick={() => removeItem(i)} className="shrink-0 text-gray-700 hover:text-red-400 transition-colors">
+              <button type="button" onClick={() => removeItem(i)} className="shrink-0 text-fg-subtle hover:text-red-400 transition-colors">
                 <Trash2 size={13} />
               </button>
             </li>
@@ -113,7 +113,7 @@ export default function PendingItemsBuilder() {
         </ul>
       )}
 
-      <div className="p-4 bg-[#0f0f0f] border border-dashed border-white/10 rounded-xl space-y-3">
+      <div className="p-4 bg-sunken border border-dashed border-white/10 rounded-xl space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input
             value={term}
@@ -134,7 +134,7 @@ export default function PendingItemsBuilder() {
               onClick={suggestTranslation}
               disabled={isSuggesting || !term.trim()}
               title="Sugerir tradução"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors"
             >
               <Wand2 size={14} className={isSuggesting ? "animate-pulse" : ""} />
             </button>
@@ -145,7 +145,7 @@ export default function PendingItemsBuilder() {
           <select
             value={type}
             onChange={e => setType(e.target.value)}
-            className="bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-yellow-400/50 transition-colors"
+            className="bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-fg-soft outline-none focus:border-brand/50 transition-colors"
           >
             <option value="word">Palavra</option>
             <option value="expression">Expressão</option>
@@ -163,21 +163,21 @@ export default function PendingItemsBuilder() {
               onClick={fetchExample}
               disabled={isFetchingExample || !term.trim()}
               title="Buscar exemplo de uso"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors"
             >
               <Wand2 size={14} className={isFetchingExample ? "animate-pulse" : ""} />
             </button>
           </div>
         </div>
 
-        {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+        {phonetic && <p className="text-xs font-mono text-fg-subtle">{phonetic}</p>}
         {translationError && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-fg-subtle">
             Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
           </p>
         )}
         {exampleError && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-fg-subtle">
             Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
           </p>
         )}
@@ -194,7 +194,7 @@ export default function PendingItemsBuilder() {
           type="button"
           onClick={addItem}
           disabled={!term.trim()}
-          className="flex items-center gap-2 w-full py-2.5 border border-yellow-400/30 hover:border-yellow-400/60 disabled:opacity-40 disabled:hover:border-yellow-400/30 text-yellow-400 text-sm font-bold rounded-lg transition-colors justify-center"
+          className="flex items-center gap-2 w-full py-2.5 border border-brand/30 hover:border-brand/60 disabled:opacity-40 disabled:hover:border-brand/30 text-brand text-sm font-bold rounded-lg transition-colors justify-center"
         >
           <Plus size={14} />
           Adicionar à lista

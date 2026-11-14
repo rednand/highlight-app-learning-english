@@ -57,20 +57,20 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
 
   if (selected) {
     return (
-      <div className="flex items-center gap-4 p-3 bg-[#0f0f0f] border border-yellow-400/20 rounded-xl">
+      <div className="flex items-center gap-4 p-3 bg-sunken border border-brand/20 rounded-xl">
         {selected.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={selected.coverUrl} alt={selected.title} className="rounded-lg object-cover shrink-0 w-10 h-14" />
         ) : (
           <div className="w-10 h-14 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            <BookMarked size={16} className="text-gray-600" />
+            <BookMarked size={16} className="text-fg-subtle" />
           </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-white text-sm font-semibold truncate">{selected.title}</p>
-          <p className="text-gray-500 text-xs mt-0.5 truncate">{selected.author}</p>
+          <p className="text-fg-subtle text-xs mt-0.5 truncate">{selected.author}</p>
         </div>
-        <button type="button" onClick={clear} className="text-gray-600 hover:text-white transition-colors shrink-0">
+        <button type="button" onClick={clear} className="text-fg-subtle hover:text-white transition-colors shrink-0">
           <X size={16} />
         </button>
         <input type="hidden" name="book_author" value={selected.author} />
@@ -82,17 +82,17 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
   return (
     <div className="space-y-2">
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none" />
         <input
           type="text"
           value={query}
           onChange={(e) => handleQuery(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault() }}
           placeholder="Buscar livro ou autor..."
-          className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl pl-9 pr-10 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
+          className="w-full bg-sunken border border-white/10 rounded-xl pl-9 pr-10 py-3 text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors text-sm"
         />
         {loading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-white/10 border-t-yellow-400 rounded-full animate-spin" />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-white/10 border-t-brand rounded-full animate-spin" />
         )}
       </div>
 
@@ -103,19 +103,19 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
               key={b.id}
               type="button"
               onClick={() => pick(b)}
-              className="w-full flex items-center gap-3 p-3 bg-[#151515] border border-[#292929] rounded-[18px] hover:border-yellow-400/20 transition-all text-left"
+              className="w-full flex items-center gap-3 p-3 bg-surface border border-line rounded-[18px] hover:border-brand/20 transition-all text-left"
             >
               {b.coverUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={b.coverUrl} alt={b.title} className="rounded-lg object-cover shrink-0 w-8 h-11" />
               ) : (
                 <div className="w-8 h-11 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-                  <BookMarked size={14} className="text-gray-600" />
+                  <BookMarked size={14} className="text-fg-subtle" />
                 </div>
               )}
               <div className="min-w-0">
                 <p className="text-white text-xs font-semibold truncate">{b.title}</p>
-                <p className="text-gray-600 text-[10px] mt-0.5 truncate">{b.author}</p>
+                <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{b.author}</p>
               </div>
             </button>
           ))}

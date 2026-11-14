@@ -61,7 +61,7 @@ export default async function QuizListPage() {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <Link
         href="/grammar"
-        className="flex items-center gap-2 text-gray-500 hover:text-white text-sm mb-8 transition-colors w-fit"
+        className="flex items-center gap-2 text-fg-subtle hover:text-white text-sm mb-8 transition-colors w-fit"
       >
         <ArrowLeft size={15} />
         Gramática
@@ -69,21 +69,21 @@ export default async function QuizListPage() {
 
       <div className="flex items-start justify-between mb-8">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">GRAMÁTICA</p>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">GRAMÁTICA</p>
           <h1 className="text-2xl font-bold text-white">Quiz</h1>
-          <p className="text-gray-500 text-sm mt-1">{completed}/{total} tópicos concluídos</p>
+          <p className="text-fg-subtle text-sm mt-1">{completed}/{total} tópicos concluídos</p>
         </div>
         {completed === total && total > 0 && (
-          <div className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/20 rounded-xl px-4 py-3">
-            <Trophy size={16} className="text-yellow-400" />
-            <span className="text-yellow-400 text-sm font-bold">Tudo concluído!</span>
+          <div className="flex items-center gap-2 bg-brand/10 border border-brand/20 rounded-xl px-4 py-3">
+            <Trophy size={16} className="text-brand" />
+            <span className="text-brand text-sm font-bold">Tudo concluído!</span>
           </div>
         )}
       </div>
 
       <div className="h-2 bg-white/5 rounded-full overflow-hidden mb-8">
         <div
-          className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+          className="h-full bg-brand rounded-full transition-all duration-500"
           style={{ width: `${total > 0 ? Math.round((completed / total) * 100) : 0}%` }}
         />
       </div>
@@ -100,20 +100,20 @@ export default async function QuizListPage() {
               href={`/grammar/quiz/${entry.slug}`}
               className={`group flex items-center gap-3 p-4 rounded-xl border transition-all ${
                 isDone
-                  ? "bg-yellow-400/5 border-yellow-400/20 hover:border-yellow-400/40"
-                  : "bg-[#0f0f0f] border-white/5 hover:border-yellow-400/20"
+                  ? "bg-brand/5 border-brand/20 hover:border-brand/40"
+                  : "bg-sunken border-white/5 hover:border-brand/20"
               }`}
             >
               {isDone ? (
-                <CheckCircle size={18} className="text-yellow-400 shrink-0" />
+                <CheckCircle size={18} className="text-brand shrink-0" />
               ) : (
-                <Circle size={18} className="text-gray-700 shrink-0" />
+                <Circle size={18} className="text-fg-subtle shrink-0" />
               )}
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-semibold truncate transition-colors ${isDone ? "text-yellow-400" : "text-white group-hover:text-yellow-400"}`}>
+                <p className={`text-sm font-semibold truncate transition-colors ${isDone ? "text-brand" : "text-white group-hover:text-brand"}`}>
                   {RULE_TITLES[entry.slug] ?? entry.slug}
                 </p>
-                <p className="text-[10px] text-gray-600 mt-0.5">
+                <p className="text-[10px] text-fg-subtle mt-0.5">
                   {entry.questions.length} {entry.questions.length === 1 ? "questão" : "questões"}
                   {isAttempted && !isDone && ` · ${p.correct}/${p.total} corretas`}
                   {isDone && " · Concluído ✓"}

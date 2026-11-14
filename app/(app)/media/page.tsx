@@ -31,7 +31,7 @@ export default async function MediaPage() {
   return (
     <div className="pt-4 px-[18px] pb-6 md:p-8 space-y-10">
       <div>
-        <p className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1">HIGHLIGHT</p>
+        <p className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1">HIGHLIGHT</p>
         <h1 className="text-2xl font-bold text-white">Mídia</h1>
       </div>
 
@@ -39,16 +39,16 @@ export default async function MediaPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Film size={15} className="text-gray-500" />
+            <Film size={15} className="text-fg-subtle" />
             <h2 className="text-sm font-bold text-white">Filmes & Séries</h2>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/movies" className="text-xs text-gray-500 hover:text-white transition-colors">
+            <Link href="/movies" className="text-xs text-fg-subtle hover:text-white transition-colors">
               Ver todos
             </Link>
             <Link
               href="/movies/new"
-              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-fg-muted hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
             >
               <Plus size={12} />
               Adicionar
@@ -57,7 +57,7 @@ export default async function MediaPage() {
         </div>
 
         {movies.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-[#0f0f0f] border border-dashed border-white/5 rounded-xl text-gray-600 text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
             Nenhum filme ainda
           </div>
         ) : (
@@ -66,7 +66,7 @@ export default async function MediaPage() {
               const count = countMap[movie.id] ?? 0
               return (
                 <Link key={movie.id} href={`/lessons/${movie.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-[2/3] bg-surface border border-line rounded-[18px] overflow-hidden mb-1.5 group-hover:border-brand/20 transition-colors">
                     {movie.tmdb_poster_path ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -77,17 +77,17 @@ export default async function MediaPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         {movie.tmdb_type === "tv"
-                          ? <Tv size={24} className="text-gray-700" />
-                          : <Film size={24} className="text-gray-700" />}
+                          ? <Tv size={24} className="text-fg-subtle" />
+                          : <Film size={24} className="text-fg-subtle" />}
                       </div>
                     )}
                     {count > 0 && (
-                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-yellow-400 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-brand text-[9px] font-bold px-1.5 py-0.5 rounded">
                         {count}
                       </div>
                     )}
                   </div>
-                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-yellow-400 transition-colors">
+                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-brand transition-colors">
                     {movie.title}
                   </p>
                 </Link>
@@ -101,16 +101,16 @@ export default async function MediaPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Music size={15} className="text-gray-500" />
+            <Music size={15} className="text-fg-subtle" />
             <h2 className="text-sm font-bold text-white">Música</h2>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/music" className="text-xs text-gray-500 hover:text-white transition-colors">
+            <Link href="/music" className="text-xs text-fg-subtle hover:text-white transition-colors">
               Ver todos
             </Link>
             <Link
               href="/music/new"
-              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-fg-muted hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
             >
               <Plus size={12} />
               Adicionar
@@ -119,7 +119,7 @@ export default async function MediaPage() {
         </div>
 
         {tracks.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-[#0f0f0f] border border-dashed border-white/5 rounded-xl text-gray-600 text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
             Nenhuma música ainda
           </div>
         ) : (
@@ -128,7 +128,7 @@ export default async function MediaPage() {
               const count = countMap[track.id] ?? 0
               return (
                 <Link key={track.id} href={`/lessons/${track.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-square bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-square bg-surface border border-line rounded-[18px] overflow-hidden mb-1.5 group-hover:border-brand/20 transition-colors">
                     {track.music_thumbnail_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -138,20 +138,20 @@ export default async function MediaPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Music size={24} className="text-gray-700" />
+                        <Music size={24} className="text-fg-subtle" />
                       </div>
                     )}
                     {count > 0 && (
-                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-yellow-400 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-brand text-[9px] font-bold px-1.5 py-0.5 rounded">
                         {count}
                       </div>
                     )}
                   </div>
-                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-yellow-400 transition-colors">
+                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-brand transition-colors">
                     {track.title}
                   </p>
                   {track.music_artist && (
-                    <p className="text-gray-600 text-[10px] mt-0.5 truncate">{track.music_artist}</p>
+                    <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{track.music_artist}</p>
                   )}
                 </Link>
               )
@@ -164,16 +164,16 @@ export default async function MediaPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <BookMarked size={15} className="text-gray-500" />
+            <BookMarked size={15} className="text-fg-subtle" />
             <h2 className="text-sm font-bold text-white">Livros</h2>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/books" className="text-xs text-gray-500 hover:text-white transition-colors">
+            <Link href="/books" className="text-xs text-fg-subtle hover:text-white transition-colors">
               Ver todos
             </Link>
             <Link
               href="/books/new"
-              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+              className="flex items-center gap-1 bg-white/5 hover:bg-white/10 text-fg-muted hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
             >
               <Plus size={12} />
               Adicionar
@@ -182,7 +182,7 @@ export default async function MediaPage() {
         </div>
 
         {books.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-[#0f0f0f] border border-dashed border-white/5 rounded-xl text-gray-600 text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
             Nenhum livro ainda
           </div>
         ) : (
@@ -191,7 +191,7 @@ export default async function MediaPage() {
               const count = countMap[book.id] ?? 0
               return (
                 <Link key={book.id} href={`/lessons/${book.id}`} className="group shrink-0 w-28">
-                  <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-1.5 group-hover:border-yellow-400/20 transition-colors">
+                  <div className="relative aspect-[2/3] bg-surface border border-line rounded-[18px] overflow-hidden mb-1.5 group-hover:border-brand/20 transition-colors">
                     {book.book_cover_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -201,20 +201,20 @@ export default async function MediaPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <BookMarked size={24} className="text-gray-700" />
+                        <BookMarked size={24} className="text-fg-subtle" />
                       </div>
                     )}
                     {count > 0 && (
-                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-yellow-400 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                      <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-brand text-[9px] font-bold px-1.5 py-0.5 rounded">
                         {count}
                       </div>
                     )}
                   </div>
-                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-yellow-400 transition-colors">
+                  <p className="text-white text-[11px] font-semibold line-clamp-2 group-hover:text-brand transition-colors">
                     {book.title}
                   </p>
                   {book.book_author && (
-                    <p className="text-gray-600 text-[10px] mt-0.5 truncate">{book.book_author}</p>
+                    <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{book.book_author}</p>
                   )}
                 </Link>
               )

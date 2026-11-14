@@ -70,7 +70,7 @@ export default function PushToggle({ showLabel = false }: { showLabel?: boolean 
       disabled={loading}
       title={subscribed ? "Desativar notificações" : "Ativar notificações de revisão"}
       className={`flex items-center gap-2 transition-colors disabled:opacity-40 ${
-        subscribed ? "text-yellow-400 hover:text-gray-400" : "text-gray-600 hover:text-white"
+        subscribed ? "text-brand hover:text-fg-muted" : "text-fg-subtle hover:text-white"
       } ${showLabel ? "text-sm font-semibold" : ""}`}
     >
       {subscribed ? <Bell size={showLabel ? 18 : 15} /> : <BellOff size={showLabel ? 18 : 15} />}

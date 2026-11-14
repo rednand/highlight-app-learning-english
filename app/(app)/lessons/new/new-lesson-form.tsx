@@ -28,7 +28,7 @@ export default function NewLessonForm() {
     <form action={createLesson} className="space-y-5">
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
           Título
         </label>
         <input
@@ -36,32 +36,32 @@ export default function NewLessonForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Ex: Phrasal verbs com &ldquo;up&rdquo; (opcional, usa a data se vazio)"
-          className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors text-sm"
+          className="w-full bg-sunken border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors text-sm"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
           Data da aula
         </label>
         <input
           name="lesson_date"
           type="date"
           defaultValue={today}
-          className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-yellow-400/50 transition-colors text-sm"
+          className="w-full bg-sunken border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-brand/50 transition-colors text-sm"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
           Notas{" "}
-          <span className="text-gray-700 normal-case font-normal tracking-normal">(opcional)</span>
+          <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
         </label>
         <textarea
           name="notes"
           rows={3}
           placeholder="Contexto, tema da aula, observações..."
-          className="w-full bg-[#0f0f0f] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors resize-none text-sm"
+          className="w-full bg-sunken border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors resize-none text-sm"
         />
       </div>
 
@@ -71,7 +71,7 @@ export default function NewLessonForm() {
 
       <SubmitButton
         pendingLabel="Criando..."
-        className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 rounded-full transition-colors text-sm"
+        className="w-full bg-brand hover:bg-brand-strong text-black font-bold py-3 rounded-full transition-colors text-sm"
       >
         Criar Aula
       </SubmitButton>

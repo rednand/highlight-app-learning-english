@@ -26,9 +26,9 @@ const TYPE_LABEL: Record<string, string> = {
 }
 
 const TYPE_COLOR: Record<string, string> = {
-  word: "text-yellow-400 bg-yellow-400/10",
+  word: "text-brand bg-brand/10",
   expression: "text-orange-400 bg-orange-400/10",
-  phrase: "text-amber-300 bg-amber-300/10",
+  phrase: "text-brand-strong bg-brand-strong/10",
 }
 
 export default function ItemCard({ item, reviewState = "active" }: { item: Item; reviewState?: "active" | "discarded" | "none" }) {
@@ -100,11 +100,11 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
     startTransition(() => deleteLessonItem(item.id, item.lesson_id))
   }
 
-  const inputClass = "w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-yellow-400/50 transition-colors"
+  const inputClass = "w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors"
 
   if (editing) {
     return (
-      <div className="p-4 bg-[#0f0f0f] border border-yellow-400/20 rounded-xl">
+      <div className="p-4 bg-sunken border border-brand/20 rounded-xl">
         <form onSubmit={handleSubmit} className="space-y-3">
           <input type="hidden" name="id" value={item.id} />
           <input type="hidden" name="lesson_id" value={item.lesson_id} />
@@ -113,35 +113,35 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
             <input name="term" required value={term} onChange={e => setTerm(e.target.value)} placeholder="Palavra / expressão" className={inputClass} />
             <div className="relative">
               <input name="translation" value={translation} onChange={e => setTranslation(e.target.value)} placeholder="Tradução" className={`${inputClass} pr-9`} />
-              <button type="button" onClick={suggestTranslation} disabled={isSuggesting || !term.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors">
+              <button type="button" onClick={suggestTranslation} disabled={isSuggesting || !term.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors">
                 <Wand2 size={14} className={isSuggesting ? "animate-pulse" : ""} />
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <select name="type" defaultValue={item.type} className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-yellow-400/50 transition-colors">
+            <select name="type" defaultValue={item.type} className="w-full bg-page border border-white/10 rounded-lg px-3 py-2.5 text-sm text-fg-soft outline-none focus:border-brand/50 transition-colors">
               <option value="word">Palavra</option>
               <option value="expression">Expressão</option>
               <option value="phrase">Frase</option>
             </select>
             <div className="relative">
               <input name="context" value={context} onChange={e => setContext(e.target.value)} placeholder="Exemplo de uso" className={`${inputClass} pr-9`} />
-              <button type="button" onClick={fetchExample} disabled={isFetchingExample || !term.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-yellow-400 disabled:opacity-30 transition-colors">
+              <button type="button" onClick={fetchExample} disabled={isFetchingExample || !term.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 text-fg-subtle hover:text-brand disabled:opacity-30 transition-colors">
                 <Wand2 size={14} className={isFetchingExample ? "animate-pulse" : ""} />
               </button>
             </div>
           </div>
 
           <input type="hidden" name="phonetic" value={phonetic} />
-          {phonetic && <p className="text-xs font-mono text-gray-500">{phonetic}</p>}
+          {phonetic && <p className="text-xs font-mono text-fg-subtle">{phonetic}</p>}
           {translationError && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-fg-subtle">
               Nenhuma tradução encontrada para &ldquo;{term}&rdquo;. Digite manualmente.
             </p>
           )}
           {exampleError && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-fg-subtle">
               Nenhum exemplo encontrado para &ldquo;{term}&rdquo;. Digite manualmente.
             </p>
           )}
@@ -156,10 +156,10 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
           />
 
           <div className="flex items-center justify-between">
-            <button type="button" onClick={() => setEditing(false)} className="text-xs text-gray-600 hover:text-white transition-colors flex items-center gap-1">
+            <button type="button" onClick={() => setEditing(false)} className="text-xs text-fg-subtle hover:text-white transition-colors flex items-center gap-1">
               <X size={12} /> Cancelar
             </button>
-            <button type="submit" disabled={isPending} className="bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-full transition-colors">
+            <button type="submit" disabled={isPending} className="bg-brand hover:bg-brand-strong disabled:opacity-50 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors">
               {isPending ? "Salvando…" : "Salvar"}
             </button>
           </div>
@@ -169,20 +169,20 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
   }
 
   return (
-    <div className={`flex items-start gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px] ${discarded ? "opacity-60" : ""}`}>
+    <div className={`flex items-start gap-4 p-4 bg-surface border border-line rounded-[18px] ${discarded ? "opacity-60" : ""}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <p className="text-white font-medium text-sm">{item.term}</p>
           <SpeakButton text={item.term} />
           {discarded && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-400 bg-white/5">Fora da revisão</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-fg-muted bg-white/5">Fora da revisão</span>
           )}
         </div>
-        {item.phonetic && <p className="text-gray-400 text-xs font-mono mt-0.5">{item.phonetic}</p>}
-        {item.translation && <p className="text-gray-300 text-xs mt-0.5">{item.translation}</p>}
-        {item.context && <p className="text-gray-400 text-xs mt-1.5 italic">&ldquo;{item.context}&rdquo;</p>}
+        {item.phonetic && <p className="text-fg-muted text-xs font-mono mt-0.5">{item.phonetic}</p>}
+        {item.translation && <p className="text-fg-soft text-xs mt-0.5">{item.translation}</p>}
+        {item.context && <p className="text-fg-muted text-xs mt-1.5 italic">&ldquo;{item.context}&rdquo;</p>}
         {item.my_sentence && (
-          <p className="text-amber-300/70 text-xs mt-1.5 italic">&ldquo;{item.my_sentence}&rdquo; <span className="not-italic text-gray-700">— minha frase</span></p>
+          <p className="text-brand-strong/70 text-xs mt-1.5 italic">&ldquo;{item.my_sentence}&rdquo; <span className="not-italic text-fg-subtle">— minha frase</span></p>
         )}
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -194,15 +194,15 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
             onClick={toggleReview}
             disabled={isPending}
             title={discarded ? "Voltar para a revisão" : "Tirar da revisão"}
-            className="text-gray-700 hover:text-white disabled:opacity-40 transition-colors"
+            className="text-fg-subtle hover:text-white disabled:opacity-40 transition-colors"
           >
             {discarded ? <Eye size={13} /> : <EyeOff size={13} />}
           </button>
         )}
-        <button onClick={() => setEditing(true)} title="Editar" className="text-gray-700 hover:text-white transition-colors">
+        <button onClick={() => setEditing(true)} title="Editar" className="text-fg-subtle hover:text-white transition-colors">
           <Pencil size={13} />
         </button>
-        <button onClick={handleDelete} disabled={isPending} title="Excluir" className="text-gray-700 hover:text-red-400 disabled:opacity-40 transition-colors">
+        <button onClick={handleDelete} disabled={isPending} title="Excluir" className="text-fg-subtle hover:text-red-400 disabled:opacity-40 transition-colors">
           <Trash2 size={13} className={isPending ? "animate-pulse" : ""} />
         </button>
       </div>

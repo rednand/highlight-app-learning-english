@@ -32,14 +32,14 @@ export default async function BooksPage() {
     <div className="pt-4 px-[18px] pb-6 md:p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/media" className="text-[10px] font-bold tracking-[0.3em] text-yellow-300 mb-1 hover:text-yellow-200 transition-colors block">
+          <Link href="/media" className="text-[10px] font-bold tracking-[0.3em] text-brand-strong mb-1 hover:text-brand-strong transition-colors block">
             ← MÍDIA
           </Link>
           <h1 className="text-2xl font-bold text-white">Livros</h1>
         </div>
         <Link
           href="/books/new"
-          className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-4 py-2 rounded-full transition-colors"
+          className="flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-4 py-2 rounded-full transition-colors"
         >
           <Plus size={15} />
           Adicionar
@@ -48,12 +48,12 @@ export default async function BooksPage() {
 
       {!books || books.length === 0 ? (
         <div className="text-center py-20">
-          <BookMarked size={36} className="text-gray-700 mx-auto mb-4" />
-          <p className="text-gray-400 font-medium mb-1">Nenhum livro ainda</p>
-          <p className="text-gray-600 text-sm mb-6">Adicione um livro que você está lendo.</p>
+          <BookMarked size={36} className="text-fg-subtle mx-auto mb-4" />
+          <p className="text-fg-muted font-medium mb-1">Nenhum livro ainda</p>
+          <p className="text-fg-subtle text-sm mb-6">Adicione um livro que você está lendo.</p>
           <Link
             href="/books/new"
-            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
           >
             <Plus size={15} />
             Adicionar
@@ -69,7 +69,7 @@ export default async function BooksPage() {
                 href={`/lessons/${book.id}`}
                 className="group flex flex-col"
               >
-                <div className="relative aspect-[2/3] bg-[#151515] border border-[#292929] rounded-[18px] overflow-hidden mb-2 group-hover:border-yellow-400/20 transition-colors">
+                <div className="relative aspect-[2/3] bg-surface border border-line rounded-[18px] overflow-hidden mb-2 group-hover:border-brand/20 transition-colors">
                   {book.book_cover_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -79,27 +79,27 @@ export default async function BooksPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <BookMarked size={32} className="text-gray-700" />
+                      <BookMarked size={32} className="text-fg-subtle" />
                     </div>
                   )}
                   {count > 0 && (
-                    <div className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-yellow-400 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                    <div className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-brand text-[10px] font-bold px-1.5 py-0.5 rounded">
                       {count} palavras
                     </div>
                   )}
                 </div>
-                <p className="text-white text-xs font-semibold line-clamp-2 group-hover:text-yellow-400 transition-colors">
+                <p className="text-white text-xs font-semibold line-clamp-2 group-hover:text-brand transition-colors">
                   {book.title}
                 </p>
                 {book.book_author && (
-                  <p className="text-gray-600 text-[10px] mt-0.5 truncate">{book.book_author}</p>
+                  <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{book.book_author}</p>
                 )}
               </Link>
             )
           })}
           <Link
             href="/books/new"
-            className="flex flex-col items-center justify-center aspect-[2/3] bg-[#0f0f0f] border border-dashed border-white/5 rounded-xl hover:border-yellow-400/20 transition-all text-gray-600 hover:text-gray-400 gap-2"
+            className="flex flex-col items-center justify-center aspect-[2/3] bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-subtle hover:text-fg-muted gap-2"
           >
             <Plus size={20} />
             <span className="text-xs">Adicionar</span>
