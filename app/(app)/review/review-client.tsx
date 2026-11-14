@@ -366,7 +366,7 @@ export default function ReviewClient({
                 </p>
               </div>
             </div>
-            <ArrowRight size={18} className="text-fg-subtle shrink-0" />
+            <ArrowRight size={18} className="text-fg-dim shrink-0" />
           </button>
         )}
 
@@ -387,7 +387,7 @@ export default function ReviewClient({
         </div>
 
         {lessonsWithCards.length > 0 && (
-          <p className="text-[10px] font-bold tracking-[0.2em] text-fg-subtle uppercase mb-3">Por aula e mídia</p>
+          <p className="text-[10px] font-bold tracking-[0.2em] text-fg-dim uppercase mb-3">Por aula e mídia</p>
         )}
 
         <div className="space-y-2">
@@ -427,7 +427,7 @@ export default function ReviewClient({
                       style={{ width: `${stat?.dominio ?? 0}%` }}
                     />
                   </div>
-                  <span className="text-[9px] text-fg-subtle">domínio</span>
+                  <span className="text-[9px] text-fg-dim">domínio</span>
                 </div>
                 <button
                   onClick={() => startReview(lesson.id)}
@@ -530,7 +530,7 @@ export default function ReviewClient({
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => { router.refresh(); setStep("filter") }}
-          className="text-xs text-fg-subtle hover:text-white transition-colors shrink-0"
+          className="text-xs text-fg-dim hover:text-white transition-colors shrink-0"
         >
           ← filtro
         </button>
@@ -560,9 +560,9 @@ export default function ReviewClient({
           </span>
           <div className="flex items-center justify-center gap-3 mt-2">
             <p className="text-3xl font-semibold text-white leading-snug">{card.front}</p>
-            <SpeakButton text={card.front} className="text-fg-subtle hover:text-brand transition-colors mt-1" />
+            <SpeakButton text={card.front} className="text-fg-dim hover:text-brand transition-colors mt-1" />
           </div>
-          {phonetic && <p className="text-fg-subtle text-sm mt-1 font-mono">{phonetic}</p>}
+          {phonetic && <p className="text-fg-dim text-sm mt-1 font-mono">{phonetic}</p>}
           {cardMode === "cinema" && context && (
             <div className="mt-4">
               <ContextSentence label="Exemplo" sentence={context} term={card.front} />
@@ -583,7 +583,7 @@ export default function ReviewClient({
             )}
             {mySentence && (
               <div className="bg-white/5 rounded-xl px-4 py-3 text-left mb-3">
-                <p className="text-[10px] text-fg-subtle uppercase font-bold tracking-wider mb-1">Minha frase</p>
+                <p className="text-[10px] text-fg-dim uppercase font-bold tracking-wider mb-1">Minha frase</p>
                 <p className="text-fg-soft text-sm italic">&ldquo;{mySentence}&rdquo;</p>
               </div>
             )}
@@ -598,8 +598,8 @@ export default function ReviewClient({
                 />
                 <div className="flex items-center gap-1.5 min-w-0">
                   {media.tmdb_type === "movie"
-                    ? <Film size={10} className="text-fg-subtle shrink-0" />
-                    : <Tv size={10} className="text-fg-subtle shrink-0" />}
+                    ? <Film size={10} className="text-fg-dim shrink-0" />
+                    : <Tv size={10} className="text-fg-dim shrink-0" />}
                   <p className="text-[11px] text-fg-subtle truncate">
                     {media.title}
                     {media.tmdb_type === "tv" && media.tmdb_season ? ` T${media.tmdb_season}` : ""}
@@ -613,7 +613,7 @@ export default function ReviewClient({
         {selection !== null && cardMode === "cinema" && (
           <div className="mt-4 pt-4 border-t border-white/5 text-center space-y-3">
             <div className="pb-1">
-              <p className="text-[10px] text-fg-subtle uppercase font-bold tracking-wider mb-1">Tradução</p>
+              <p className="text-[10px] text-fg-dim uppercase font-bold tracking-wider mb-1">Tradução</p>
               <p className="text-white text-lg font-semibold">{card.back}</p>
             </div>
             {isMusic ? (
@@ -627,7 +627,7 @@ export default function ReviewClient({
                   />
                 ) : (
                   <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
-                    <Music size={24} className="text-fg-subtle" />
+                    <Music size={24} className="text-fg-dim" />
                   </div>
                 )}
                 <div>
@@ -651,8 +651,8 @@ export default function ReviewClient({
                 ) : (
                   <div className="w-18 h-24 bg-white/5 rounded-xl flex items-center justify-center mx-auto">
                     {media?.tmdb_type === "tv"
-                      ? <Tv size={22} className="text-fg-subtle" />
-                      : <Film size={22} className="text-fg-subtle" />}
+                      ? <Tv size={22} className="text-fg-dim" />
+                      : <Film size={22} className="text-fg-dim" />}
                   </div>
                 )}
                 <div>
@@ -677,7 +677,7 @@ export default function ReviewClient({
         <button
           onClick={handleSkip}
           disabled={selection !== null}
-          className="flex items-center gap-1.5 text-xs text-fg-subtle hover:text-fg-muted transition-colors"
+          className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-fg-muted transition-colors"
         >
           <SkipForward size={12} />
           Pular
@@ -687,7 +687,7 @@ export default function ReviewClient({
           onClick={handleDiscard}
           disabled={selection !== null || discarding}
           title="Já sei esta palavra: não mostrar mais na revisão"
-          className="flex items-center gap-1.5 text-xs text-fg-subtle hover:text-red-400 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-red-400 disabled:opacity-50 transition-colors"
         >
           <EyeOff size={12} />
           {discarding ? "Descartando…" : "Já sei, descartar"}

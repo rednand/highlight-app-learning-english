@@ -107,13 +107,13 @@ export default async function QuizListPage() {
               {isDone ? (
                 <CheckCircle size={18} className="text-brand shrink-0" />
               ) : (
-                <Circle size={18} className="text-fg-subtle shrink-0" />
+                <Circle size={18} className="text-fg-faint shrink-0" />
               )}
               <div className="flex-1 min-w-0">
                 <p className={`text-sm font-semibold truncate transition-colors ${isDone ? "text-brand" : "text-white group-hover:text-brand"}`}>
                   {RULE_TITLES[entry.slug] ?? entry.slug}
                 </p>
-                <p className="text-[10px] text-fg-subtle mt-0.5">
+                <p className="text-[10px] text-fg-dim mt-0.5">
                   {entry.questions.length} {entry.questions.length === 1 ? "questão" : "questões"}
                   {isAttempted && !isDone && ` · ${p.correct}/${p.total} corretas`}
                   {isDone && " · Concluído ✓"}

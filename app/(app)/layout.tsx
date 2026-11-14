@@ -74,7 +74,7 @@ export default async function AppLayout({
             icon={<RotateCcw size={16} />}
             label="Revisar"
           />
-          <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-fg-subtle uppercase">
+          <p className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-fg-dim uppercase">
             Mais
           </p>
           <NavLink
@@ -122,7 +122,7 @@ export default async function AppLayout({
           <div className="flex items-center gap-3">
             <PushToggle />
             <form action={signOut}>
-              <button className="text-xs text-fg-subtle hover:text-white transition-colors">
+              <button className="text-xs text-fg-dim hover:text-white transition-colors">
                 Sair
               </button>
             </form>

@@ -122,7 +122,7 @@ export default async function DashboardPage() {
               >
                 <span
                   className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${
-                    primary ? "bg-brand/10 text-brand" : "bg-white/5 text-fg-muted"
+                    primary ? "bg-brand/15 text-brand" : "bg-white/5 text-fg-muted"
                   }`}
                 >
                   <Icon size={22} />

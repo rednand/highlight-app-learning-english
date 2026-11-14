@@ -95,7 +95,7 @@ export default async function AccountPage() {
         <DeleteAccountForm />
       </section>
 
-      <p className="mt-6 text-xs text-fg-subtle">
+      <p className="mt-6 text-xs text-fg-dim">
         <Link href="/privacy" className="hover:text-white">
           Política de Privacidade
         </Link>

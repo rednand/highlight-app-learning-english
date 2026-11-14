@@ -57,7 +57,7 @@ export default async function MediaPage() {
         </div>
 
         {movies.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-dim text-sm">
             Nenhum filme ainda
           </div>
         ) : (
@@ -77,8 +77,8 @@ export default async function MediaPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         {movie.tmdb_type === "tv"
-                          ? <Tv size={24} className="text-fg-subtle" />
-                          : <Film size={24} className="text-fg-subtle" />}
+                          ? <Tv size={24} className="text-fg-faint" />
+                          : <Film size={24} className="text-fg-faint" />}
                       </div>
                     )}
                     {count > 0 && (
@@ -119,7 +119,7 @@ export default async function MediaPage() {
         </div>
 
         {tracks.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-dim text-sm">
             Nenhuma música ainda
           </div>
         ) : (
@@ -138,7 +138,7 @@ export default async function MediaPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Music size={24} className="text-fg-subtle" />
+                        <Music size={24} className="text-fg-faint" />
                       </div>
                     )}
                     {count > 0 && (
@@ -151,7 +151,7 @@ export default async function MediaPage() {
                     {track.title}
                   </p>
                   {track.music_artist && (
-                    <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{track.music_artist}</p>
+                    <p className="text-fg-dim text-[10px] mt-0.5 truncate">{track.music_artist}</p>
                   )}
                 </Link>
               )
@@ -182,7 +182,7 @@ export default async function MediaPage() {
         </div>
 
         {books.length === 0 ? (
-          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-subtle text-sm">
+          <div className="flex items-center justify-center h-32 bg-sunken border border-dashed border-white/5 rounded-xl text-fg-dim text-sm">
             Nenhum livro ainda
           </div>
         ) : (
@@ -201,7 +201,7 @@ export default async function MediaPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <BookMarked size={24} className="text-fg-subtle" />
+                        <BookMarked size={24} className="text-fg-faint" />
                       </div>
                     )}
                     {count > 0 && (
@@ -214,7 +214,7 @@ export default async function MediaPage() {
                     {book.title}
                   </p>
                   {book.book_author && (
-                    <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{book.book_author}</p>
+                    <p className="text-fg-dim text-[10px] mt-0.5 truncate">{book.book_author}</p>
                   )}
                 </Link>
               )

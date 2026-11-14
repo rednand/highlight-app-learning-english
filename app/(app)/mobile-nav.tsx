@@ -89,7 +89,7 @@ export default function MobileNav() {
                 <Icon size={18} />
               </span>
               <span className={`text-[10px] font-bold tracking-wide transition-colors ${
-                isActive ? "text-brand" : "text-fg-subtle"
+                isActive ? "text-brand" : "text-fg-dim"
               }`}>
                 {label}
               </span>
@@ -108,7 +108,7 @@ export default function MobileNav() {
             <Menu size={18} />
           </span>
           <span className={`text-[10px] font-bold tracking-wide transition-colors ${
-            isMoreActive || open ? "text-brand" : "text-fg-subtle"
+            isMoreActive || open ? "text-brand" : "text-fg-dim"
           }`}>
             Mais
           </span>

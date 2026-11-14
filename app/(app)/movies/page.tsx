@@ -49,9 +49,9 @@ export default async function MoviesPage() {
 
       {!movies || movies.length === 0 ? (
         <div className="text-center py-20">
-          <Film size={36} className="text-fg-subtle mx-auto mb-4" />
+          <Film size={36} className="text-fg-faint mx-auto mb-4" />
           <p className="text-fg-muted font-medium mb-1">Nenhum título ainda</p>
-          <p className="text-fg-subtle text-sm mb-6">Adicione um filme ou série que você está assistindo.</p>
+          <p className="text-fg-dim text-sm mb-6">Adicione um filme ou série que você está assistindo.</p>
           <Link
             href="/movies/new"
             className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
@@ -82,8 +82,8 @@ export default async function MoviesPage() {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       {movie.tmdb_type === "tv"
-                        ? <Tv size={32} className="text-fg-subtle" />
-                        : <Film size={32} className="text-fg-subtle" />}
+                        ? <Tv size={32} className="text-fg-faint" />
+                        : <Film size={32} className="text-fg-faint" />}
                     </div>
                   )}
                   {count > 0 && (
@@ -96,14 +96,14 @@ export default async function MoviesPage() {
                   {movie.title}
                 </p>
                 {movie.tmdb_season && (
-                  <p className="text-fg-subtle text-[10px] mt-0.5">Temporada {movie.tmdb_season}</p>
+                  <p className="text-fg-dim text-[10px] mt-0.5">Temporada {movie.tmdb_season}</p>
                 )}
               </Link>
             )
           })}
           <Link
             href="/movies/new"
-            className="flex flex-col items-center justify-center aspect-[2/3] bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-subtle hover:text-fg-muted gap-2"
+            className="flex flex-col items-center justify-center aspect-[2/3] bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-dim hover:text-fg-muted gap-2"
           >
             <Plus size={20} />
             <span className="text-xs">Adicionar</span>

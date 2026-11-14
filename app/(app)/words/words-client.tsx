@@ -15,7 +15,7 @@ const FILTERS: { value: WordFilter; label: string }[] = [
 ]
 
 function SourceIcon({ type }: { type: string | null }) {
-  const className = "text-fg-subtle shrink-0"
+  const className = "text-fg-dim shrink-0"
   if (type === "movie") return <Film size={11} className={className} />
   if (type === "music") return <Music size={11} className={className} />
   if (type === "book") return <BookMarked size={11} className={className} />
@@ -63,7 +63,7 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
   return (
     <div>
       <div className="relative mb-3">
-        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-subtle" />
+        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-dim" />
         <input
           type="search"
           value={query}
@@ -123,7 +123,7 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
                   </div>
                   {word.translation && <p className="text-fg-muted text-xs mt-0.5 truncate">{word.translation}</p>}
                   {word.sourceTitle && (
-                    <p className="flex items-center gap-1 text-fg-subtle text-[11px] mt-1 min-w-0">
+                    <p className="flex items-center gap-1 text-fg-dim text-[11px] mt-1 min-w-0">
                       <SourceIcon type={word.sourceType} />
                       <span className="truncate">{word.sourceTitle}</span>
                     </p>

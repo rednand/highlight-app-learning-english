@@ -57,7 +57,7 @@ export default function EditLessonForm({ lesson }: Props) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 text-xs text-fg-subtle hover:text-white transition-colors"
+        className="flex items-center gap-1.5 text-xs text-fg-dim hover:text-white transition-colors"
       >
         <Pencil size={13} />
         Editar
@@ -69,7 +69,7 @@ export default function EditLessonForm({ lesson }: Props) {
     <form onSubmit={handleSubmit} className="mb-8 bg-sunken border border-white/10 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-fg-subtle uppercase tracking-wider">Editar aula</span>
-        <button type="button" onClick={() => setOpen(false)} className="text-fg-subtle hover:text-white transition-colors">
+        <button type="button" onClick={() => setOpen(false)} className="text-fg-dim hover:text-white transition-colors">
           <X size={15} />
         </button>
       </div>

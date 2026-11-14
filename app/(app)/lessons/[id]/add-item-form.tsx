@@ -125,7 +125,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-subtle hover:text-brand text-sm rounded-xl transition-colors justify-center"
+        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-dim hover:text-brand text-sm rounded-xl transition-colors justify-center"
       >
         <Plus size={15} />
         Adicionar palavra ou expressão
@@ -143,7 +143,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
           >
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold text-white">Adicionar palavra</h2>
-              <button type="button" onClick={closeModal} className="text-fg-subtle hover:text-white transition-colors">
+              <button type="button" onClick={closeModal} className="text-fg-dim hover:text-white transition-colors">
                 <X size={16} />
               </button>
             </div>
@@ -177,7 +177,7 @@ export default function AddItemForm({ lessonId, sourceType }: { lessonId: string
                   className={`${inputClass} resize-none`}
                   autoFocus
                 />
-                <p className="text-xs text-fg-subtle">
+                <p className="text-xs text-fg-dim">
                   Use &ldquo;=&rdquo; ou &ldquo; - &rdquo; para separar a tradução. Sem tradução, ela é sugerida automaticamente.
                 </p>
               </div>

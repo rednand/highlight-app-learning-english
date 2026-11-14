@@ -28,7 +28,7 @@ const TYPE_LABEL: Record<string, string> = {
 const TYPE_COLOR: Record<string, string> = {
   word: "text-brand bg-brand/10",
   expression: "text-orange-400 bg-orange-400/10",
-  phrase: "text-brand-strong bg-brand-strong/10",
+  phrase: "text-sky-300 bg-sky-300/10",
 }
 
 export default function ItemCard({ item, reviewState = "active" }: { item: Item; reviewState?: "active" | "discarded" | "none" }) {
@@ -156,7 +156,7 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
           />
 
           <div className="flex items-center justify-between">
-            <button type="button" onClick={() => setEditing(false)} className="text-xs text-fg-subtle hover:text-white transition-colors flex items-center gap-1">
+            <button type="button" onClick={() => setEditing(false)} className="text-xs text-fg-dim hover:text-white transition-colors flex items-center gap-1">
               <X size={12} /> Cancelar
             </button>
             <button type="submit" disabled={isPending} className="bg-brand hover:bg-brand-strong disabled:opacity-50 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors">
@@ -182,7 +182,7 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
         {item.translation && <p className="text-fg-soft text-xs mt-0.5">{item.translation}</p>}
         {item.context && <p className="text-fg-muted text-xs mt-1.5 italic">&ldquo;{item.context}&rdquo;</p>}
         {item.my_sentence && (
-          <p className="text-brand-strong/70 text-xs mt-1.5 italic">&ldquo;{item.my_sentence}&rdquo; <span className="not-italic text-fg-subtle">— minha frase</span></p>
+          <p className="text-brand-strong/70 text-xs mt-1.5 italic">&ldquo;{item.my_sentence}&rdquo; <span className="not-italic text-fg-dim">— minha frase</span></p>
         )}
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -194,15 +194,15 @@ export default function ItemCard({ item, reviewState = "active" }: { item: Item;
             onClick={toggleReview}
             disabled={isPending}
             title={discarded ? "Voltar para a revisão" : "Tirar da revisão"}
-            className="text-fg-subtle hover:text-white disabled:opacity-40 transition-colors"
+            className="text-fg-dim hover:text-white disabled:opacity-40 transition-colors"
           >
             {discarded ? <Eye size={13} /> : <EyeOff size={13} />}
           </button>
         )}
-        <button onClick={() => setEditing(true)} title="Editar" className="text-fg-subtle hover:text-white transition-colors">
+        <button onClick={() => setEditing(true)} title="Editar" className="text-fg-dim hover:text-white transition-colors">
           <Pencil size={13} />
         </button>
-        <button onClick={handleDelete} disabled={isPending} title="Excluir" className="text-fg-subtle hover:text-red-400 disabled:opacity-40 transition-colors">
+        <button onClick={handleDelete} disabled={isPending} title="Excluir" className="text-fg-dim hover:text-red-400 disabled:opacity-40 transition-colors">
           <Trash2 size={13} className={isPending ? "animate-pulse" : ""} />
         </button>
       </div>

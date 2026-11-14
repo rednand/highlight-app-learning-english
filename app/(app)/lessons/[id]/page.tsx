@@ -69,7 +69,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
             <img src={lesson.music_thumbnail_url} alt={lesson.title} className="w-12 h-12 rounded-lg object-cover shrink-0" />
           ) : (
             <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-              <Music size={18} className="text-fg-subtle" />
+              <Music size={18} className="text-fg-dim" />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -86,7 +86,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
             <img src={lesson.book_cover_url} alt={lesson.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
           ) : (
             <div className="w-10 h-14 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-              <BookMarked size={18} className="text-fg-subtle" />
+              <BookMarked size={18} className="text-fg-dim" />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -149,7 +149,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           <h2 className="text-xs font-bold tracking-[0.2em] text-fg-subtle uppercase">
             Palavras & Expressões
             {items && items.length > 0 && (
-              <span className="ml-2 text-fg-subtle font-normal tracking-normal normal-case">
+              <span className="ml-2 text-fg-dim font-normal tracking-normal normal-case">
                 ({items.length})
               </span>
             )}

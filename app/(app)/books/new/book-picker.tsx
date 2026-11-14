@@ -63,14 +63,14 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
           <img src={selected.coverUrl} alt={selected.title} className="rounded-lg object-cover shrink-0 w-10 h-14" />
         ) : (
           <div className="w-10 h-14 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            <BookMarked size={16} className="text-fg-subtle" />
+            <BookMarked size={16} className="text-fg-dim" />
           </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-white text-sm font-semibold truncate">{selected.title}</p>
           <p className="text-fg-subtle text-xs mt-0.5 truncate">{selected.author}</p>
         </div>
-        <button type="button" onClick={clear} className="text-fg-subtle hover:text-white transition-colors shrink-0">
+        <button type="button" onClick={clear} className="text-fg-dim hover:text-white transition-colors shrink-0">
           <X size={16} />
         </button>
         <input type="hidden" name="book_author" value={selected.author} />
@@ -82,7 +82,7 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
   return (
     <div className="space-y-2">
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-dim pointer-events-none" />
         <input
           type="text"
           value={query}
@@ -110,12 +110,12 @@ export default function BookPicker({ onSelectAction }: { onSelectAction: (b: Boo
                 <img src={b.coverUrl} alt={b.title} className="rounded-lg object-cover shrink-0 w-8 h-11" />
               ) : (
                 <div className="w-8 h-11 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-                  <BookMarked size={14} className="text-fg-subtle" />
+                  <BookMarked size={14} className="text-fg-dim" />
                 </div>
               )}
               <div className="min-w-0">
                 <p className="text-white text-xs font-semibold truncate">{b.title}</p>
-                <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{b.author}</p>
+                <p className="text-fg-dim text-[10px] mt-0.5 truncate">{b.author}</p>
               </div>
             </button>
           ))}

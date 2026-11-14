@@ -57,14 +57,14 @@ export default function MusicPicker({ onSelectAction }: { onSelectAction: (s: Tr
           <img src={selected.artworkUrl100} alt={selected.trackName} className="rounded-lg object-cover shrink-0 w-12 h-12" />
         ) : (
           <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            <Music size={16} className="text-fg-subtle" />
+            <Music size={16} className="text-fg-dim" />
           </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-white text-sm font-semibold truncate">{selected.trackName}</p>
           <p className="text-fg-subtle text-xs mt-0.5 truncate">{selected.artistName}</p>
         </div>
-        <button type="button" onClick={clear} className="text-fg-subtle hover:text-white transition-colors shrink-0">
+        <button type="button" onClick={clear} className="text-fg-dim hover:text-white transition-colors shrink-0">
           <X size={16} />
         </button>
         <input type="hidden" name="music_artist" value={selected.artistName} />
@@ -76,7 +76,7 @@ export default function MusicPicker({ onSelectAction }: { onSelectAction: (s: Tr
   return (
     <div className="space-y-2">
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-dim pointer-events-none" />
         <input
           type="text"
           value={query}
@@ -104,12 +104,12 @@ export default function MusicPicker({ onSelectAction }: { onSelectAction: (s: Tr
                 <img src={r.artworkUrl100} alt={r.trackName} className="rounded-lg object-cover shrink-0 w-10 h-10" />
               ) : (
                 <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-                  <Music size={14} className="text-fg-subtle" />
+                  <Music size={14} className="text-fg-dim" />
                 </div>
               )}
               <div className="min-w-0">
                 <p className="text-white text-xs font-semibold truncate">{r.trackName}</p>
-                <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{r.artistName}</p>
+                <p className="text-fg-dim text-[10px] mt-0.5 truncate">{r.artistName}</p>
               </div>
             </button>
           ))}

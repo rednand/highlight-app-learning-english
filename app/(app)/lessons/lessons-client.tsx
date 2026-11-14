@@ -32,7 +32,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
     <div>
       <div className="flex items-center gap-3 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-dim" />
           <input
             type="text"
             placeholder="Buscar aulas..."
@@ -45,7 +45,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
           <button
             onClick={() => setView("grid")}
             className={`p-1.5 rounded-lg transition-colors ${
-              view === "grid" ? "bg-brand/10 text-brand" : "text-fg-subtle hover:text-fg-muted"
+              view === "grid" ? "bg-brand/10 text-brand" : "text-fg-dim hover:text-fg-muted"
             }`}
           >
             <LayoutGrid size={15} />
@@ -53,7 +53,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
           <button
             onClick={() => setView("list")}
             className={`p-1.5 rounded-lg transition-colors ${
-              view === "list" ? "bg-brand/10 text-brand" : "text-fg-subtle hover:text-fg-muted"
+              view === "list" ? "bg-brand/10 text-brand" : "text-fg-dim hover:text-fg-muted"
             }`}
           >
             <List size={15} />
@@ -93,9 +93,9 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
                   <p className="text-white font-semibold text-sm group-hover:text-brand transition-colors truncate">
                     {lesson.title}
                   </p>
-                  <p className="text-xs text-fg-subtle mt-0.5">{date}</p>
+                  <p className="text-xs text-fg-dim mt-0.5">{date}</p>
                 </div>
-                <span className="text-xs text-fg-subtle shrink-0 max-w-[40%] truncate">
+                <span className="text-xs text-fg-dim shrink-0 max-w-[40%] truncate">
                   {lessonPreview(lesson)}
                 </span>
               </Link>
@@ -114,7 +114,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
               <h2 className="text-white font-semibold text-base mb-2 group-hover:text-brand transition-colors line-clamp-2">
                 {lesson.title}
               </h2>
-              <div className="flex items-center gap-2 text-xs text-fg-subtle">
+              <div className="flex items-center gap-2 text-xs text-fg-dim">
                 <span className="shrink-0">{date}</span>
                 <span className="shrink-0">·</span>
                 <span className="truncate">{lessonPreview(lesson)}</span>
@@ -126,7 +126,7 @@ export default function LessonsClient({ lessons }: { lessons: Lesson[] }) {
         {view === "grid" && (
           <Link
             href="/lessons/new"
-            className="flex flex-col items-center justify-center gap-2 p-5 bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all min-h-[80px] sm:min-h-[148px] text-fg-subtle hover:text-fg-muted"
+            className="flex flex-col items-center justify-center gap-2 p-5 bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all min-h-[80px] sm:min-h-[148px] text-fg-dim hover:text-fg-muted"
           >
             <Plus size={20} />
             <span className="text-sm">Adicionar nova aula</span>

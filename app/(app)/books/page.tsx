@@ -48,9 +48,9 @@ export default async function BooksPage() {
 
       {!books || books.length === 0 ? (
         <div className="text-center py-20">
-          <BookMarked size={36} className="text-fg-subtle mx-auto mb-4" />
+          <BookMarked size={36} className="text-fg-faint mx-auto mb-4" />
           <p className="text-fg-muted font-medium mb-1">Nenhum livro ainda</p>
-          <p className="text-fg-subtle text-sm mb-6">Adicione um livro que você está lendo.</p>
+          <p className="text-fg-dim text-sm mb-6">Adicione um livro que você está lendo.</p>
           <Link
             href="/books/new"
             className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
@@ -79,7 +79,7 @@ export default async function BooksPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <BookMarked size={32} className="text-fg-subtle" />
+                      <BookMarked size={32} className="text-fg-faint" />
                     </div>
                   )}
                   {count > 0 && (
@@ -92,14 +92,14 @@ export default async function BooksPage() {
                   {book.title}
                 </p>
                 {book.book_author && (
-                  <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{book.book_author}</p>
+                  <p className="text-fg-dim text-[10px] mt-0.5 truncate">{book.book_author}</p>
                 )}
               </Link>
             )
           })}
           <Link
             href="/books/new"
-            className="flex flex-col items-center justify-center aspect-[2/3] bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-subtle hover:text-fg-muted gap-2"
+            className="flex flex-col items-center justify-center aspect-[2/3] bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-dim hover:text-fg-muted gap-2"
           >
             <Plus size={20} />
             <span className="text-xs">Adicionar</span>

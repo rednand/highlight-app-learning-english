@@ -69,15 +69,15 @@ export default async function LessonsPage() {
         </Link>
       </div>
 
-      <p className="text-sm text-fg-subtle mb-6">
+      <p className="text-sm text-fg-dim mb-6">
         {lessonsWithCounts.length} aulas&nbsp; · &nbsp;{totalWords ?? 0} palavras no total
       </p>
 
       {lessonsWithCounts.length === 0 ? (
         <div className="text-center py-20">
-          <BookOpen size={36} className="text-fg-subtle mx-auto mb-4" />
+          <BookOpen size={36} className="text-fg-faint mx-auto mb-4" />
           <p className="text-fg-muted font-medium mb-1">Nenhuma aula ainda</p>
-          <p className="text-fg-subtle text-sm mb-6">Comece registrando sua primeira aula.</p>
+          <p className="text-fg-dim text-sm mb-6">Comece registrando sua primeira aula.</p>
           <Link
             href="/lessons/new"
             className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"

@@ -91,7 +91,7 @@ export default function PendingItemsBuilder() {
 
       <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider">
         Palavras / expressões{" "}
-        <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
+        <span className="text-fg-dim normal-case font-normal tracking-normal">(opcional)</span>
       </label>
 
       {items.length > 0 && (
@@ -103,9 +103,9 @@ export default function PendingItemsBuilder() {
                   {item.term}
                   {item.translation && <span className="text-fg-muted"> — {item.translation}</span>}
                 </p>
-                <span className="text-[10px] text-fg-subtle">{TYPE_LABEL[item.type] ?? item.type}</span>
+                <span className="text-[10px] text-fg-dim">{TYPE_LABEL[item.type] ?? item.type}</span>
               </div>
-              <button type="button" onClick={() => removeItem(i)} className="shrink-0 text-fg-subtle hover:text-red-400 transition-colors">
+              <button type="button" onClick={() => removeItem(i)} className="shrink-0 text-fg-dim hover:text-red-400 transition-colors">
                 <Trash2 size={13} />
               </button>
             </li>

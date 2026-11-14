@@ -54,7 +54,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           {rule.level}
         </span>
       </div>
-      <p className="text-[10px] font-bold tracking-wider text-fg-subtle uppercase mb-8">
+      <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-8">
         {CATEGORY_LABELS[rule.category] ?? rule.category}
       </p>
 
@@ -65,12 +65,12 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
           <p className="text-brand font-mono text-sm">{rule.structure}</p>
           {rule.negative && (
             <p className="text-fg-muted font-mono text-sm mt-2">
-              <span className="text-fg-subtle text-xs mr-2">Negativa:</span>{rule.negative}
+              <span className="text-fg-dim text-xs mr-2">Negativa:</span>{rule.negative}
             </p>
           )}
           {rule.question && (
             <p className="text-fg-muted font-mono text-sm mt-2">
-              <span className="text-fg-subtle text-xs mr-2">Pergunta:</span>{rule.question}
+              <span className="text-fg-dim text-xs mr-2">Pergunta:</span>{rule.question}
             </p>
           )}
         </div>
@@ -145,7 +145,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
                 <div key={change} className="bg-sunken border border-white/5 rounded-lg px-4 py-3">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-green-400 text-xs font-bold">{from}</span>
-                    <span className="text-fg-subtle text-xs">→</span>
+                    <span className="text-fg-dim text-xs">→</span>
                     <span className="text-brand text-xs font-bold">{to}</span>
                   </div>
                   <p className="text-fg-muted text-xs italic">{example}</p>
@@ -206,11 +206,11 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
                 <p className="text-brand font-bold text-sm mb-2">{verb}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="bg-white/5 rounded-lg p-2.5">
-                    <p className="text-[10px] text-fg-subtle font-bold uppercase mb-1">Gerúndio</p>
+                    <p className="text-[10px] text-fg-dim font-bold uppercase mb-1">Gerúndio</p>
                     <p className="text-fg-soft text-xs italic">{data.gerund}</p>
                   </div>
                   <div className="bg-white/5 rounded-lg p-2.5">
-                    <p className="text-[10px] text-fg-subtle font-bold uppercase mb-1">Infinitivo</p>
+                    <p className="text-[10px] text-fg-dim font-bold uppercase mb-1">Infinitivo</p>
                     <p className="text-fg-soft text-xs italic">{data.infinitive}</p>
                   </div>
                 </div>
@@ -286,7 +286,7 @@ export default async function GrammarRulePage({ params }: { params: Promise<{ sl
                   <span className="text-red-400 text-xs line-through">{parts[0]}</span>
                   {parts[1] && (
                     <>
-                      <span className="text-fg-subtle text-xs">→</span>
+                      <span className="text-fg-dim text-xs">→</span>
                       <span className="text-green-400 text-xs">{parts[1]}</span>
                     </>
                   )}

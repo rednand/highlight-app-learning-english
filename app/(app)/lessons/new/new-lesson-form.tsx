@@ -55,7 +55,7 @@ export default function NewLessonForm() {
       <div>
         <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider mb-2">
           Notas{" "}
-          <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
+          <span className="text-fg-dim normal-case font-normal tracking-normal">(opcional)</span>
         </label>
         <textarea
           name="notes"

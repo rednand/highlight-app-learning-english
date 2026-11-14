@@ -90,14 +90,14 @@ export default function GrammarList({ rules }: { rules: GrammarRule[] }) {
                 {rule.level}
               </span>
             </div>
-            <p className="text-[10px] font-bold tracking-wider text-fg-subtle uppercase mb-2">
+            <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-2">
               {CATEGORY_LABELS[rule.category] ?? rule.category}
             </p>
             {rule.structure && (
               <p className="text-xs text-fg-subtle font-mono truncate">{rule.structure}</p>
             )}
             {rule.usage && rule.usage.length > 0 && (
-              <p className="text-xs text-fg-subtle mt-1.5 line-clamp-2">{rule.usage[0]}</p>
+              <p className="text-xs text-fg-dim mt-1.5 line-clamp-2">{rule.usage[0]}</p>
             )}
           </Link>
         ))}

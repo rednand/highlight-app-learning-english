@@ -48,9 +48,9 @@ export default async function MusicPage() {
 
       {!tracks || tracks.length === 0 ? (
         <div className="text-center py-20">
-          <Music size={36} className="text-fg-subtle mx-auto mb-4" />
+          <Music size={36} className="text-fg-faint mx-auto mb-4" />
           <p className="text-fg-muted font-medium mb-1">Nenhuma música ainda</p>
-          <p className="text-fg-subtle text-sm mb-6">Adicione uma música que você está estudando.</p>
+          <p className="text-fg-dim text-sm mb-6">Adicione uma música que você está estudando.</p>
           <Link
             href="/music/new"
             className="inline-flex items-center gap-2 bg-brand hover:bg-brand-strong text-black text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
@@ -79,7 +79,7 @@ export default async function MusicPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Music size={28} className="text-fg-subtle" />
+                      <Music size={28} className="text-fg-faint" />
                     </div>
                   )}
                   {count > 0 && (
@@ -92,14 +92,14 @@ export default async function MusicPage() {
                   {track.title}
                 </p>
                 {track.music_artist && (
-                  <p className="text-fg-subtle text-[10px] mt-0.5 truncate">{track.music_artist}</p>
+                  <p className="text-fg-dim text-[10px] mt-0.5 truncate">{track.music_artist}</p>
                 )}
               </Link>
             )
           })}
           <Link
             href="/music/new"
-            className="flex flex-col items-center justify-center aspect-square bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-subtle hover:text-fg-muted gap-2"
+            className="flex flex-col items-center justify-center aspect-square bg-sunken border border-dashed border-white/5 rounded-xl hover:border-brand/20 transition-all text-fg-dim hover:text-fg-muted gap-2"
           >
             <Plus size={20} />
             <span className="text-xs">Adicionar</span>

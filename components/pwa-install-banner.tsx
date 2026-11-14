@@ -75,7 +75,7 @@ export default function PwaInstallBanner() {
           </button>
           <button
             onClick={() => setDismissed(true)}
-            className="text-fg-subtle hover:text-white transition-colors p-1"
+            className="text-fg-dim hover:text-white transition-colors p-1"
             aria-label="Fechar"
           >
             <X size={16} />

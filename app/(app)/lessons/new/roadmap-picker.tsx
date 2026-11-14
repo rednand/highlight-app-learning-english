@@ -29,7 +29,7 @@ export default function RoadmapPicker() {
   return (
     <div className="space-y-3">
       <label className="block text-xs font-bold text-fg-subtle uppercase tracking-wider">
-        Associar ao Roadmap <span className="text-fg-subtle normal-case font-normal tracking-normal">(opcional)</span>
+        Associar ao Roadmap <span className="text-fg-dim normal-case font-normal tracking-normal">(opcional)</span>
       </label>
 
       <input type="hidden" name="roadmap_key" value={key} />

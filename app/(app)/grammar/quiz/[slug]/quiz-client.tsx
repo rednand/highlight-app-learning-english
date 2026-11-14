@@ -74,7 +74,7 @@ export default function QuizClient({
         </h2>
         <p className="text-fg-subtle text-sm mb-2">{pct}% de aproveitamento</p>
         {previousBest && (
-          <p className="text-fg-subtle text-xs mb-6">
+          <p className="text-fg-dim text-xs mb-6">
             Melhor anterior: {previousBest.correct}/{previousBest.total}
           </p>
         )}
@@ -100,7 +100,7 @@ export default function QuizClient({
                 {!answers[i] && (
                   <p className="text-green-400 text-xs mt-0.5">✓ {q.options[q.answer]}</p>
                 )}
-                <p className="text-fg-subtle text-[10px] mt-0.5 italic">{q.tip}</p>
+                <p className="text-fg-dim text-[10px] mt-0.5 italic">{q.tip}</p>
               </div>
             </div>
           ))}
@@ -158,7 +158,7 @@ export default function QuizClient({
             } else if (idx === selected) {
               style = "bg-red-400/10 border-red-400/30 text-red-400"
             } else {
-              style = "bg-sunken border-white/5 text-fg-subtle"
+              style = "bg-sunken border-white/5 text-fg-dim"
             }
           } else if (idx === selected) {
             style = "bg-brand/10 border-brand/30 text-brand"

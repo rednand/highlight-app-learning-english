@@ -23,7 +23,7 @@ export default function MultipleChoiceOptions({ options, selection, onSelect }: 
         } else if (option.label === selection.selectedLabel) {
           style += " text-red-300 border-red-500/40 bg-red-500/10 cursor-default"
         } else {
-          style += " text-fg-subtle border-white/5 bg-transparent cursor-default opacity-40"
+          style += " text-fg-dim border-white/5 bg-transparent cursor-default opacity-40"
         }
 
         return (

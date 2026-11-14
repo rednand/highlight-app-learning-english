@@ -113,7 +113,7 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-subtle hover:text-brand text-sm rounded-xl transition-colors justify-center"
+        className="flex items-center gap-2 w-full py-3 border border-dashed border-white/10 hover:border-brand/30 text-fg-dim hover:text-brand text-sm rounded-xl transition-colors justify-center"
       >
         {isMusic ? <Music size={15} /> : <FileText size={15} />}
         {isMusic ? "Extrair da letra" : "Extrair de um texto"}
@@ -129,7 +129,7 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
             ? (isMusic ? "Letra da música" : "Colar texto")
             : `${words.length} ${words.length === 1 ? "palavra encontrada" : "palavras encontradas"}${isTranslating ? " — traduzindo…" : ""}`}
         </span>
-        <button onClick={handleClose} className="text-fg-subtle hover:text-white transition-colors">
+        <button onClick={handleClose} className="text-fg-dim hover:text-white transition-colors">
           <X size={15} />
         </button>
       </div>
@@ -185,7 +185,7 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
                 className={`flex flex-col items-start px-3 py-2 rounded-xl text-xs border transition-colors text-left ${
                   selected
                     ? "bg-brand/10 border-brand/30 text-brand"
-                    : "bg-transparent border-white/10 text-fg-subtle"
+                    : "bg-transparent border-white/10 text-fg-dim"
                 }`}
               >
                 <span className="font-medium">{term}</span>
@@ -200,12 +200,12 @@ export default function TranscriptExtractor({ lessonId, sourceType }: { lessonId
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={() => setStep("input")}
-              className="text-xs text-fg-subtle hover:text-white transition-colors"
+              className="text-xs text-fg-dim hover:text-white transition-colors"
             >
               Voltar
             </button>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-fg-subtle">
+              <span className="text-xs text-fg-dim">
                 {words.filter(w => w.selected).length} selecionadas
               </span>
               <button
