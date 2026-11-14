@@ -104,7 +104,7 @@ export default async function DashboardPage() {
       <div className="mb-6">
         <div className="md:hidden">
           <div className="flex items-center justify-between gap-3 mb-3">
-            <Image src="/highlight-logo.png" alt="Highlight" width={140} height={40} className="h-10 w-auto shrink-0" priority />
+            <Image src="/highlight-logo.svg" alt="Highlight" width={132} height={40} className="h-10 w-auto shrink-0" priority unoptimized />
             <h1 className="min-w-0 text-right leading-tight">
               <span className="block text-xs text-[#8B8B98]">Olá 👋</span>
               <span className="block text-lg font-bold text-white truncate">{firstName}</span>

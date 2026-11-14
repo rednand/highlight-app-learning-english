@@ -41,11 +41,12 @@ export default async function AppLayout({
         <div className="px-5 py-5 border-b border-white/5">
           <div className="flex items-center gap-2">
             <Image
-              src="/highlight-logo.png"
+              src="/highlight-logo.svg"
               alt="Highlight"
-              width={110}
+              width={105}
               height={32}
-              className="h-8 w-auto rounded"
+              className="h-8 w-auto"
+              unoptimized
             />
           </div>
         </div>

@@ -88,3 +88,10 @@
 - [x] Erro em palavra madura (intervalo de 6 dias ou mais) corta o intervalo pela metade em vez de voltar para 1 dia
 - [x] Página Palavras marca "Repetida N×" e tem o filtro "Repetidas"
 - [ ] Teste manual da revisão no celular
+
+## Logo e ícone novos
+- [x] Logo "high" + "light" marcado com marca-texto (`public/highlight-logo.svg`, versão para fundo claro em `highlight-logo-light.svg`)
+- [x] Ícone: "h" branco com passada de marca-texto na diagonal (icon-192/512, highlight-icon, app/icon, app/apple-icon)
+- [x] Badge das notificações com o mesmo "h"
+- [ ] Gerar de novo o `.aab` no PWABuilder para o ícone novo ir para o app Android
+- [ ] Conferir o ícone na tela inicial do celular (reinstalar o app)
