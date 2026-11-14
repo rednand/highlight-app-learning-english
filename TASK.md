@@ -67,3 +67,4 @@
 
 ## Logo maior na home
 - [x] Logo da home no celular de 28px para 40px de altura
+- [x] Saudação ao lado direito do logo ("Olá 👋" + nome em duas linhas, cabe em telas de 320px)
