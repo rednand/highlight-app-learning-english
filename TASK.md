@@ -60,3 +60,7 @@
 - [x] Correções do review: modo treino sem alterar agenda quando nada está pendente, erro na revisão volta ao filtro, destaque só de palavra inteira, timeout e fallback no LRCLIB, nomes de artista com vírgula
 - [x] Home: grade "Adicionar" com ícones maiores (Filme, Música, Livro, Aula), contadores em cartões, mídias recentes com capas grandes
 - [ ] Teste manual da nova home no celular
+
+## Ícone da notificação
+- [x] Badge monocromático (`public/badge-96.png`, branco com transparência) no lugar do ícone colorido, que aparecia como quadrado na barra de status do Android
+- [ ] Teste manual: receber uma notificação no celular depois do deploy
