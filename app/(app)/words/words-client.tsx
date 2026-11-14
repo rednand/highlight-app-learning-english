@@ -5,12 +5,13 @@ import Link from "next/link"
 import { Search, Eye, EyeOff, Film, Music, BookMarked, BookOpen } from "lucide-react"
 import { toast } from "sonner"
 import { setItemInReview } from "../../actions/items"
-import { filterWords, countByFilter, type ReviewState, type WordFilter, type WordItem } from "../../lib/words-utils"
+import { filterWords, countByFilter, withDuplicates, type ReviewState, type WordFilter, type WordItem } from "../../lib/words-utils"
 
 const FILTERS: { value: WordFilter; label: string }[] = [
   { value: "todas", label: "Todas" },
   { value: "revisao", label: "Na revisão" },
   { value: "fora", label: "Fora da revisão" },
+  { value: "repetidas", label: "Repetidas" },
 ]
 
 function SourceIcon({ type }: { type: string | null }) {
@@ -28,11 +29,12 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
   const [filter, setFilter] = useState<WordFilter>("todas")
 
   const words = useMemo(
-    () => serverWords.map((w) => (overrides[w.id] ? { ...w, reviewState: overrides[w.id] } : w)),
+    () => withDuplicates(serverWords.map((w) => (overrides[w.id] ? { ...w, reviewState: overrides[w.id] } : w))),
     [serverWords, overrides],
   )
   const counts = useMemo(() => countByFilter(words), [words])
-  const visible = useMemo(() => filterWords(words, query, filter), [words, query, filter])
+  const activeFilter: WordFilter = filter === "repetidas" && counts.repetidas === 0 ? "todas" : filter
+  const visible = useMemo(() => filterWords(words, query, activeFilter), [words, query, activeFilter])
 
   function setPendingFor(id: string, on: boolean) {
     setPending((prev) => {
@@ -43,7 +45,7 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
     })
   }
 
-  async function toggle(word: WordItem) {
+  async function toggle(word: WordItem & { duplicates: number }) {
     if (pending.has(word.id)) return
     const inReview = word.reviewState === "discarded"
     setPendingFor(word.id, true)
@@ -72,12 +74,12 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
       </div>
 
       <div className="flex gap-1.5 mb-4 overflow-x-auto">
-        {FILTERS.map(({ value, label }) => (
+        {FILTERS.filter(({ value }) => value !== "repetidas" || counts.repetidas > 0).map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-colors shrink-0 ${
-              filter === value
+              activeFilter === value
                 ? "bg-yellow-400/10 text-yellow-400 border-yellow-400/20"
                 : "text-gray-500 border-white/10 hover:text-white hover:border-white/20"
             }`}
@@ -108,6 +110,14 @@ export default function WordsClient({ words: serverWords }: { words: WordItem[] 
                     {discarded && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-400 bg-white/5 shrink-0">
                         Fora da revisão
+                      </span>
+                    )}
+                    {word.duplicates > 1 && (
+                      <span
+                        title="Esta palavra está na revisão mais de uma vez. Tire as cópias que sobram com o olho."
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full text-orange-300 bg-orange-400/10 shrink-0"
+                      >
+                        Repetida {word.duplicates}×
                       </span>
                     )}
                   </div>

@@ -5,7 +5,10 @@ import {
   normalizeSearch,
   buildSearchText,
   countByFilter,
-  type WordItem,
+  countDuplicates,
+  termKey,
+  withDuplicates,
+  type WordWithDuplicates,
 } from "../app/lib/words-utils"
 import { foldAccents } from "../app/lib/text"
 
@@ -50,11 +53,11 @@ describe("normalizeSearch e buildSearchText", () => {
   })
 })
 
-function word(id: string, fields: [string, string | null, string | null], reviewState: WordItem["reviewState"]): WordItem {
+function word(id: string, fields: [string, string | null, string | null], reviewState: WordWithDuplicates["reviewState"], duplicates = 1): WordWithDuplicates {
   const [term, translation, sourceTitle] = fields
   return {
     id, lessonId: `l${id}`, term, translation, sourceTitle, sourceType: null, reviewState,
-    searchText: buildSearchText(fields),
+    searchText: buildSearchText(fields), duplicates,
   }
 }
 
@@ -86,6 +89,50 @@ describe("filterWords", () => {
   })
 
   it("conta por filtro", () => {
-    expect(countByFilter(words)).toEqual({ todas: 3, revisao: 1, fora: 1 })
+    expect(countByFilter(words)).toEqual({ todas: 3, revisao: 1, fora: 1, repetidas: 0 })
+  })
+})
+
+describe("palavras repetidas", () => {
+  it("termKey ignora maiúsculas, acentos, apóstrofo curvo e espaços extras", () => {
+    expect(termKey("  Don’t  give UP ")).toBe(termKey("don't give up"))
+    expect(termKey("Café")).toBe("cafe")
+  })
+
+  it("conta quantas vezes cada termo aparece", () => {
+    const counts = countDuplicates(["Spouse", "spouse ", "Referee", "SPOUSE"])
+    expect(counts.get("spouse")).toBe(3)
+    expect(counts.get("referee")).toBe(1)
+  })
+
+  it("filtro 'repetidas' mostra só as que aparecem mais de uma vez", () => {
+    const words = [
+      word("1", ["Spouse", "Cônjuge", null], "active", 2),
+      word("2", ["spouse", "Esposa", null], "active", 2),
+      word("3", ["Referee", "Árbitro", null], "active", 1),
+    ]
+    expect(filterWords(words, "", "repetidas").map((w) => w.id)).toEqual(["1", "2"])
+    expect(countByFilter(words).repetidas).toBe(2)
+  })
+})
+
+describe("withDuplicates", () => {
+  const base = (id: string, term: string, reviewState: WordWithDuplicates["reviewState"]) => ({
+    id, term, reviewState,
+  })
+
+  it("conta só as cópias que estão na revisão", () => {
+    const result = withDuplicates([
+      base("1", "Spouse", "active"),
+      base("2", "spouse", "active"),
+      base("3", "SPOUSE", "discarded"),
+      base("4", "Referee", "active"),
+    ])
+    expect(result.map((w) => w.duplicates)).toEqual([2, 2, 1, 1])
+  })
+
+  it("descartar uma das duas cópias resolve a repetição", () => {
+    const result = withDuplicates([base("1", "Spouse", "active"), base("2", "spouse", "discarded")])
+    expect(result.map((w) => w.duplicates)).toEqual([1, 1])
   })
 })
