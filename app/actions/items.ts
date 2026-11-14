@@ -159,6 +159,7 @@ export async function setItemInReview(itemId: string, lessonId: string, inReview
   revalidatePath(`/lessons/${lessonId}`)
   revalidatePath("/")
   revalidatePath("/review")
+  revalidatePath("/words")
 }
 
 export async function deleteLessonItem(id: string, lessonId: string) {

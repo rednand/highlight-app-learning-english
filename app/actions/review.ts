@@ -124,6 +124,7 @@ export async function setFlashcardDiscarded(id: string, discarded: boolean) {
   if (error) throw new Error(error.message)
   revalidatePath("/")
   revalidatePath("/review")
+  revalidatePath("/words")
 }
 
 export async function getStreak(): Promise<number> {

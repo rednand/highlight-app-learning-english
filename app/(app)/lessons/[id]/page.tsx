@@ -9,15 +9,8 @@ import EditLessonForm from "./edit-lesson-form"
 import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
+import { reviewStateOf as reviewState } from "../../../lib/words-utils"
 
-
-type ItemFlashcard = { discarded_at: string | null }
-
-function reviewState(cards: ItemFlashcard | ItemFlashcard[] | null): "active" | "discarded" | "none" {
-  const card = Array.isArray(cards) ? cards[0] : cards
-  if (!card) return "none"
-  return card.discarded_at ? "discarded" : "active"
-}
 
 function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
   if (sourceType === "movie") return tmdbType === "tv" ? "Revisar palavras desta série" : "Revisar palavras deste filme"

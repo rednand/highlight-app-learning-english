@@ -26,6 +26,12 @@ describe("MobileNav", () => {
     expect(labels).toEqual(["Início", "Mídia", "Aulas", "Revisar"])
   })
 
+  it("Palavras fica no menu Mais e leva para /words", () => {
+    render(<MobileNav />)
+    fireEvent.click(screen.getByText("Mais"))
+    expect(screen.getByText("Palavras").closest("a")).toHaveAttribute("href", "/words")
+  })
+
   it("Gramática fica no menu Mais", () => {
     render(<MobileNav />)
     expect(screen.queryByText("Gramática")).not.toBeInTheDocument()

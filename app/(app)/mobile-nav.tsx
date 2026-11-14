@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, BookOpen, RotateCcw, ScrollText, Menu, Library, Map, UserRound, X } from "lucide-react"
+import { LayoutDashboard, BookOpen, RotateCcw, ScrollText, Menu, Library, Map, UserRound, X, ListChecks } from "lucide-react"
 import { useState } from "react"
 
 const mainLinks = [
@@ -13,6 +13,7 @@ const mainLinks = [
 ]
 
 const moreLinks = [
+  { href: "/words", icon: ListChecks, label: "Palavras", activeFor: [] as string[] },
   { href: "/grammar", icon: ScrollText, label: "Gramática", activeFor: [] as string[] },
   { href: "/roadmap", icon: Map, label: "Trilha", activeFor: [] as string[] },
   { href: "/account", icon: UserRound, label: "Conta", activeFor: [] as string[] },
