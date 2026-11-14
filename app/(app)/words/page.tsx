@@ -28,9 +28,9 @@ export default async function WordsPage() {
       .order("created_at", { ascending: false })
       .order("id", { ascending: true })
       .range(from, from + PAGE_SIZE - 1)
-    if (error || !data) break
-    rows.push(...(data as unknown as Row[]))
-    if (data.length < PAGE_SIZE) break
+    if (error) throw new Error(`Não foi possível carregar as palavras: ${error.message}`)
+    rows.push(...((data ?? []) as unknown as Row[]))
+    if (!data || data.length < PAGE_SIZE) break
   }
 
   const words: WordItem[] = rows.map((row) => ({
