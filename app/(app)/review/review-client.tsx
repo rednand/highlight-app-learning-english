@@ -8,10 +8,12 @@ import {
   fetchFallbackTitlePool,
   updateFlashcard,
   updateStreak,
+  setFlashcardDiscarded,
 } from "../../actions/review"
+import { toast } from "sonner"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, BookOpen, BookMarked, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward } from "lucide-react"
+import { ArrowRight, BookOpen, BookMarked, Play, Zap, CheckCircle, Film, Tv, Music, SkipForward, EyeOff } from "lucide-react"
 import Image from "next/image"
 import SpeakButton from "../speak-button"
 import { sm2, buildMultipleChoiceOptions, formatNextReview, urgencyLabel } from "../../lib/review-utils"
@@ -205,6 +207,7 @@ export default function ReviewClient({
       const sel: SelectionState = { selectedLabel: label, isCorrect: chosen.isCorrect }
       setSelection(sel)
       advanceTimerRef.current = setTimeout(() => {
+        advanceTimerRef.current = null
         advance(card, chosen.isCorrect, index, cards)
       }, ADVANCE_DELAY_MS)
     },
@@ -228,6 +231,32 @@ export default function ReviewClient({
     setCards((prev) => [...prev, card])
     setIndex((i) => i + 1)
   }, [cards, index, practiceOnly])
+
+  const handleDiscard = useCallback(() => {
+    if (advanceTimerRef.current || selection !== null) return
+    const card = cards[index]
+    const remaining = cards.filter((c, i) => i < index || c.id !== card.id)
+    setCards(remaining)
+    if (index >= remaining.length) {
+      setDone(true)
+      if (!practiceOnly && reviewed > 0) updateStreak().then(setStreak)
+    }
+
+    setFlashcardDiscarded(card.id, true)
+      .then(() => {
+        toast(`"${card.front}" saiu da revisão`, {
+          action: {
+            label: "Desfazer",
+            onClick: () => {
+              setFlashcardDiscarded(card.id, false)
+                .then(() => toast("Palavra de volta na revisão"))
+                .catch(() => toast.error("Não foi possível desfazer"))
+            },
+          },
+        })
+      })
+      .catch(() => toast.error("Não foi possível descartar a palavra"))
+  }, [cards, index, selection, practiceOnly, reviewed])
 
   useEffect(() => {
     return () => {
@@ -626,15 +655,26 @@ export default function ReviewClient({
         )}
       </div>
 
-      <button
-        onClick={handleSkip}
-        disabled={selection !== null}
-        className="flex items-center gap-1.5 mx-auto text-xs text-gray-600 hover:text-gray-400 transition-colors disabled:opacity-0 disabled:pointer-events-none"
-      >
-        <SkipForward size={12} />
-        Pular
-        <kbd className="text-[9px] bg-white/5 border border-white/10 px-1 py-0.5 rounded">espaço</kbd>
-      </button>
+      <div className={`flex items-center justify-center gap-6 transition-opacity ${selection !== null ? "opacity-0 pointer-events-none" : ""}`}>
+        <button
+          onClick={handleSkip}
+          disabled={selection !== null}
+          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+        >
+          <SkipForward size={12} />
+          Pular
+          <kbd className="text-[9px] bg-white/5 border border-white/10 px-1 py-0.5 rounded">espaço</kbd>
+        </button>
+        <button
+          onClick={handleDiscard}
+          disabled={selection !== null}
+          title="Já sei esta palavra: não mostrar mais na revisão"
+          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-red-400 transition-colors"
+        >
+          <EyeOff size={12} />
+          Já sei, descartar
+        </button>
+      </div>
     </div>
   )
 }

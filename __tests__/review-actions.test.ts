@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { getStreak, updateStreak, fetchFlashcards, updateFlashcard } from "../app/actions/review"
+import { getStreak, updateStreak, fetchFlashcards, updateFlashcard, setFlashcardDiscarded } from "../app/actions/review"
 
 vi.mock("../app/utils/supabase/server", () => ({ createClient: vi.fn() }))
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
@@ -132,7 +132,7 @@ type MockFn = ReturnType<typeof vi.fn>
 type ChainBuilder = {
   data: unknown; error: { message: string } | null
   select: MockFn; eq: MockFn; single: MockFn; upsert: MockFn
-  update: MockFn; insert: MockFn; delete: MockFn; in: MockFn; lte: MockFn; order: MockFn
+  update: MockFn; insert: MockFn; delete: MockFn; in: MockFn; lte: MockFn; order: MockFn; is: MockFn
 }
 
 function makeChainBuilder(opts: { data?: unknown; error?: { message: string } | null } = {}): ChainBuilder {
@@ -143,9 +143,9 @@ function makeChainBuilder(opts: { data?: unknown; error?: { message: string } | 
     select: vi.fn(), eq: vi.fn(),
     single: vi.fn().mockResolvedValue(resolved),
     upsert: vi.fn().mockResolvedValue({ data: null, error: opts.error ?? null }),
-    update: vi.fn(), insert: vi.fn(), delete: vi.fn(), in: vi.fn(), lte: vi.fn(), order: vi.fn(),
+    update: vi.fn(), insert: vi.fn(), delete: vi.fn(), in: vi.fn(), lte: vi.fn(), order: vi.fn(), is: vi.fn(),
   }
-  b.select.mockReturnValue(b); b.eq.mockReturnValue(b); b.in.mockReturnValue(b)
+  b.select.mockReturnValue(b); b.eq.mockReturnValue(b); b.in.mockReturnValue(b); b.is.mockReturnValue(b)
   b.lte.mockReturnValue(b); b.order.mockReturnValue(b); b.update.mockReturnValue(b)
   b.insert.mockReturnValue(b); b.delete.mockReturnValue(b); b.upsert.mockReturnValue(b)
   return b
@@ -243,5 +243,60 @@ describe("updateFlashcard", () => {
     expect(b.update).toHaveBeenCalledWith({ ...update, last_reviewed_at: expect.any(String) })
     expect(b.eq).toHaveBeenCalledWith("id", "card-1")
     expect(revalidatePath).toHaveBeenCalledWith("/")
+  })
+})
+
+// ─── setFlashcardDiscarded ───────────────────────────────────────────────────
+
+describe("setFlashcardDiscarded", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  function supaWith(b: ReturnType<typeof makeChainBuilder>, user: unknown = { id: "u1" }) {
+    return {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user } }) },
+      from: vi.fn().mockReturnValue(b),
+    }
+  }
+
+  it("exige usuário autenticado", async () => {
+    mockCreateClient.mockResolvedValue(supaWith(makeChainBuilder(), null) as never)
+    await expect(setFlashcardDiscarded("card-1", true)).rejects.toThrow("Não autenticado")
+  })
+
+  it("descarta marcando discarded_at e filtrando pelo dono", async () => {
+    const b = makeChainBuilder()
+    mockCreateClient.mockResolvedValue(supaWith(b) as never)
+    await setFlashcardDiscarded("card-1", true)
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: expect.any(String) })
+    expect(b.eq).toHaveBeenCalledWith("id", "card-1")
+    expect(b.eq).toHaveBeenCalledWith("user_id", "u1")
+    expect(revalidatePath).toHaveBeenCalledWith("/")
+  })
+
+  it("restaura limpando discarded_at e deixando o card pendente", async () => {
+    const b = makeChainBuilder()
+    mockCreateClient.mockResolvedValue(supaWith(b) as never)
+    await setFlashcardDiscarded("card-1", false)
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: null, next_review_at: expect.any(String) })
+  })
+
+  it("propaga erro do banco", async () => {
+    const b = makeChainBuilder({ error: { message: "falhou" } })
+    mockCreateClient.mockResolvedValue(supaWith(b) as never)
+    await expect(setFlashcardDiscarded("card-1", true)).rejects.toThrow("falhou")
+  })
+})
+
+describe("fetchFlashcards ignora descartados", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it("filtra discarded_at nulo", async () => {
+    const b = makeChainBuilder({ data: [], error: null })
+    mockCreateClient.mockResolvedValue({
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: "u1" } } }) },
+      from: vi.fn().mockReturnValue(b),
+    } as never)
+    await fetchFlashcards()
+    expect(b.is).toHaveBeenCalledWith("discarded_at", null)
   })
 })

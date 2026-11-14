@@ -230,3 +230,7 @@ END $$;
 -- 14. Store AI correction feedback for practice attempts
 ALTER TABLE practice_attempts
   ADD COLUMN IF NOT EXISTS ai_feedback TEXT;
+
+-- 15. Discard flashcards from review (keeps the word in the lesson)
+ALTER TABLE flashcards
+  ADD COLUMN IF NOT EXISTS discarded_at TIMESTAMPTZ;

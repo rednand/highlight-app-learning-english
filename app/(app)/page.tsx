@@ -34,11 +34,12 @@ export default async function DashboardPage() {
         .from("flashcards")
         .select("id, front, back", { count: "exact" })
         .eq("user_id", user.id)
+        .is("discarded_at", null)
         .lte("next_review_at", new Date().toISOString())
         .limit(2),
       supabase
         .from("lesson_items")
-        .select("id, term, translation, created_at, flashcards(next_review_at)")
+        .select("id, term, translation, created_at, flashcards(next_review_at, discarded_at)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(4),
@@ -59,13 +60,14 @@ export default async function DashboardPage() {
   const dueCount = dueFlashcardsResult.count ?? 0
   type DueCard = { id: string; front: string; back: string | null }
   const dueCards = (dueFlashcardsResult.data ?? []) as unknown as DueCard[]
-  type RecentItem = { id: string; term: string; translation: string | null; created_at: string; flashcards: { next_review_at: string } | { next_review_at: string }[] | null }
+  type RecentCard = { next_review_at: string; discarded_at: string | null }
+  type RecentItem = { id: string; term: string; translation: string | null; created_at: string; flashcards: RecentCard | RecentCard[] | null }
   const recentItems = (recentItemsResult.data ?? []) as unknown as RecentItem[]
   const now = new Date().toISOString()
   function isItemDue(item: RecentItem): boolean {
     const rel = item.flashcards
-    const nextReview = Array.isArray(rel) ? rel[0]?.next_review_at : rel?.next_review_at
-    return !!nextReview && nextReview <= now
+    const card = Array.isArray(rel) ? rel[0] : rel
+    return !!card && !card.discarded_at && card.next_review_at <= now
   }
   const totalMedia = totalMediaResult.count ?? 0
   const totalWords = totalWordsResult.count ?? 0

@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Pencil, X, Wand2, Trash2 } from "lucide-react"
-import { updateLessonItem, deleteLessonItem } from "../../../actions/items"
+import { Pencil, X, Wand2, Trash2, EyeOff, Eye } from "lucide-react"
+import { updateLessonItem, deleteLessonItem, setItemInReview } from "../../../actions/items"
+import { toast } from "sonner"
 import { fetchExampleSentence } from "../../../actions/examples"
 import { translateTerm } from "../../../actions/translate"
 import SpeakButton from "../../speak-button"
@@ -30,7 +31,7 @@ const TYPE_COLOR: Record<string, string> = {
   phrase: "text-amber-300 bg-amber-300/10",
 }
 
-export default function ItemCard({ item }: { item: Item }) {
+export default function ItemCard({ item, reviewState = "active" }: { item: Item; reviewState?: "active" | "discarded" | "none" }) {
   const [editing, setEditing] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [term, setTerm] = useState(item.term)
@@ -42,6 +43,18 @@ export default function ItemCard({ item }: { item: Item }) {
   const [isFetchingExample, setIsFetchingExample] = useState(false)
   const [translationError, setTranslationError] = useState(false)
   const [exampleError, setExampleError] = useState(false)
+  const discarded = reviewState === "discarded"
+
+  function toggleReview() {
+    startTransition(async () => {
+      try {
+        await setItemInReview(item.id, item.lesson_id, discarded)
+        toast(discarded ? "Palavra de volta na revisão" : "Palavra fora da revisão")
+      } catch {
+        toast.error("Não foi possível alterar a revisão")
+      }
+    })
+  }
 
   async function suggestTranslation() {
     if (!term.trim()) return
@@ -156,11 +169,14 @@ export default function ItemCard({ item }: { item: Item }) {
   }
 
   return (
-    <div className="flex items-start gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px]">
+    <div className={`flex items-start gap-4 p-4 bg-[#151515] border border-[#292929] rounded-[18px] ${discarded ? "opacity-60" : ""}`}>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <p className="text-white font-medium text-sm">{item.term}</p>
           <SpeakButton text={item.term} />
+          {discarded && (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-gray-400 bg-white/5">Fora da revisão</span>
+          )}
         </div>
         {item.phonetic && <p className="text-gray-400 text-xs font-mono mt-0.5">{item.phonetic}</p>}
         {item.translation && <p className="text-gray-300 text-xs mt-0.5">{item.translation}</p>}
@@ -173,6 +189,16 @@ export default function ItemCard({ item }: { item: Item }) {
         <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${TYPE_COLOR[item.type] ?? TYPE_COLOR.word}`}>
           {TYPE_LABEL[item.type] ?? item.type}
         </span>
+        {reviewState !== "none" && (
+          <button
+            onClick={toggleReview}
+            disabled={isPending}
+            title={discarded ? "Voltar para a revisão" : "Tirar da revisão"}
+            className="text-gray-700 hover:text-white disabled:opacity-40 transition-colors"
+          >
+            {discarded ? <Eye size={13} /> : <EyeOff size={13} />}
+          </button>
+        )}
         <button onClick={() => setEditing(true)} title="Editar" className="text-gray-700 hover:text-white transition-colors">
           <Pencil size={13} />
         </button>

@@ -26,15 +26,18 @@ export default async function ReviewPage({ searchParams }: { searchParams: Promi
         .from("flashcards")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user!.id)
+        .is("discarded_at", null)
         .lte("next_review_at", now),
       supabase
         .from("flashcards")
         .select("ease_factor, next_review_at, lesson_items(lesson_id)")
-        .eq("user_id", user!.id),
+        .eq("user_id", user!.id)
+        .is("discarded_at", null),
       supabase
         .from("flashcards")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user!.id),
+        .eq("user_id", user!.id)
+        .is("discarded_at", null),
       getStreak(),
     ])
 

@@ -23,6 +23,7 @@ export async function fetchFlashcards(lessonId?: string, skipDueFilter?: boolean
     .from("flashcards")
     .select("id, front, back, ease_factor, interval_days, next_review_at, lesson_items(phonetic, my_sentence, context, lessons(title, tmdb_poster_path, tmdb_type, tmdb_season, source_type, music_thumbnail_url, music_artist))")
     .eq("user_id", user.id)
+    .is("discarded_at", null)
     .order("next_review_at", { ascending: true })
 
   if (!skipDueFilter) query = query.lte("next_review_at", new Date().toISOString())
@@ -106,6 +107,25 @@ export async function updateFlashcard(
 ) {
   const supabase = await createClient()
   await supabase.from("flashcards").update({ ...update, last_reviewed_at: new Date().toISOString() }).eq("id", id)
+  revalidatePath("/")
+}
+
+export async function setFlashcardDiscarded(id: string, discarded: boolean) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Não autenticado")
+
+  const update = discarded
+    ? { discarded_at: new Date().toISOString() }
+    : { discarded_at: null, next_review_at: new Date().toISOString() }
+
+  const { error } = await supabase
+    .from("flashcards")
+    .update(update)
+    .eq("id", id)
+    .eq("user_id", user.id)
+
+  if (error) throw new Error(error.message)
   revalidatePath("/")
 }
 

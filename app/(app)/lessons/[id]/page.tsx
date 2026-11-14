@@ -11,6 +11,14 @@ import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
 
 
+type ItemFlashcard = { discarded_at: string | null }
+
+function reviewState(cards: ItemFlashcard | ItemFlashcard[] | null): "active" | "discarded" | "none" {
+  const card = Array.isArray(cards) ? cards[0] : cards
+  if (!card) return "none"
+  return card.discarded_at ? "discarded" : "active"
+}
+
 function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
   if (sourceType === "movie") return tmdbType === "tv" ? "Revisar palavras desta série" : "Revisar palavras deste filme"
   if (sourceType === "music") return "Revisar palavras desta música"
@@ -32,7 +40,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
   const { data: items } = await supabase
     .from("lesson_items")
-    .select("*")
+    .select("*, flashcards(discarded_at)")
     .eq("lesson_id", id)
     .order("created_at", { ascending: true })
 
@@ -171,6 +179,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
               <ItemCard
                 key={item.id}
                 item={{ id: item.id, lesson_id: id, term: item.term, translation: item.translation, type: item.type, context: item.context, phonetic: item.phonetic ?? null, my_sentence: item.my_sentence ?? null }}
+                reviewState={reviewState(item.flashcards)}
               />
             ))}
           </div>

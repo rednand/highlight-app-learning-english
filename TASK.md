@@ -68,3 +68,12 @@
 ## Logo maior na home
 - [x] Logo da home no celular de 28px para 40px de altura
 - [x] Saudação ao lado direito do logo ("Olá 👋" + nome em duas linhas, cabe em telas de 320px)
+
+## Descartar palavras da revisão
+- [x] Coluna `flashcards.discarded_at` (seção 15 de `supabase/migration.sql`)
+- [ ] Rodar a migração no SQL Editor do Supabase ANTES do deploy
+- [x] Botão "Já sei, descartar" na revisão, com "Desfazer"
+- [x] Botão de olho em cada palavra da página da mídia para tirar ou voltar para a revisão; selo "Fora da revisão"
+- [x] Descartadas saem da revisão, dos contadores da home e da notificação diária
+- [x] Corrigido: "Pular" parava de funcionar depois da primeira resposta
+- [ ] Teste manual no celular
