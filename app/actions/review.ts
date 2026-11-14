@@ -115,18 +115,15 @@ export async function setFlashcardDiscarded(id: string, discarded: boolean) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Não autenticado")
 
-  const update = discarded
-    ? { discarded_at: new Date().toISOString() }
-    : { discarded_at: null, next_review_at: new Date().toISOString() }
-
   const { error } = await supabase
     .from("flashcards")
-    .update(update)
+    .update({ discarded_at: discarded ? new Date().toISOString() : null })
     .eq("id", id)
     .eq("user_id", user.id)
 
   if (error) throw new Error(error.message)
   revalidatePath("/")
+  revalidatePath("/review")
 }
 
 export async function getStreak(): Promise<number> {

@@ -232,9 +232,21 @@ export default function ReviewClient({
     setIndex((i) => i + 1)
   }, [cards, index, practiceOnly])
 
-  const handleDiscard = useCallback(() => {
-    if (advanceTimerRef.current || selection !== null) return
+  const [discarding, setDiscarding] = useState(false)
+
+  const handleDiscard = useCallback(async () => {
+    if (advanceTimerRef.current || selection !== null || discarding) return
     const card = cards[index]
+    setDiscarding(true)
+    try {
+      await setFlashcardDiscarded(card.id, true)
+    } catch {
+      toast.error("Não foi possível descartar a palavra")
+      return
+    } finally {
+      setDiscarding(false)
+    }
+
     const remaining = cards.filter((c, i) => i < index || c.id !== card.id)
     setCards(remaining)
     if (index >= remaining.length) {
@@ -242,21 +254,21 @@ export default function ReviewClient({
       if (!practiceOnly && reviewed > 0) updateStreak().then(setStreak)
     }
 
-    setFlashcardDiscarded(card.id, true)
-      .then(() => {
-        toast(`"${card.front}" saiu da revisão`, {
-          action: {
-            label: "Desfazer",
-            onClick: () => {
-              setFlashcardDiscarded(card.id, false)
-                .then(() => toast("Palavra de volta na revisão"))
-                .catch(() => toast.error("Não foi possível desfazer"))
-            },
-          },
-        })
-      })
-      .catch(() => toast.error("Não foi possível descartar a palavra"))
-  }, [cards, index, selection, practiceOnly, reviewed])
+    toast(`"${card.front}" saiu da revisão`, {
+      action: {
+        label: "Desfazer",
+        onClick: () => {
+          setFlashcardDiscarded(card.id, false)
+            .then(() => {
+              setCards((prev) => [...prev, card])
+              setDone(false)
+              toast("Palavra de volta na revisão")
+            })
+            .catch(() => toast.error("Não foi possível desfazer"))
+        },
+      },
+    })
+  }, [cards, index, selection, practiceOnly, reviewed, discarding])
 
   useEffect(() => {
     return () => {
@@ -280,10 +292,11 @@ export default function ReviewClient({
       if (e.code === "Digit3") { e.preventDefault(); handleSelect("C") }
       if (e.code === "Digit4") { e.preventDefault(); handleSelect("D") }
       if (e.code === "Space") { e.preventDefault(); handleSkip() }
+      if (e.code === "KeyD") { e.preventDefault(); handleDiscard() }
     }
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
-  }, [step, done, selection, handleSelect, handleSkip])
+  }, [step, done, selection, handleSelect, handleSkip, handleDiscard])
 
   if (step === "filter") {
     const lessonsWithCards = lessons.filter((l) => lessonStats[l.id])
@@ -667,12 +680,13 @@ export default function ReviewClient({
         </button>
         <button
           onClick={handleDiscard}
-          disabled={selection !== null}
+          disabled={selection !== null || discarding}
           title="Já sei esta palavra: não mostrar mais na revisão"
-          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-red-400 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-red-400 disabled:opacity-50 transition-colors"
         >
           <EyeOff size={12} />
-          Já sei, descartar
+          {discarding ? "Descartando…" : "Já sei, descartar"}
+          <kbd className="text-[9px] bg-white/5 border border-white/10 px-1 py-0.5 rounded">D</kbd>
         </button>
       </div>
     </div>

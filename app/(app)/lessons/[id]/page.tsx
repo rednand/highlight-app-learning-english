@@ -163,7 +163,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           </h2>
         </div>
 
-        {items && items.length > 0 && (
+        {items && items.some((item) => reviewState(item.flashcards) === "active") && (
           <Link
             href={`/review?lesson=${id}`}
             className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold py-2.5 rounded-full transition-colors mb-4"

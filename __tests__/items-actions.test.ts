@@ -162,11 +162,11 @@ describe("setItemInReview", () => {
     expect(mockRevalidatePath).toHaveBeenCalledWith("/")
   })
 
-  it("volta para a revisão limpando discarded_at e deixando pendente", async () => {
+  it("volta para a revisão limpando discarded_at sem mexer na agenda", async () => {
     const b = makeBuilder()
     mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, b) as never)
     await setItemInReview("item-1", "lesson-1", true)
-    expect(b.update).toHaveBeenCalledWith({ discarded_at: null, next_review_at: expect.any(String) })
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: null })
   })
 
   it("propaga erro do banco", async () => {

@@ -273,11 +273,11 @@ describe("setFlashcardDiscarded", () => {
     expect(revalidatePath).toHaveBeenCalledWith("/")
   })
 
-  it("restaura limpando discarded_at e deixando o card pendente", async () => {
+  it("restaura limpando discarded_at sem mexer na agenda", async () => {
     const b = makeChainBuilder()
     mockCreateClient.mockResolvedValue(supaWith(b) as never)
     await setFlashcardDiscarded("card-1", false)
-    expect(b.update).toHaveBeenCalledWith({ discarded_at: null, next_review_at: expect.any(String) })
+    expect(b.update).toHaveBeenCalledWith({ discarded_at: null })
   })
 
   it("propaga erro do banco", async () => {
