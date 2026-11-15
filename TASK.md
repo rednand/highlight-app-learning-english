@@ -94,7 +94,7 @@
 - [x] Ícone: "h" branco com passada de marca-texto na diagonal (icon-192/512, highlight-icon, app/icon, app/apple-icon)
 - [x] Badge das notificações com o mesmo "h"
 - [ ] Gerar de novo o `.aab` no PWABuilder para o ícone novo ir para o app Android
-- [x] Ícones do manifest com nome novo (icon-*-v2.png) para o Chrome atualizar o ícone do app instalado
+- [x] Faixa do ícone com cara de marca-texto (12°, bordas irregulares, listras); ícones do manifest com nome novo (icon-*-v3.png) para o Chrome atualizar o ícone do app instalado
 - [ ] Conferir o ícone na tela inicial do celular (remover os dois apps e instalar de novo pelo Chrome)
 
 ## Paleta de cores
