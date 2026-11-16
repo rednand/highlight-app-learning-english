@@ -92,6 +92,10 @@ export function applyNoteColor(
   const runs = runsOf(text)
   const from = toVisible(runs, Math.max(0, Math.min(start, end)))
   const to = toVisible(runs, Math.min(text.length, Math.max(start, end)))
+  if (from === to) {
+    const caret = Math.max(0, Math.min(start, end, text.length))
+    return { text, selectionStart: caret, selectionEnd: caret }
+  }
 
   const chars: { ch: string; color: NoteColor | null }[] = []
   for (const run of runs) {

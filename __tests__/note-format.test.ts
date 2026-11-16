@@ -108,7 +108,9 @@ describe("applyNoteColor", () => {
     expect(applyNoteColor("abc", -5, 99, "azul").text).toBe("[azul]abc[/azul]")
   })
 
-  it("seleção vazia não muda o texto", () => {
-    expect(applyNoteColor("abc", 1, 1, "azul").text).toBe("abc")
+  it("seleção vazia não muda o texto nem move o cursor", () => {
+    expect(applyNoteColor("abc", 1, 1, "azul")).toEqual({ text: "abc", selectionStart: 1, selectionEnd: 1 })
+    const colored = "x[verde]ab[/verde]"
+    expect(applyNoteColor(colored, 1, 1, "azul")).toEqual({ text: colored, selectionStart: 1, selectionEnd: 1 })
   })
 })
