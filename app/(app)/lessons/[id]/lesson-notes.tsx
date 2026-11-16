@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { Pencil, Trash2, Plus, StickyNote } from "lucide-react"
 import { toast } from "sonner"
 import { addLessonNote, updateLessonNote, deleteLessonNote } from "../../../actions/notes"
@@ -44,14 +44,13 @@ function NoteEditor({
 }) {
   const [text, setText] = useState(initial)
   const [isPending, startTransition] = useTransition()
-  const textRef = useRef(initial)
+  const canSave = stripNoteColors(text).trim().length > 0
 
   function submit() {
-    const current = textRef.current
-    if (isPending || !stripNoteColors(current).trim()) return
+    if (isPending || !canSave) return
     startTransition(async () => {
       try {
-        await onSubmit(current)
+        await onSubmit(text)
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Não foi possível salvar a anotação")
       }
@@ -63,10 +62,7 @@ function NoteEditor({
       <RichNoteEditor
         initial={initial}
         placeholder={placeholder}
-        onChange={(markup) => {
-          textRef.current = markup
-          setText(markup)
-        }}
+        onChange={setText}
         onSubmit={submit}
         onCancel={onCancel}
       />
@@ -77,7 +73,7 @@ function NoteEditor({
         <button
           type="button"
           onClick={submit}
-          disabled={isPending || !stripNoteColors(text).trim()}
+          disabled={isPending || !canSave}
           className="bg-brand hover:bg-brand-strong disabled:opacity-40 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors"
         >
           {isPending ? "Salvando…" : submitLabel}

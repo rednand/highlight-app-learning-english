@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { renderNoteInto, readNoteFrom, getVisibleSelection, setVisibleSelection, COLOR_ATTR } from "../app/lib/note-dom"
+import { renderNoteInto, readNoteFrom, getVisibleSelection, setVisibleSelection, hasElementBreaks, COLOR_ATTR } from "../app/lib/note-dom"
 import { paintSegments, serializeSegments, normalizeSegments, parseNote } from "../app/lib/note-format"
 
 const classFor = (c: string) => `c-${c}`
@@ -94,5 +94,52 @@ describe("seleção em letras visíveis", () => {
     renderNoteInto(el, parseNote("abc"), classFor)
     setVisibleSelection(el, 1, 50)
     expect(getVisibleSelection(el)).toEqual({ from: 1, to: 3 })
+  })
+})
+
+describe("quebras de linha como elemento", () => {
+  it("seleção depois de um <br> conta a quebra, igual à leitura", () => {
+    el.innerHTML = "a<br>bc"
+    const text = el.lastChild as Text
+    const range = document.createRange()
+    range.setStart(text, 0)
+    range.setEnd(text, 2)
+    document.getSelection()?.removeAllRanges()
+    document.getSelection()?.addRange(range)
+    expect(getVisibleSelection(el)).toEqual({ from: 2, to: 4 })
+    expect(serializeSegments(readNoteFrom(el)).slice(2, 4)).toBe("bc")
+  })
+
+  it("seleção dentro de um <div> criado pelo navegador também bate", () => {
+    el.innerHTML = "ab<div>cd</div>"
+    const text = el.querySelector("div")!.firstChild as Text
+    const range = document.createRange()
+    range.setStart(text, 1)
+    range.setEnd(text, 2)
+    document.getSelection()?.removeAllRanges()
+    document.getSelection()?.addRange(range)
+    expect(getVisibleSelection(el)).toEqual({ from: 4, to: 5 })
+    expect(serializeSegments(readNoteFrom(el))).toBe("ab\ncd")
+  })
+
+  it("posicionar a seleção logo depois de um <br>", () => {
+    el.innerHTML = "a<br>bc"
+    setVisibleSelection(el, 2, 3)
+    expect(getVisibleSelection(el)).toEqual({ from: 2, to: 3 })
+    expect(document.getSelection()?.toString()).toBe("b")
+  })
+
+  it("detecta quando há quebras como elemento", () => {
+    el.innerHTML = "a<br>b"
+    expect(hasElementBreaks(el)).toBe(true)
+    renderNoteInto(el, parseNote("a\nb"), classFor)
+    expect(hasElementBreaks(el)).toBe(false)
+  })
+
+  it("linha nova no fim ganha um <br> de apoio que não vira texto", () => {
+    renderNoteInto(el, parseNote("abc\n"), classFor)
+    expect(el.lastChild?.nodeName).toBe("BR")
+    expect(serializeSegments(readNoteFrom(el))).toBe("abc\n")
+    expect(hasElementBreaks(el)).toBe(false)
   })
 })

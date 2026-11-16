@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react"
 import { Eraser } from "lucide-react"
 import { toast } from "sonner"
-import { NOTE_COLORS, paintSegments, parseNote, serializeSegments, type NoteColor } from "../../app/lib/note-format"
-import { getVisibleSelection, readNoteFrom, renderNoteInto, setVisibleSelection } from "../../app/lib/note-dom"
+import {
+  NOTE_COLORS, paintSegments, parseNote, replaceInSegments, serializeSegments, type NoteColor, type NoteSegment,
+} from "../../app/lib/note-format"
+import { getVisibleSelection, hasElementBreaks, readNoteFrom, renderNoteInto, setVisibleSelection } from "../../app/lib/note-dom"
 import { NOTE_COLOR_STYLES } from "./colored-text"
 
 type Props = {
@@ -16,18 +18,6 @@ type Props = {
 }
 
 const classFor = (color: NoteColor) => NOTE_COLOR_STYLES[color].text
-
-function insertPlainText(text: string) {
-  // insertText mantém o desfazer (Ctrl+Z) do navegador funcionando.
-  if (!document.execCommand("insertText", false, text)) {
-    const selection = document.getSelection()
-    if (!selection || selection.rangeCount === 0) return
-    const range = selection.getRangeAt(0)
-    range.deleteContents()
-    range.insertNode(document.createTextNode(text))
-    range.collapse(false)
-  }
-}
 
 /**
  * Editor que pinta direto: a pessoa seleciona um trecho e toca na cor.
@@ -58,12 +48,45 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function sync() {
-    const el = editorRef.current
-    if (!el) return
-    const segments = readNoteFrom(el)
+  function commit(segments: NoteSegment[]) {
     setEmpty(segments.length === 0)
     onChange(serializeSegments(segments))
+  }
+
+  /** Redesenha o editor com os trechos e põe a seleção de volta. */
+  function redraw(segments: NoteSegment[], from: number, to: number) {
+    const el = editorRef.current
+    if (!el) return
+    renderNoteInto(el, segments, classFor)
+    el.focus()
+    setVisibleSelection(el, from, to)
+    commit(segments)
+  }
+
+  function handleInput() {
+    const el = editorRef.current
+    if (!el) return
+    lastSelection.current = null
+    // Alguns teclados (Android, Safari) quebram linha criando <br>/<div>: volta ao formato simples.
+    if (hasElementBreaks(el)) {
+      const selection = getVisibleSelection(el)
+      const segments = readNoteFrom(el)
+      const caret = selection?.to ?? segments.reduce((sum, s) => sum + s.text.length, 0)
+      redraw(segments, selection?.from ?? caret, caret)
+      return
+    }
+    commit(readNoteFrom(el))
+  }
+
+  function insertText(text: string) {
+    const el = editorRef.current
+    if (!el) return
+    const selection = getVisibleSelection(el)
+    const length = readNoteFrom(el).reduce((sum, s) => sum + s.text.length, 0)
+    const from = selection?.from ?? length
+    const to = selection?.to ?? length
+    const result = replaceInSegments(readNoteFrom(el), from, to, text)
+    redraw(result.segments, result.caret, result.caret)
   }
 
   function paint(color: NoteColor | null) {
@@ -77,12 +100,7 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
     }
     const from = Math.min(selection.from, selection.to)
     const to = Math.max(selection.from, selection.to)
-    const segments = paintSegments(readNoteFrom(el), from, to, color)
-    renderNoteInto(el, segments, classFor)
-    el.focus()
-    setVisibleSelection(el, from, to)
-    setEmpty(segments.length === 0)
-    onChange(serializeSegments(segments))
+    redraw(paintSegments(readNoteFrom(el), from, to, color), from, to)
   }
 
   return (
@@ -97,7 +115,7 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
             onClick={() => paint(color)}
             title={NOTE_COLOR_STYLES[color].label}
             aria-label={`Pintar trecho de ${NOTE_COLOR_STYLES[color].label.toLowerCase()}`}
-            className={`w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 transition-colors ${NOTE_COLOR_STYLES[color].swatch}`}
+            className={`w-7 h-7 rounded-full border-2 border-line hover:border-fg-muted transition-colors ${NOTE_COLOR_STYLES[color].swatch}`}
           />
         ))}
         <button
@@ -106,7 +124,7 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
           onClick={() => paint(null)}
           title="Tirar a cor"
           aria-label="Tirar a cor do trecho selecionado"
-          className="w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 flex items-center justify-center text-fg-muted transition-colors"
+          className="w-7 h-7 rounded-full border-2 border-line hover:border-fg-muted flex items-center justify-center text-fg-muted transition-colors"
         >
           <Eraser size={13} />
         </button>
@@ -124,7 +142,7 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
           contentEditable
           suppressContentEditableWarning
           spellCheck
-          onInput={sync}
+          onInput={handleInput}
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
               e.preventDefault()
@@ -133,19 +151,17 @@ export default function RichNoteEditor({ initial, placeholder, onChange, onSubmi
             }
             if (e.key === "Enter") {
               e.preventDefault()
-              insertPlainText("\n")
-              sync()
+              insertText("\n")
               return
             }
             if (e.key === "Escape") onCancel()
           }}
           onPaste={(e) => {
             e.preventDefault()
-            insertPlainText(e.clipboardData.getData("text/plain"))
-            sync()
+            insertText(e.clipboardData.getData("text/plain").replace(/\r\n?/g, "\n"))
           }}
           onDrop={(e) => e.preventDefault()}
-          className="w-full min-h-24 max-h-96 overflow-y-auto bg-page border border-white/10 rounded-xl px-4 py-3 text-sm text-white leading-relaxed whitespace-pre-wrap break-words outline-none focus:border-brand/50 transition-colors"
+          className="w-full min-h-24 max-h-96 overflow-y-auto bg-page border border-line rounded-xl px-4 py-3 text-sm text-white leading-relaxed whitespace-pre-wrap break-words outline-none focus:border-brand/50 transition-colors"
         />
       </div>
     </div>

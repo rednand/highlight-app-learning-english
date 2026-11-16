@@ -22,8 +22,6 @@ export function isNoteColor(value: string): value is NoteColor {
  */
 type Run = {
   color: NoteColor | null
-  rawStart: number
-  rawEnd: number
   contentStart: number
   contentEnd: number
 }
@@ -33,18 +31,16 @@ function runsOf(text: string): Run[] {
   let last = 0
   for (const match of text.matchAll(MARKUP)) {
     const start = match.index ?? 0
-    if (start > last) runs.push({ color: null, rawStart: last, rawEnd: start, contentStart: last, contentEnd: start })
+    if (start > last) runs.push({ color: null, contentStart: last, contentEnd: start })
     const openLength = match[1].length + 2
     runs.push({
       color: match[1] as NoteColor,
-      rawStart: start,
-      rawEnd: start + match[0].length,
       contentStart: start + openLength,
       contentEnd: start + openLength + match[2].length,
     })
     last = start + match[0].length
   }
-  if (last < text.length) runs.push({ color: null, rawStart: last, rawEnd: text.length, contentStart: last, contentEnd: text.length })
+  if (last < text.length) runs.push({ color: null, contentStart: last, contentEnd: text.length })
   return runs
 }
 
@@ -60,10 +56,6 @@ export function stripNoteColors(text: string): string {
   return parseNote(text).map((segment) => segment.text).join("")
 }
 
-export function hasNoteColors(segments: NoteSegment[]): boolean {
-  return segments.some((segment) => segment.color !== null)
-}
-
 /** Junta trechos vizinhos da mesma cor e descarta trechos vazios. */
 export function normalizeSegments(segments: NoteSegment[]): NoteSegment[] {
   const out: NoteSegment[] = []
@@ -76,11 +68,53 @@ export function normalizeSegments(segments: NoteSegment[]): NoteSegment[] {
   return out
 }
 
+// Caractere invisível colocado dentro de "[verde]" digitado pela pessoa, para
+// que texto parecido com a marcação não vire cor sem querer.
+const WORD_JOINER = "\u2060"
+const TYPED_TAG = new RegExp(`\\[(?=\\/?(?:${COLOR_GROUP})\\])`, "g")
+
+function protectTypedTags(text: string): string {
+  return text.replace(TYPED_TAG, `[${WORD_JOINER}`)
+}
+
 /** Escreve os trechos no formato salvo ("[verde]…[/verde]"). */
 export function serializeSegments(segments: NoteSegment[]): string {
   return normalizeSegments(segments)
-    .map((segment) => (segment.color ? `[${segment.color}]${segment.text}[/${segment.color}]` : segment.text))
+    .map((segment) => {
+      const text = protectTypedTags(segment.text)
+      return segment.color ? `[${segment.color}]${text}[/${segment.color}]` : text
+    })
     .join("")
+}
+
+/**
+ * Troca as letras visíveis de from até to por um texto (digitado ou colado).
+ * O texto novo fica com a cor da letra logo antes, como acontece ao digitar.
+ */
+export function replaceInSegments(
+  segments: NoteSegment[],
+  from: number,
+  to: number,
+  text: string,
+): { segments: NoteSegment[]; caret: number } {
+  const start = Math.max(0, Math.min(from, to))
+  const end = Math.max(from, to)
+  let pos = 0
+  let colorBefore: NoteColor | null = null
+  const before: NoteSegment[] = []
+  const after: NoteSegment[] = []
+  for (const segment of segments) {
+    const segStart = pos
+    const segEnd = pos + segment.text.length
+    pos = segEnd
+    if (segStart < start) {
+      before.push({ text: segment.text.slice(0, start - segStart), color: segment.color })
+      colorBefore = segment.color
+    }
+    if (segEnd > end) after.push({ text: segment.text.slice(Math.max(0, end - segStart)), color: segment.color })
+  }
+  const inserted: NoteSegment = { text, color: text === "\n" ? null : colorBefore }
+  return { segments: normalizeSegments([...before, inserted, ...after]), caret: start + text.length }
 }
 
 /** Pinta (ou tira a cor, com null) as letras visíveis de from até to. */

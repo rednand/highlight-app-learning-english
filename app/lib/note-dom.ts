@@ -4,9 +4,15 @@ import { isNoteColor, normalizeSegments, type NoteColor, type NoteSegment } from
  * Ponte entre o editor visual (um elemento contentEditable) e os trechos da
  * anotação. Os trechos coloridos viram <span data-note-color="verde">; o
  * texto é sempre colocado com textContent, nunca como HTML.
+ *
+ * Todas as posições ("letras visíveis") são contadas do mesmo jeito em toda
+ * parte: cada letra conta 1 e cada quebra de linha conta 1, venha ela de um
+ * "\n" no texto, de um <br> ou de um <div> que o navegador criou.
  */
 
 export const COLOR_ATTR = "data-note-color"
+const FILLER_ATTR = "data-note-filler"
+const BLOCK_TAGS = new Set(["DIV", "P", "LI"])
 
 export function renderNoteInto(
   el: HTMLElement,
@@ -27,40 +33,85 @@ export function renderNoteInto(
       el.appendChild(doc.createTextNode(segment.text))
     }
   }
+  // Um "\n" no fim do texto não aparece sozinho: um <br> de apoio faz a linha nova existir.
+  const last = segments[segments.length - 1]
+  if (last?.text.endsWith("\n")) {
+    const filler = doc.createElement("br")
+    filler.setAttribute(FILLER_ATTR, "")
+    el.appendChild(filler)
+  }
 }
 
-const BLOCK_TAGS = new Set(["DIV", "P", "LI"])
+type Piece =
+  | { kind: "text"; node: Text; start: number; text: string; color: NoteColor | null }
+  | { kind: "break"; node: Element; start: number }
 
-/** Lê o que está no editor e devolve os trechos (com quebras de linha como "\n"). */
-export function readNoteFrom(el: HTMLElement): NoteSegment[] {
-  const out: NoteSegment[] = []
+/** Lista, na ordem do documento, tudo que conta como letra visível. */
+function linearize(el: HTMLElement): Piece[] {
+  const pieces: Piece[] = []
+  let pos = 0
   const walk = (node: Node, color: NoteColor | null) => {
     node.childNodes.forEach((child, index) => {
       if (child.nodeType === 3) {
-        out.push({ text: child.textContent ?? "", color })
+        const text = child.textContent ?? ""
+        pieces.push({ kind: "text", node: child as Text, start: pos, text, color })
+        pos += text.length
         return
       }
       if (child.nodeType !== 1) return
       const element = child as HTMLElement
       if (element.tagName === "BR") {
-        out.push({ text: "\n", color: null })
+        if (element.hasAttribute(FILLER_ATTR)) return
+        // <br> sozinho no fim do editor é apoio do navegador, não uma linha a mais.
+        if (node === el && element === el.lastChild && pieces.length > 0) return
+        pieces.push({ kind: "break", node: element, start: pos })
+        pos += 1
         return
       }
       const attr = element.getAttribute(COLOR_ATTR)
-      const childColor = attr === "" ? null : attr && isNoteColor(attr) ? attr : color
-      const isBlock = BLOCK_TAGS.has(element.tagName)
-      if (isBlock && index > 0) out.push({ text: "\n", color: null })
+      const childColor = attr && isNoteColor(attr) ? attr : color
+      if (BLOCK_TAGS.has(element.tagName) && index > 0) {
+        pieces.push({ kind: "break", node: element, start: pos })
+        pos += 1
+      }
       walk(element, childColor)
     })
   }
   walk(el, null)
-  const segments = normalizeSegments(out)
-  // Navegadores deixam um <br> sobrando no fim do editor; não vira texto.
-  const last = segments[segments.length - 1]
-  if (last && last.color === null && last.text.endsWith("\n") && el.lastChild?.nodeName === "BR") {
-    last.text = last.text.slice(0, -1)
+  return pieces
+}
+
+/** Lê o que está no editor e devolve os trechos (com quebras de linha como "\n"). */
+export function readNoteFrom(el: HTMLElement): NoteSegment[] {
+  return normalizeSegments(
+    linearize(el).map((piece) =>
+      piece.kind === "text" ? { text: piece.text, color: piece.color } : { text: "\n", color: null },
+    ),
+  )
+}
+
+/** True quando o navegador colocou quebras como elementos (<br>, <div>) e vale redesenhar. */
+export function hasElementBreaks(el: HTMLElement): boolean {
+  return linearize(el).some((piece) => piece.kind === "break")
+}
+
+function offsetOf(el: HTMLElement, pieces: Piece[], container: Node, offset: number): number {
+  const doc = el.ownerDocument
+  const point = doc.createRange()
+  point.setStart(container, offset)
+  let count = 0
+  for (const piece of pieces) {
+    if (piece.kind === "text") {
+      if (piece.node === container) return piece.start + Math.min(offset, piece.text.length)
+      if (point.comparePoint(piece.node, 0) < 0) count = piece.start + piece.text.length
+      else break
+    } else {
+      // A quebra conta se o começo dela estiver antes do ponto da seleção.
+      if (point.comparePoint(piece.node, 0) < 0) count = piece.start + 1
+      else break
+    }
   }
-  return normalizeSegments(segments)
+  return count
 }
 
 /** Posição da seleção contada em letras visíveis, ou null se estiver fora do editor. */
@@ -69,36 +120,35 @@ export function getVisibleSelection(el: HTMLElement): { from: number; to: number
   if (!selection || selection.rangeCount === 0) return null
   const range = selection.getRangeAt(0)
   if (!el.contains(range.startContainer) || !el.contains(range.endContainer)) return null
-  const offsetOf = (container: Node, offset: number) => {
-    const probe = el.ownerDocument.createRange()
-    probe.selectNodeContents(el)
-    probe.setEnd(container, offset)
-    return probe.toString().length
+  const pieces = linearize(el)
+  return {
+    from: offsetOf(el, pieces, range.startContainer, range.startOffset),
+    to: offsetOf(el, pieces, range.endContainer, range.endOffset),
   }
-  return { from: offsetOf(range.startContainer, range.startOffset), to: offsetOf(range.endContainer, range.endOffset) }
+}
+
+function pointAt(el: HTMLElement, pieces: Piece[], target: number): [Node, number] {
+  let lastPoint: [Node, number] = [el, 0]
+  for (const piece of pieces) {
+    if (piece.kind === "text") {
+      if (target <= piece.start + piece.text.length) return [piece.node, Math.max(0, target - piece.start)]
+      lastPoint = [piece.node, piece.text.length]
+    } else {
+      const parent = piece.node.parentNode ?? el
+      const index = Array.prototype.indexOf.call(parent.childNodes, piece.node) as number
+      if (target <= piece.start) return [parent, index]
+      lastPoint = [parent, index + 1]
+    }
+  }
+  return lastPoint
 }
 
 /** Coloca a seleção nas letras visíveis de from até to. */
 export function setVisibleSelection(el: HTMLElement, from: number, to: number): void {
   const doc = el.ownerDocument
-  const walker = doc.createTreeWalker(el, 4)
-  const locate = (target: number): [Node, number] => {
-    let remaining = target
-    let node = walker.nextNode()
-    let last: Node | null = null
-    while (node) {
-      const length = node.textContent?.length ?? 0
-      if (remaining <= length) return [node, remaining]
-      remaining -= length
-      last = node
-      node = walker.nextNode()
-    }
-    return last ? [last, last.textContent?.length ?? 0] : [el, 0]
-  }
-  walker.currentNode = el
-  const [startNode, startOffset] = locate(from)
-  walker.currentNode = el
-  const [endNode, endOffset] = locate(to)
+  const pieces = linearize(el)
+  const [startNode, startOffset] = pointAt(el, pieces, Math.min(from, to))
+  const [endNode, endOffset] = pointAt(el, pieces, Math.max(from, to))
   const range = doc.createRange()
   range.setStart(startNode, startOffset)
   range.setEnd(endNode, endOffset)
