@@ -11,7 +11,7 @@ export default async function LessonsPage() {
 
   const { data: lessons } = await supabase
     .from("lessons")
-    .select("id, title, lesson_date, created_at, notes")
+    .select("id, title, lesson_date, created_at, notes, lesson_notes(content, created_at)")
     .eq("user_id", user.id)
     .or("source_type.eq.lesson,source_type.is.null")
     .order("lesson_date", { ascending: false, nullsFirst: false })
@@ -47,8 +47,13 @@ export default async function LessonsPage() {
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)
 
-  const lessonsWithCounts = (lessons ?? []).map((l) => ({
+  type NoteRow = { content: string; created_at: string }
+  const firstNote = (rows: NoteRow[] | null | undefined): string | null =>
+    [...(rows ?? [])].sort((a, b) => a.created_at.localeCompare(b.created_at))[0]?.content ?? null
+
+  const lessonsWithCounts = (lessons ?? []).map(({ lesson_notes, ...l }) => ({
     ...l,
+    notes: firstNote(lesson_notes as NoteRow[] | null) ?? l.notes,
     itemCount: countMap[l.id] ?? 0,
     previewWord: previewMap[l.id] ?? null,
   }))

@@ -98,6 +98,24 @@ describe("createLesson", () => {
     expect(b.insert).toHaveBeenCalledWith(expect.objectContaining({ tmdb_id: 99 }))
   })
 
+  it("salva a nota inicial na lista de anotações, não no campo antigo", async () => {
+    const b = makeBuilder({ data: { id: "lesson-789" }, error: null })
+    const supa = makeSupabase({ id: "u1" }, b)
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(createLesson(fd({ title: "Filme", notes: "  episódio 3  " }))).rejects.toThrow("NEXT_REDIRECT")
+    expect(supa.from).toHaveBeenCalledWith("lesson_notes")
+    expect(b.insert).toHaveBeenCalledWith({ lesson_id: "lesson-789", user_id: "u1", content: "episódio 3" })
+    expect(b.insert).toHaveBeenCalledWith(expect.not.objectContaining({ notes: expect.anything() }))
+  })
+
+  it("sem nota inicial não cria anotação", async () => {
+    const b = makeBuilder({ data: { id: "lesson-790" }, error: null })
+    const supa = makeSupabase({ id: "u1" }, b)
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(createLesson(fd({ title: "Filme", notes: "   " }))).rejects.toThrow("NEXT_REDIRECT")
+    expect(supa.from).not.toHaveBeenCalledWith("lesson_notes")
+  })
+
   it("erro no banco: lança erro", async () => {
     const b = makeBuilder({ data: null, error: { message: "insert error" } })
     const supa = makeSupabase({ id: "u1" }, b)
@@ -123,6 +141,15 @@ describe("updateLesson", () => {
     await updateLesson(fd({ id: "lesson-1", title: "Atualizada" }))
     expect(supa._builder.update).toHaveBeenCalledWith(expect.objectContaining({ title: "Atualizada" }))
     expect(mockRevalidatePath).toHaveBeenCalledWith("/lessons/lesson-1")
+  })
+
+  it("não apaga as notas antigas quando o formulário não envia o campo", async () => {
+    const supa = makeSupabase({ id: "u1" })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await updateLesson(fd({ id: "lesson-1", title: "Atualizada" }))
+    expect(supa._builder.update).toHaveBeenCalledWith(expect.not.objectContaining({ notes: expect.anything() }))
+    const arg = supa._builder.update.mock.calls[0][0] as Record<string, unknown>
+    expect("notes" in arg).toBe(false)
   })
 
   it("erro no banco: lança erro", async () => {

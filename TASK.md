@@ -105,3 +105,11 @@
 - [x] Botões amarelos com texto branco corrigidos para texto preto
 - [x] Regra da paleta em `.claude/rules/stack.md`
 - [ ] Conferir as telas no celular
+
+## Anotações na aula
+- [x] Tabela `lesson_notes` (seção 16 de `supabase/migration.sql`), copiando a nota atual de cada aula
+- [ ] Rodar a migração no SQL Editor do Supabase ANTES do deploy
+- [x] Seção "Anotações" acima de "Palavras & Expressões": adicionar, editar e apagar cada anotação, com data e hora
+- [x] Nota digitada ao criar aula/mídia vira a primeira anotação; "Editar" não mexe mais nas notas
+- [x] Lista de aulas mostra a primeira anotação como resumo
+- [ ] Teste manual no celular
