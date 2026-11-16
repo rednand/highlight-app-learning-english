@@ -1,11 +1,12 @@
 "use client"
 
-import { useMemo, useRef, useState, useTransition } from "react"
-import { Pencil, Trash2, Plus, StickyNote, Eraser } from "lucide-react"
+import { useRef, useState, useTransition } from "react"
+import { Pencil, Trash2, Plus, StickyNote } from "lucide-react"
 import { toast } from "sonner"
 import { addLessonNote, updateLessonNote, deleteLessonNote } from "../../../actions/notes"
-import { applyNoteColor, hasNoteColors, parseNote, NOTE_COLORS, type NoteColor } from "../../../lib/note-format"
-import ColoredText, { NOTE_COLOR_STYLES } from "../../../../components/notes/colored-text"
+import { stripNoteColors } from "../../../lib/note-format"
+import ColoredText from "../../../../components/notes/colored-text"
+import RichNoteEditor from "../../../../components/notes/rich-note-editor"
 
 export type LessonNote = {
   id: string
@@ -28,9 +29,6 @@ function formatWhen(iso: string): string {
   return `${date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", timeZone: TIME_ZONE })}, ${time}`
 }
 
-const textareaClass =
-  "w-full bg-page border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-fg-faint outline-none focus:border-brand/50 transition-colors resize-y min-h-24"
-
 function NoteEditor({
   initial = "",
   placeholder,
@@ -46,30 +44,14 @@ function NoteEditor({
 }) {
   const [text, setText] = useState(initial)
   const [isPending, startTransition] = useTransition()
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const segments = useMemo(() => parseNote(text), [text])
-
-  function paint(color: NoteColor | null) {
-    const el = textareaRef.current
-    if (!el) return
-    if (el.selectionStart === el.selectionEnd) {
-      toast("Selecione um trecho do texto e depois toque na cor")
-      el.focus()
-      return
-    }
-    const result = applyNoteColor(text, el.selectionStart, el.selectionEnd, color)
-    setText(result.text)
-    requestAnimationFrame(() => {
-      el.focus()
-      el.setSelectionRange(result.selectionStart, result.selectionEnd)
-    })
-  }
+  const textRef = useRef(initial)
 
   function submit() {
-    if (isPending || !text.trim()) return
+    const current = textRef.current
+    if (isPending || !stripNoteColors(current).trim()) return
     startTransition(async () => {
       try {
-        await onSubmit(text)
+        await onSubmit(current)
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Não foi possível salvar a anotação")
       }
@@ -78,51 +60,16 @@ function NoteEditor({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 flex-wrap" role="toolbar" aria-label="Cor do trecho selecionado">
-        <span className="text-[11px] text-fg-dim mr-1">Cor:</span>
-        {NOTE_COLORS.map((color) => (
-          <button
-            key={color}
-            type="button"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => paint(color)}
-            title={NOTE_COLOR_STYLES[color].label}
-            aria-label={`Pintar trecho de ${NOTE_COLOR_STYLES[color].label.toLowerCase()}`}
-            className={`w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 transition-colors ${NOTE_COLOR_STYLES[color].swatch}`}
-          />
-        ))}
-        <button
-          type="button"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => paint(null)}
-          title="Tirar a cor"
-          aria-label="Tirar a cor do trecho selecionado"
-          className="w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 flex items-center justify-center text-fg-muted transition-colors"
-        >
-          <Eraser size={13} />
-        </button>
-      </div>
-      <textarea
-        ref={textareaRef}
-        autoFocus
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit()
-          if (e.key === "Escape") onCancel()
-        }}
+      <RichNoteEditor
+        initial={initial}
         placeholder={placeholder}
-        rows={4}
-        className={textareaClass}
+        onChange={(markup) => {
+          textRef.current = markup
+          setText(markup)
+        }}
+        onSubmit={submit}
+        onCancel={onCancel}
       />
-      {hasNoteColors(segments) && (
-        <div className="bg-page border border-white/5 rounded-xl px-4 py-3">
-          <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-1">Prévia</p>
-          <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">
-            <ColoredText segments={segments} />
-          </p>
-        </div>
-      )}
       <div className="flex items-center justify-end gap-3">
         <button type="button" onClick={onCancel} className="text-xs text-fg-dim hover:text-white transition-colors">
           Cancelar
@@ -130,7 +77,7 @@ function NoteEditor({
         <button
           type="button"
           onClick={submit}
-          disabled={isPending || !text.trim()}
+          disabled={isPending || !stripNoteColors(text).trim()}
           className="bg-brand hover:bg-brand-strong disabled:opacity-40 text-black text-xs font-bold px-4 py-2 rounded-full transition-colors"
         >
           {isPending ? "Salvando…" : submitLabel}
@@ -225,7 +172,7 @@ export default function LessonNotes({ lessonId, notes }: { lessonId: string; not
       {adding ? (
         <div className="p-4 bg-surface border border-line rounded-[18px]">
           <NoteEditor
-            placeholder="O que você quer lembrar desta aula? Dica: Ctrl+Enter salva."
+            placeholder="O que você quer lembrar desta aula? Selecione um trecho e toque numa cor para pintar."
             submitLabel="Adicionar"
             onSubmit={async (text) => {
               await addLessonNote(lessonId, text)

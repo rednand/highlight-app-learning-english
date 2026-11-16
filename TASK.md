@@ -129,6 +129,6 @@
 
 ## Cores nas anotações
 - [x] Barra de cores no editor (marca-texto, verde, azul, rosa, vermelho e borracha): selecionar um trecho e tocar na cor
-- [x] Marcação curta no texto (`[verde]…[/verde]`), sem HTML; prévia colorida enquanto edita; pintar, trocar e apagar cor funcionam pela seleção do texto visível
+- [x] Editor que pinta direto (sem código visível); o texto continua salvo como `[verde]…[/verde]`, sem HTML
 - [x] Anotações salvas mostram só as cores; resumo da lista de aulas sem marcação
 - [ ] Teste manual no celular (selecionar e pintar)
