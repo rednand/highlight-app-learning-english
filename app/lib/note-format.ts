@@ -22,8 +22,6 @@ export function isNoteColor(value: string): value is NoteColor {
  */
 type Run = {
   color: NoteColor | null
-  rawStart: number
-  rawEnd: number
   contentStart: number
   contentEnd: number
 }
@@ -33,18 +31,16 @@ function runsOf(text: string): Run[] {
   let last = 0
   for (const match of text.matchAll(MARKUP)) {
     const start = match.index ?? 0
-    if (start > last) runs.push({ color: null, rawStart: last, rawEnd: start, contentStart: last, contentEnd: start })
+    if (start > last) runs.push({ color: null, contentStart: last, contentEnd: start })
     const openLength = match[1].length + 2
     runs.push({
       color: match[1] as NoteColor,
-      rawStart: start,
-      rawEnd: start + match[0].length,
       contentStart: start + openLength,
       contentEnd: start + openLength + match[2].length,
     })
     last = start + match[0].length
   }
-  if (last < text.length) runs.push({ color: null, rawStart: last, rawEnd: text.length, contentStart: last, contentEnd: text.length })
+  if (last < text.length) runs.push({ color: null, contentStart: last, contentEnd: text.length })
   return runs
 }
 
@@ -60,67 +56,91 @@ export function stripNoteColors(text: string): string {
   return parseNote(text).map((segment) => segment.text).join("")
 }
 
-export function hasNoteColors(segments: NoteSegment[]): boolean {
-  return segments.some((segment) => segment.color !== null)
+/** Junta trechos vizinhos da mesma cor e descarta trechos vazios. */
+export function normalizeSegments(segments: NoteSegment[]): NoteSegment[] {
+  const out: NoteSegment[] = []
+  for (const segment of segments) {
+    if (!segment.text) continue
+    const last = out[out.length - 1]
+    if (last && last.color === segment.color) last.text += segment.text
+    else out.push({ ...segment })
+  }
+  return out
 }
 
-/** Posição no texto bruto → posição no texto visível. Dentro de uma marcação, encosta no conteúdo. */
-function toVisible(runs: Run[], raw: number): number {
-  let visible = 0
-  for (const run of runs) {
-    if (raw <= run.rawStart) return visible
-    const length = run.contentEnd - run.contentStart
-    if (raw < run.rawEnd) return visible + Math.min(Math.max(raw - run.contentStart, 0), length)
-    visible += length
-  }
-  return visible
+// Caractere invisível colocado dentro de "[verde]" digitado pela pessoa, para
+// que texto parecido com a marcação não vire cor sem querer.
+const WORD_JOINER = "\u2060"
+const TYPED_TAG = new RegExp(`\\[(?=\\/?(?:${COLOR_GROUP})\\])`, "g")
+
+function protectTypedTags(text: string): string {
+  return text.replace(TYPED_TAG, `[${WORD_JOINER}`)
+}
+
+/** Escreve os trechos no formato salvo ("[verde]…[/verde]"). */
+export function serializeSegments(segments: NoteSegment[]): string {
+  return normalizeSegments(segments)
+    .map((segment) => {
+      const text = protectTypedTags(segment.text)
+      return segment.color ? `[${segment.color}]${text}[/${segment.color}]` : text
+    })
+    .join("")
 }
 
 /**
- * Aplica (ou tira, com color = null) uma cor no trecho selecionado. A seleção
- * vem em posições do texto bruto, mas a cor vale para as letras que aparecem
- * na tela: pintar de novo troca a cor, a borracha funciona selecionando só a
- * palavra, e seleções que pegam metade de um trecho colorido não quebram nada.
- * Devolve o novo texto e a seleção em cima das mesmas letras.
+ * Troca as letras visíveis de from até to por um texto (digitado ou colado).
+ * O texto novo fica com a cor da letra logo antes, como acontece ao digitar.
  */
-export function applyNoteColor(
+export function replaceInSegments(
+  segments: NoteSegment[],
+  from: number,
+  to: number,
   text: string,
-  start: number,
-  end: number,
-  color: NoteColor | null,
-): { text: string; selectionStart: number; selectionEnd: number } {
-  const runs = runsOf(text)
-  const from = toVisible(runs, Math.max(0, Math.min(start, end)))
-  const to = toVisible(runs, Math.min(text.length, Math.max(start, end)))
-  if (from === to) {
-    const caret = Math.max(0, Math.min(start, end, text.length))
-    return { text, selectionStart: caret, selectionEnd: caret }
-  }
-
-  const chars: { ch: string; color: NoteColor | null }[] = []
-  for (const run of runs) {
-    for (let i = run.contentStart; i < run.contentEnd; i++) chars.push({ ch: text[i], color: run.color })
-  }
-  for (let i = from; i < to; i++) chars[i].color = color
-
-  let out = ""
-  let selectionStart = -1
-  let selectionEnd = -1
-  let i = 0
-  while (i < chars.length) {
-    const runColor = chars[i].color
-    let j = i
-    while (j < chars.length && chars[j].color === runColor) j++
-    if (runColor) out += `[${runColor}]`
-    for (let k = i; k < j; k++) {
-      if (k === from) selectionStart = out.length
-      out += chars[k].ch
-      if (k === to - 1) selectionEnd = out.length
+): { segments: NoteSegment[]; caret: number } {
+  const start = Math.max(0, Math.min(from, to))
+  const end = Math.max(from, to)
+  let pos = 0
+  let colorBefore: NoteColor | null = null
+  const before: NoteSegment[] = []
+  const after: NoteSegment[] = []
+  for (const segment of segments) {
+    const segStart = pos
+    const segEnd = pos + segment.text.length
+    pos = segEnd
+    if (segStart < start) {
+      before.push({ text: segment.text.slice(0, start - segStart), color: segment.color })
+      colorBefore = segment.color
     }
-    if (runColor) out += `[/${runColor}]`
-    i = j
+    if (segEnd > end) after.push({ text: segment.text.slice(Math.max(0, end - segStart)), color: segment.color })
   }
-  if (selectionStart < 0) selectionStart = out.length
-  if (selectionEnd < 0) selectionEnd = selectionStart
-  return { text: out, selectionStart, selectionEnd }
+  const inserted: NoteSegment = { text, color: text === "\n" ? null : colorBefore }
+  return { segments: normalizeSegments([...before, inserted, ...after]), caret: start + text.length }
+}
+
+/** Pinta (ou tira a cor, com null) as letras visíveis de from até to. */
+export function paintSegments(
+  segments: NoteSegment[],
+  from: number,
+  to: number,
+  color: NoteColor | null,
+): NoteSegment[] {
+  const start = Math.max(0, Math.min(from, to))
+  const end = Math.max(from, to)
+  const out: NoteSegment[] = []
+  let pos = 0
+  for (const segment of segments) {
+    const segStart = pos
+    const segEnd = pos + segment.text.length
+    pos = segEnd
+    const a = Math.max(start, segStart)
+    const b = Math.min(end, segEnd)
+    if (a >= b) {
+      out.push(segment)
+      continue
+    }
+    out.push({ text: segment.text.slice(0, a - segStart), color: segment.color })
+    out.push({ text: segment.text.slice(a - segStart, b - segStart), color })
+    out.push({ text: segment.text.slice(b - segStart), color: segment.color })
+  }
+  return normalizeSegments(out)
 }
