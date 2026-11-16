@@ -270,6 +270,10 @@ END $$;
 INSERT INTO lesson_notes (lesson_id, user_id, content, created_at, updated_at)
 SELECT l.id, l.user_id, l.notes, l.created_at, l.created_at
 FROM lessons l
-WHERE l.notes IS NOT NULL AND btrim(l.notes) <> '';
+WHERE l.notes IS NOT NULL AND btrim(l.notes) <> ''
+  AND NOT EXISTS (
+    SELECT 1 FROM lesson_notes n
+    WHERE n.lesson_id = l.id AND n.content = l.notes
+  );
 
 UPDATE lessons SET notes = NULL WHERE notes IS NOT NULL;
