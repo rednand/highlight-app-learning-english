@@ -143,3 +143,16 @@ describe("quebras de linha como elemento", () => {
     expect(hasElementBreaks(el)).toBe(false)
   })
 })
+
+describe("casos de borda do editor", () => {
+  it("apagar tudo deixa só o <br> do navegador: o editor fica vazio", () => {
+    el.innerHTML = "<br>"
+    expect(readNoteFrom(el)).toEqual([])
+    expect(hasElementBreaks(el)).toBe(false)
+  })
+
+  it("span com cor vazia dentro de um colorido fica sem cor", () => {
+    el.innerHTML = '<span data-note-color="verde">a<span data-note-color="">b</span></span>'
+    expect(serializeSegments(readNoteFrom(el))).toBe("[verde]a[/verde]b")
+  })
+})

@@ -62,14 +62,14 @@ function linearize(el: HTMLElement): Piece[] {
       const element = child as HTMLElement
       if (element.tagName === "BR") {
         if (element.hasAttribute(FILLER_ATTR)) return
-        // <br> sozinho no fim do editor é apoio do navegador, não uma linha a mais.
-        if (node === el && element === el.lastChild && pieces.length > 0) return
+        // <br> no fim do editor é apoio do navegador (inclusive com o editor vazio), não uma linha a mais.
+        if (node === el && element === el.lastChild) return
         pieces.push({ kind: "break", node: element, start: pos })
         pos += 1
         return
       }
       const attr = element.getAttribute(COLOR_ATTR)
-      const childColor = attr && isNoteColor(attr) ? attr : color
+      const childColor = attr === "" ? null : attr && isNoteColor(attr) ? attr : color
       if (BLOCK_TAGS.has(element.tagName) && index > 0) {
         pieces.push({ kind: "break", node: element, start: pos })
         pos += 1
