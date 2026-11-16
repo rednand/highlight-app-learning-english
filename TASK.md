@@ -121,7 +121,7 @@
 - [ ] Gerar de novo o `.aab` no PWABuilder (mesmo `signing.keystore`)
 
 ## Google / Search Console
-- [x] `robots.txt` liberando só as páginas públicas (/about, /login, /privacy, /account-deletion) e bloqueando as telas internas
+- [x] `robots.txt` bloqueando só rotas técnicas (as telas internas têm noindex e redirecionam para o login); deploys de preview bloqueados por inteiro
 - [x] `sitemap.xml` com as páginas públicas
 - [x] Endereço canônico em cada página pública (`metadataBase` + `alternates.canonical`) e `noindex` nas telas internas
 - [ ] Recuperar o acesso ao Search Console (verificar a propriedade com a conta certa) e enviar o sitemap
