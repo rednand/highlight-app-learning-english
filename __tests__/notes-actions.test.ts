@@ -97,16 +97,28 @@ describe("updateLessonNote", () => {
     expect(revalidatePath).toHaveBeenCalledWith("/lessons/l1")
   })
 
-  it("recusa texto vazio quando a anotação não tem imagens", async () => {
+  it("recusa texto vazio quando a anotação não tem imagens salvas", async () => {
     mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: makeBuilder() }) as never)
     await expect(updateLessonNote("n1", "l1", "")).rejects.toThrow("vazia")
   })
 
-  it("aceita texto vazio quando a anotação tem ou vai ganhar imagens", async () => {
+  it("aceita texto vazio quando a anotação tem imagens salvas", async () => {
+    const notes = makeBuilder({ single: { id: "n1", image_paths: ["u1/n1/a.jpg"] } })
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
+    await updateLessonNote("n1", "l1", "  ")
+    expect(notes.update).toHaveBeenCalledWith({ content: "", updated_at: expect.any(String) })
+  })
+
+  it("texto vazio em anotação que não existe mais avisa", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: makeBuilder({ single: null }) }) as never)
+    await expect(updateLessonNote("n1", "l1", "")).rejects.toThrow("não encontrada")
+  })
+
+  it("texto com conteúdo não faz leitura extra", async () => {
     const notes = makeBuilder()
     mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
-    await updateLessonNote("n1", "l1", "  ", true)
-    expect(notes.update).toHaveBeenCalledWith({ content: "", updated_at: expect.any(String) })
+    await updateLessonNote("n1", "l1", "oi")
+    expect(notes.maybeSingle).not.toHaveBeenCalled()
   })
 
   it("propaga erro do banco", async () => {

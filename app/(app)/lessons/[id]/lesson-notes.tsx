@@ -228,8 +228,9 @@ function NoteCard({ note, lessonId }: { note: LessonNote; lessonId: string }) {
           removingImage={removingImage}
           onRemoveExisting={removeImage}
           onSubmit={async (text, files) => {
-            await updateLessonNote(note.id, lessonId, text, files.length > 0 || images.length > 0)
+            // Imagens primeiro: assim, se o texto ficar vazio, o servidor já vê as imagens salvas.
             await uploadImages(note.id, lessonId, files)
+            await updateLessonNote(note.id, lessonId, text)
             setEditing(false)
           }}
           onCancel={() => setEditing(false)}

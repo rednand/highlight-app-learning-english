@@ -138,5 +138,5 @@
 - [ ] Rodar a migração 17 no SQL Editor do Supabase ANTES do deploy
 - [x] Até 6 imagens por anotação, comprimidas no celular (lado maior 1600px, JPEG)
 - [x] Miniaturas na anotação, tela cheia ao tocar; tirar imagem no modo de edição
-- [x] Anotação só com imagens; imagens apagadas junto com a anotação, a aula ou a conta
+- [x] Anotação só com imagens (o servidor confere as imagens salvas); imagens apagadas junto com a anotação, a aula ou a conta
 - [ ] Teste manual no celular (foto da câmera e da galeria)

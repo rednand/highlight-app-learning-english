@@ -59,10 +59,23 @@ export async function addLessonNote(lessonId: string, content: string, withImage
   return { id: data.id as string }
 }
 
-/** Com withImages = true (a anotação tem ou vai ganhar imagens) o texto pode ficar vazio. */
-export async function updateLessonNote(id: string, lessonId: string, content: string, withImages = false) {
-  const text = cleanContent(content, withImages)
+/** O texto só pode ficar vazio se a anotação já tiver imagens salvas (conferido no banco). */
+export async function updateLessonNote(id: string, lessonId: string, content: string) {
+  const text = cleanContent(content, true)
   const { supabase, user } = await requireUser()
+
+  if (!text) {
+    const { data: current, error: readError } = await supabase
+      .from("lesson_notes")
+      .select("image_paths")
+      .eq("id", id)
+      .eq("lesson_id", lessonId)
+      .eq("user_id", user.id)
+      .maybeSingle()
+    if (readError) throw new Error(readError.message)
+    if (!current) throw new Error("Anotação não encontrada. Ela pode ter sido apagada.")
+    if (((current.image_paths ?? []) as string[]).length === 0) throw new Error("A anotação está vazia")
+  }
 
   const { data, error } = await supabase
     .from("lesson_notes")
