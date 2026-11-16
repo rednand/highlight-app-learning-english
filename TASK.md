@@ -71,7 +71,7 @@
 
 ## Descartar palavras da revisão
 - [x] Coluna `flashcards.discarded_at` (seção 15 de `supabase/migration.sql`)
-- [ ] Rodar a migração no SQL Editor do Supabase ANTES do deploy
+- [x] Rodar a migração no SQL Editor do Supabase ANTES do deploy
 - [x] Botão "Já sei, descartar" na revisão, com "Desfazer"
 - [x] Botão de olho em cada palavra da página da mídia para tirar ou voltar para a revisão; selo "Fora da revisão"
 - [x] Descartadas saem da revisão, dos contadores da home e da notificação diária
@@ -105,3 +105,17 @@
 - [x] Botões amarelos com texto branco corrigidos para texto preto
 - [x] Regra da paleta em `.claude/rules/stack.md`
 - [ ] Conferir as telas no celular
+
+## Anotações na aula
+- [x] Tabela `lesson_notes` (seção 16 de `supabase/migration.sql`), movendo a nota atual de cada aula para a lista
+- [x] Rodar a migração no SQL Editor do Supabase ANTES do deploy
+- [x] Seção "Anotações" acima de "Palavras & Expressões": adicionar, editar e apagar cada anotação, com data e hora
+- [x] Nota digitada ao criar aula/mídia vira a primeira anotação; "Editar" não mexe mais nas notas
+- [x] Lista de aulas mostra a primeira anotação como resumo
+- [ ] Teste manual no celular
+
+## Ícone da lâmpada
+- [x] Ícone novo (R3, minimalista): contorno amarelo da lâmpada com o filamento em forma de "h" branco; cabe no círculo do Android
+- [x] Badge das notificações: silhueta da lâmpada com o "h"
+- [x] Manifest aponta para icon-*-v4.png
+- [ ] Gerar de novo o `.aab` no PWABuilder (mesmo `signing.keystore`)

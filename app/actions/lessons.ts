@@ -66,7 +66,6 @@ export async function createLesson(formData: FormData) {
     .insert({
       title,
       lesson_date: lesson_date || null,
-      notes: notes || null,
       roadmap_key: roadmap_key || null,
       user_id: user.id,
       source_type,
@@ -114,6 +113,13 @@ export async function createLesson(formData: FormData) {
     )
   }
 
+  if (notes?.trim()) {
+    // Não derruba a criação: a aula e as palavras já foram salvas.
+    await supabase
+      .from("lesson_notes")
+      .insert({ lesson_id: data.id, user_id: user.id, content: notes.trim() })
+  }
+
   revalidatePath("/lessons")
   redirect(`/lessons/${data.id}`)
 }
@@ -126,12 +132,11 @@ export async function updateLesson(formData: FormData) {
   const id = formData.get("id") as string
   const title = formData.get("title") as string
   const lesson_date = formData.get("lesson_date") as string
-  const notes = formData.get("notes") as string
   const roadmap_key = formData.get("roadmap_key") as string
 
   const { error } = await supabase
     .from("lessons")
-    .update({ title, lesson_date: lesson_date || null, notes: notes || null, roadmap_key: roadmap_key || null })
+    .update({ title, lesson_date: lesson_date || null, roadmap_key: roadmap_key || null })
     .eq("id", id)
     .eq("user_id", user.id)
 

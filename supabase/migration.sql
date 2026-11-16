@@ -234,3 +234,41 @@ ALTER TABLE practice_attempts
 -- 15. Discard flashcards from review (keeps the word in the lesson)
 ALTER TABLE flashcards
   ADD COLUMN IF NOT EXISTS discarded_at TIMESTAMPTZ;
+
+-- 16. Lesson notes (a list of notes per lesson/media)
+CREATE TABLE IF NOT EXISTS lesson_notes (
+  id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+  lesson_id   UUID        NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+  user_id     UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  content     TEXT        NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS lesson_notes_lesson_id_idx ON lesson_notes (lesson_id, created_at);
+
+ALTER TABLE lesson_notes ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS lesson_notes_owner ON lesson_notes;
+
+CREATE POLICY lesson_notes_owner ON lesson_notes
+  FOR ALL TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (
+    auth.uid() = user_id
+    AND EXISTS (SELECT 1 FROM lessons l WHERE l.id = lesson_id AND l.user_id = auth.uid())
+  );
+
+-- Move each lesson's old single note into the list, then clear the old column
+-- so lesson_notes is the only source (safe to re-run)
+INSERT INTO lesson_notes (lesson_id, user_id, content, created_at, updated_at)
+SELECT l.id, l.user_id, l.notes, l.created_at, l.created_at
+FROM lessons l
+WHERE l.notes IS NOT NULL
+  AND length(btrim(l.notes)) > 0
+  AND NOT EXISTS (
+    SELECT 1 FROM lesson_notes n
+    WHERE n.lesson_id = l.id AND n.content = l.notes
+  );
+
+UPDATE lessons SET notes = NULL WHERE notes IS NOT NULL;

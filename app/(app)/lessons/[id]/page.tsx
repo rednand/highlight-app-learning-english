@@ -10,6 +10,7 @@ import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
 import { reviewStateOf } from "../../../lib/words-utils"
+import LessonNotes, { type LessonNote } from "./lesson-notes"
 
 
 function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
@@ -31,11 +32,19 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
   if (error || !lesson) notFound()
 
-  const { data: items } = await supabase
-    .from("lesson_items")
-    .select("*, flashcards(discarded_at)")
-    .eq("lesson_id", id)
-    .order("created_at", { ascending: true })
+  const [{ data: items }, { data: notesData }] = await Promise.all([
+    supabase
+      .from("lesson_items")
+      .select("*, flashcards(discarded_at)")
+      .eq("lesson_id", id)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("lesson_notes")
+      .select("id, content, created_at, updated_at")
+      .eq("lesson_id", id)
+      .order("created_at", { ascending: true }),
+  ])
+  const notes = (notesData ?? []) as LessonNote[]
 
   const lessonDate = lesson.lesson_date
     ? new Date(lesson.lesson_date + "T12:00:00").toLocaleDateString("pt-BR", {
@@ -60,7 +69,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <EditLessonForm lesson={{ id, title: lesson.title, lesson_date: lesson.lesson_date, notes: lesson.notes, roadmap_key: lesson.roadmap_key }} />
+      <EditLessonForm lesson={{ id, title: lesson.title, lesson_date: lesson.lesson_date, roadmap_key: lesson.roadmap_key }} />
 
       {lesson.source_type === "music" && lesson.music_artist && (
         <div className="flex items-center gap-4 p-3 bg-surface border border-line rounded-[18px] mb-6">
@@ -137,12 +146,9 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
             </div>
           )
         })()}
-        {lesson.notes && (
-          <p className="text-fg-muted text-sm leading-relaxed whitespace-pre-wrap bg-surface border border-line rounded-[18px] px-4 py-3">
-            {lesson.notes}
-          </p>
-        )}
       </div>
+
+      <LessonNotes lessonId={id} notes={notes} />
 
       <div className="border-t border-white/5 pt-8">
         <div className="flex items-center justify-between mb-5">

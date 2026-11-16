@@ -10,7 +10,6 @@ type Props = {
     id: string
     title: string
     lesson_date: string | null
-    notes: string | null
     roadmap_key: string | null
   }
 }
@@ -79,8 +78,6 @@ export default function EditLessonForm({ lesson }: Props) {
       <input name="title" required defaultValue={lesson.title} placeholder="Título" className={inputClass} />
 
       <input name="lesson_date" type="date" defaultValue={lesson.lesson_date ?? ""} className={inputClass} />
-
-      <textarea name="notes" rows={3} defaultValue={lesson.notes ?? ""} placeholder="Notas (opcional)" className={`${inputClass} resize-none`} />
 
       <div className="space-y-2">
         <p className="text-xs font-bold text-fg-subtle uppercase tracking-wider">Roadmap</p>
