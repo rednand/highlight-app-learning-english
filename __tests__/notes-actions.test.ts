@@ -11,13 +11,16 @@ const mockCreateClient = vi.mocked(createClient)
 type MockFn = ReturnType<typeof vi.fn>
 
 function makeBuilder(opts: { single?: unknown; error?: { message: string } | null; rows?: unknown[] } = {}) {
+  // single: o que .single() devolve (padrão: uma anotação sem imagens)
   const b: Record<string, MockFn | unknown> & { error: { message: string } | null; data: unknown[] } = {
     error: opts.error ?? null,
     data: opts.rows ?? [{ id: "n1" }],
   }
   for (const m of ["select", "eq", "insert", "update", "delete"]) b[m] = vi.fn().mockReturnValue(b)
-  b.single = vi.fn().mockResolvedValue({ data: opts.single ?? null, error: null })
-  return b as typeof b & Record<"select" | "eq" | "insert" | "update" | "delete" | "single", MockFn>
+  const single = "single" in opts ? opts.single : { id: "n1", image_paths: [] }
+  b.single = vi.fn().mockResolvedValue({ data: opts.error ? null : single, error: opts.error ?? null })
+  b.maybeSingle = b.single
+  return b as typeof b & Record<"select" | "eq" | "insert" | "update" | "delete" | "single" | "maybeSingle", MockFn>
 }
 
 function makeSupabase(user: unknown, builders: Record<string, ReturnType<typeof makeBuilder>>) {
@@ -94,8 +97,16 @@ describe("updateLessonNote", () => {
     expect(revalidatePath).toHaveBeenCalledWith("/lessons/l1")
   })
 
-  it("recusa texto vazio", async () => {
+  it("recusa texto vazio quando a anotação não tem imagens", async () => {
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: makeBuilder() }) as never)
     await expect(updateLessonNote("n1", "l1", "")).rejects.toThrow("vazia")
+  })
+
+  it("aceita texto vazio quando a anotação tem imagens", async () => {
+    const notes = makeBuilder({ single: { id: "n1", image_paths: ["u1/n1/a.jpg"] } })
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
+    await updateLessonNote("n1", "l1", "  ")
+    expect(notes.update).toHaveBeenCalledWith({ content: "", updated_at: expect.any(String) })
   })
 
   it("propaga erro do banco", async () => {

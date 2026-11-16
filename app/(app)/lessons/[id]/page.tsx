@@ -11,6 +11,7 @@ import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
 import { reviewStateOf } from "../../../lib/words-utils"
 import LessonNotes, { type LessonNote } from "./lesson-notes"
+import { collectImagePaths, signImageUrls } from "../../../lib/note-images-server"
 
 
 function reviewLabel(sourceType: string | null, tmdbType: string | null): string {
@@ -40,11 +41,17 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       .order("created_at", { ascending: true }),
     supabase
       .from("lesson_notes")
-      .select("id, content, created_at, updated_at")
+      .select("id, content, created_at, updated_at, image_paths")
       .eq("lesson_id", id)
       .order("created_at", { ascending: true }),
   ])
-  const notes = (notesData ?? []) as LessonNote[]
+  type NoteRow = Omit<LessonNote, "images"> & { image_paths: string[] | null }
+  const noteRows = (notesData ?? []) as NoteRow[]
+  const imageUrls = await signImageUrls(supabase, collectImagePaths(noteRows))
+  const notes: LessonNote[] = noteRows.map(({ image_paths, ...note }) => ({
+    ...note,
+    images: (image_paths ?? []).filter((path) => imageUrls[path]).map((path) => ({ path, url: imageUrls[path] })),
+  }))
 
   const lessonDate = lesson.lesson_date
     ? new Date(lesson.lesson_date + "T12:00:00").toLocaleDateString("pt-BR", {

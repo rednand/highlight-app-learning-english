@@ -30,12 +30,18 @@ function makeServer(user: unknown) {
   }
 }
 
-function makeAdmin(options: { tableError?: boolean; userError?: boolean } = {}) {
+function makeAdmin(options: { tableError?: boolean; userError?: boolean; imagePaths?: string[] } = {}) {
   const deleteBuilder = {
     eq: vi.fn().mockResolvedValue({ error: options.tableError ? { message: "x" } : null }),
   }
+  const selectBuilder = {
+    eq: vi.fn().mockResolvedValue({ data: [{ image_paths: options.imagePaths ?? [] }], error: null }),
+  }
+  const remove = vi.fn().mockResolvedValue({ data: [], error: null })
   return {
-    from: vi.fn().mockReturnValue({ delete: vi.fn().mockReturnValue(deleteBuilder) }),
+    from: vi.fn().mockReturnValue({ delete: vi.fn().mockReturnValue(deleteBuilder), select: vi.fn().mockReturnValue(selectBuilder) }),
+    storage: { from: vi.fn().mockReturnValue({ remove }) },
+    _remove: remove,
     auth: {
       admin: {
         deleteUser: vi.fn().mockResolvedValue({ error: options.userError ? { message: "x" } : null }),
@@ -88,5 +94,18 @@ describe("deleteAccount", () => {
 
     const result = await deleteAccount(null, makeForm("EXCLUIR"))
     expect(result?.error).toBeTruthy()
+  })
+})
+
+describe("deleteAccount apaga as imagens das anotações", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it("remove os arquivos do Storage antes de apagar as aulas", async () => {
+    mockCreateClient.mockResolvedValue(makeServer({ id: "u1" }) as never)
+    const admin = makeAdmin({ imagePaths: ["u1/n1/a.jpg", "u1/n1/b.jpg"] })
+    mockCreateAdmin.mockReturnValue(admin as never)
+    await expect(deleteAccount(null, makeForm("EXCLUIR"))).rejects.toThrow("REDIRECT:/login")
+    expect(admin.storage.from).toHaveBeenCalledWith("note-images")
+    expect(admin._remove).toHaveBeenCalledWith(["u1/n1/a.jpg", "u1/n1/b.jpg"])
   })
 })
