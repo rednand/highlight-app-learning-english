@@ -5,6 +5,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Excluir conta - Highlight",
   description: "Como excluir sua conta e seus dados do Highlight.",
+  alternates: { canonical: "/account-deletion" },
 }
 
 export default function AccountDeletionPage() {
