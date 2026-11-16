@@ -5,6 +5,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Política de Privacidade - Highlight",
   description: "Como o Highlight coleta, usa e protege seus dados.",
+  alternates: { canonical: "/privacy" },
 }
 
 const UPDATED_AT = "11 de novembro de 2026"

@@ -3,9 +3,10 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Highlight - Aprenda inglês com flashcards",
+  title: "Highlight - Aprenda inglês com filmes, séries, músicas e livros",
   description:
-    "Highlight é um app para registrar suas aulas de inglês e memorizar vocabulário com flashcards e repetição espaçada.",
+    "Anote as palavras que você encontra em filmes, séries, músicas e livros e memorize com flashcards e repetição espaçada.",
+  alternates: { canonical: "/about" },
 }
 
 const features = [

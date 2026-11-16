@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SwRegister from "./sw-register";
 import NextTopLoader from "nextjs-toploader";
+import { SITE_URL } from "./lib/site";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Highlight",
   description: "Aprenda inglês com filmes, séries, músicas e livros, e revise com flashcards.",
   manifest: "/manifest.webmanifest",

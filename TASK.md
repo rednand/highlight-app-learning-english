@@ -119,3 +119,10 @@
 - [x] Badge das notificações: silhueta da lâmpada com o "h"
 - [x] Manifest aponta para icon-*-v4.png
 - [ ] Gerar de novo o `.aab` no PWABuilder (mesmo `signing.keystore`)
+
+## Google / Search Console
+- [x] `robots.txt` liberando só as páginas públicas (/about, /login, /privacy, /account-deletion) e bloqueando as telas internas
+- [x] `sitemap.xml` com as páginas públicas
+- [x] Endereço canônico em cada página pública (`metadataBase` + `alternates.canonical`) e `noindex` nas telas internas
+- [ ] Recuperar o acesso ao Search Console (verificar a propriedade com a conta certa) e enviar o sitemap
+- [ ] Pedir nova validação do erro "Cópia sem página canônica" no Search Console

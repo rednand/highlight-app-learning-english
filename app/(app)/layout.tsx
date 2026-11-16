@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { createClient } from "../utils/supabase/server";
 import { redirect } from "next/navigation";
 import { signOut } from "../actions/lessons";
@@ -20,6 +21,10 @@ import StreakBadge from "./streak-badge";
 import { Toaster } from "sonner";
 import PwaInstallBanner from "../../components/pwa-install-banner";
 import WatchSessionResume from "../../components/watch-session-resume";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AppLayout({
   children,
