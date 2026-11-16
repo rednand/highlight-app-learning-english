@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { X } from "lucide-react"
 
 export type NoteImage = { key: string; url: string }
@@ -16,6 +17,15 @@ export default function NoteImages({
   removing?: string | null
 }) {
   const [open, setOpen] = useState<NoteImage | null>(null)
+  const router = useRouter()
+  const refreshed = useRef(false)
+
+  // Link vencido (a tela ficou aberta muito tempo): busca links novos uma vez.
+  function handleError(image: NoteImage) {
+    if (refreshed.current || image.url.startsWith("blob:")) return
+    refreshed.current = true
+    router.refresh()
+  }
 
   useEffect(() => {
     if (!open) return
@@ -38,15 +48,15 @@ export default function NoteImages({
               aria-label="Abrir imagem"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image.url} alt="" loading="lazy" className="w-full h-full object-cover" />
+              <img src={image.url} alt="" loading="lazy" onError={() => handleError(image)} className="w-full h-full object-cover" />
             </button>
             {onRemove && (
               <button
                 type="button"
                 onClick={() => onRemove(image.key)}
-                disabled={removing === image.key}
+                disabled={Boolean(removing)}
                 aria-label="Tirar imagem"
-                className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-page border border-line text-fg-muted hover:text-red-400 flex items-center justify-center"
+                className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-page border border-line text-fg-muted hover:text-note-red disabled:opacity-40 flex items-center justify-center"
               >
                 <X size={12} />
               </button>
@@ -61,7 +71,7 @@ export default function NoteImages({
           aria-modal="true"
           aria-label="Imagem da anotação"
           onClick={() => setOpen(null)}
-          className="fixed inset-0 z-[80] bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[80] bg-page/95 flex items-center justify-center p-4"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={open.url} alt="" className="max-w-full max-h-full object-contain rounded-lg" />

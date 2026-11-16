@@ -59,20 +59,10 @@ export async function addLessonNote(lessonId: string, content: string, withImage
   return { id: data.id as string }
 }
 
-export async function updateLessonNote(id: string, lessonId: string, content: string) {
+/** Com withImages = true (a anotação tem ou vai ganhar imagens) o texto pode ficar vazio. */
+export async function updateLessonNote(id: string, lessonId: string, content: string, withImages = false) {
+  const text = cleanContent(content, withImages)
   const { supabase, user } = await requireUser()
-
-  const { data: current, error: readError } = await supabase
-    .from("lesson_notes")
-    .select("image_paths")
-    .eq("id", id)
-    .eq("lesson_id", lessonId)
-    .eq("user_id", user.id)
-    .maybeSingle()
-  if (readError) throw new Error(readError.message)
-  if (!current) throw new Error("Anotação não encontrada. Ela pode ter sido apagada.")
-  // Anotação com imagens pode ficar sem texto.
-  const text = cleanContent(content, ((current.image_paths ?? []) as string[]).length > 0)
 
   const { data, error } = await supabase
     .from("lesson_notes")

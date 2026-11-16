@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import {
   NOTE_IMAGES_BUCKET, MAX_IMAGES_PER_NOTE, MAX_IMAGE_BYTES, buildImagePath, isAllowedImageType, isImagePathOf,
 } from "../lib/note-images"
+import { stripNoteColors } from "../lib/note-format"
 
 async function requireNote(noteId: string, lessonId: string) {
   const supabase = await createClient()
@@ -12,13 +13,13 @@ async function requireNote(noteId: string, lessonId: string) {
   if (!user) throw new Error("Não autenticado")
   const { data: note } = await supabase
     .from("lesson_notes")
-    .select("id, image_paths")
+    .select("id, content, image_paths")
     .eq("id", noteId)
     .eq("lesson_id", lessonId)
     .eq("user_id", user.id)
     .single()
   if (!note) throw new Error("Anotação não encontrada")
-  return { supabase, user, paths: (note.image_paths ?? []) as string[] }
+  return { supabase, user, paths: (note.image_paths ?? []) as string[], content: (note.content ?? "") as string }
 }
 
 export async function addNoteImage(formData: FormData): Promise<{ path: string }> {
@@ -53,8 +54,11 @@ export async function addNoteImage(formData: FormData): Promise<{ path: string }
 }
 
 export async function removeNoteImage(noteId: string, lessonId: string, path: string): Promise<void> {
-  const { supabase, user, paths } = await requireNote(noteId, lessonId)
+  const { supabase, user, paths, content } = await requireNote(noteId, lessonId)
   if (!isImagePathOf(path, user.id, noteId) || !paths.includes(path)) throw new Error("Imagem não encontrada")
+  if (paths.length === 1 && !stripNoteColors(content).trim()) {
+    throw new Error("Esta anotação só tem essa imagem. Escreva um texto antes ou apague a anotação.")
+  }
 
   const { error } = await supabase
     .from("lesson_notes")

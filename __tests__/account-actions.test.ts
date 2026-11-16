@@ -30,12 +30,12 @@ function makeServer(user: unknown) {
   }
 }
 
-function makeAdmin(options: { tableError?: boolean; userError?: boolean; imagePaths?: string[] } = {}) {
+function makeAdmin(options: { tableError?: boolean; userError?: boolean; imagePaths?: string[]; selectError?: boolean } = {}) {
   const deleteBuilder = {
     eq: vi.fn().mockResolvedValue({ error: options.tableError ? { message: "x" } : null }),
   }
   const selectBuilder = {
-    eq: vi.fn().mockResolvedValue({ data: [{ image_paths: options.imagePaths ?? [] }], error: null }),
+    eq: vi.fn().mockResolvedValue({ data: [{ image_paths: options.imagePaths ?? [] }], error: options.selectError ? { message: "x" } : null }),
   }
   const remove = vi.fn().mockResolvedValue({ data: [], error: null })
   return {
@@ -107,5 +107,27 @@ describe("deleteAccount apaga as imagens das anotações", () => {
     await expect(deleteAccount(null, makeForm("EXCLUIR"))).rejects.toThrow("REDIRECT:/login")
     expect(admin.storage.from).toHaveBeenCalledWith("note-images")
     expect(admin._remove).toHaveBeenCalledWith(["u1/n1/a.jpg", "u1/n1/b.jpg"])
+  })
+})
+
+describe("deleteAccount não perde imagens quando algo falha", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it("erro ao listar as imagens: não apaga nada", async () => {
+    mockCreateClient.mockResolvedValue(makeServer({ id: "u1" }) as never)
+    const admin = makeAdmin({ selectError: true, imagePaths: ["u1/n1/a.jpg"] })
+    mockCreateAdmin.mockReturnValue(admin as never)
+    const result = await deleteAccount(null, makeForm("EXCLUIR"))
+    expect(result?.error).toBeTruthy()
+    expect(admin._remove).not.toHaveBeenCalled()
+  })
+
+  it("erro ao apagar os dados: as imagens ficam", async () => {
+    mockCreateClient.mockResolvedValue(makeServer({ id: "u1" }) as never)
+    const admin = makeAdmin({ tableError: true, imagePaths: ["u1/n1/a.jpg"] })
+    mockCreateAdmin.mockReturnValue(admin as never)
+    const result = await deleteAccount(null, makeForm("EXCLUIR"))
+    expect(result?.error).toBeTruthy()
+    expect(admin._remove).not.toHaveBeenCalled()
   })
 })

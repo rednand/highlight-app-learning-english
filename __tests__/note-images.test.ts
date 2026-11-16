@@ -152,8 +152,22 @@ describe("removeNoteImage", () => {
     expect(supa.bucket.remove).toHaveBeenCalledWith(["u1/n1/a.jpg"])
   })
 
+  it("não deixa tirar a última imagem de uma anotação sem texto", async () => {
+    const supa = makeSupa({ note: { id: "n1", content: "[verde][/verde] ", image_paths: ["u1/n1/a.jpg"] } })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(removeNoteImage("n1", "l1", "u1/n1/a.jpg")).rejects.toThrow("só tem essa imagem")
+    expect(supa.bucket.remove).not.toHaveBeenCalled()
+  })
+
+  it("tira a última imagem se a anotação tiver texto", async () => {
+    const supa = makeSupa({ note: { id: "n1", content: "texto", image_paths: ["u1/n1/a.jpg"] } })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await removeNoteImage("n1", "l1", "u1/n1/a.jpg")
+    expect(supa.builder.update).toHaveBeenCalledWith({ image_paths: [] })
+  })
+
   it("propaga erro do banco sem apagar o arquivo", async () => {
-    const supa = makeSupa({ note: { id: "n1", image_paths: ["u1/n1/a.jpg"] }, updateError: { message: "falhou" } })
+    const supa = makeSupa({ note: { id: "n1", content: "texto", image_paths: ["u1/n1/a.jpg"] }, updateError: { message: "falhou" } })
     mockCreateClient.mockResolvedValue(supa as never)
     await expect(removeNoteImage("n1", "l1", "u1/n1/a.jpg")).rejects.toThrow("falhou")
     expect(supa.bucket.remove).not.toHaveBeenCalled()

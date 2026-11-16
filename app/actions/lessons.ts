@@ -149,7 +149,8 @@ export async function updateLesson(formData: FormData) {
 export async function deleteLesson(id: string) {
   const supabase = await createClient()
   const { data: notes } = await supabase.from("lesson_notes").select("image_paths").eq("lesson_id", id)
-  await supabase.from("lessons").delete().eq("id", id)
+  const { error } = await supabase.from("lessons").delete().eq("id", id)
+  if (error) throw new Error(error.message)
   // As anotações saem junto com a aula (cascade); os arquivos de imagem, não.
   await removeStoredImages(supabase, collectImagePaths(notes as { image_paths: string[] | null }[] | null))
   revalidatePath("/lessons")

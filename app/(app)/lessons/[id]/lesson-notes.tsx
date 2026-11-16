@@ -189,11 +189,12 @@ function NoteCard({ note, lessonId }: { note: LessonNote; lessonId: string }) {
   const images: NoteImage[] = note.images.map((image) => ({ key: image.path, url: image.url }))
 
   async function removeImage(path: string) {
+    if (removingImage) return
     setRemovingImage(path)
     try {
       await removeNoteImage(note.id, lessonId, path)
-    } catch {
-      toast.error("Não foi possível tirar a imagem")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível tirar a imagem")
     } finally {
       setRemovingImage(null)
     }
@@ -227,7 +228,7 @@ function NoteCard({ note, lessonId }: { note: LessonNote; lessonId: string }) {
           removingImage={removingImage}
           onRemoveExisting={removeImage}
           onSubmit={async (text, files) => {
-            await updateLessonNote(note.id, lessonId, text)
+            await updateLessonNote(note.id, lessonId, text, files.length > 0 || images.length > 0)
             await uploadImages(note.id, lessonId, files)
             setEditing(false)
           }}
@@ -292,10 +293,13 @@ export default function LessonNotes({ lessonId, notes }: { lessonId: string; not
             onSubmit={async (text, files) => {
               const hasText = stripNoteColors(text).trim().length > 0
               const { id } = await addLessonNote(lessonId, text, files.length > 0)
+              // A anotação já existe: o editor fecha mesmo se algo abaixo falhar, para não duplicar.
+              setAdding(false)
               const failed = await uploadImages(id, lessonId, files)
               // Anotação só de imagens em que nenhuma subiu: não deixa uma anotação vazia.
-              if (!hasText && files.length > 0 && failed === files.length) await deleteLessonNote(id, lessonId)
-              setAdding(false)
+              if (!hasText && files.length > 0 && failed === files.length) {
+                await deleteLessonNote(id, lessonId).catch(() => undefined)
+              }
             }}
             onCancel={() => setAdding(false)}
           />

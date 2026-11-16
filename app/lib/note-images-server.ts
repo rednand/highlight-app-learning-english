@@ -14,8 +14,8 @@ export async function removeStoredImages(supabase: SupabaseClient, paths: string
   }
 }
 
-/** Links temporários para mostrar as imagens privadas. */
-export async function signImageUrls(supabase: SupabaseClient, paths: string[], expiresIn = 60 * 60): Promise<Record<string, string>> {
+/** Links temporários (24h) para mostrar as imagens privadas; se vencerem, a tela recarrega. */
+export async function signImageUrls(supabase: SupabaseClient, paths: string[], expiresIn = 24 * 60 * 60): Promise<Record<string, string>> {
   if (paths.length === 0) return {}
   const { data } = await supabase.storage.from(NOTE_IMAGES_BUCKET).createSignedUrls(paths, expiresIn)
   const urls: Record<string, string> = {}
