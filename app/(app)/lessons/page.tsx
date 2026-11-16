@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Plus, BookOpen } from "lucide-react"
 import LessonsClient from "./lessons-client"
+import { stripNoteColors } from "../../lib/note-format"
 
 export default async function LessonsPage() {
   const supabase = await createClient()
@@ -49,9 +50,14 @@ export default async function LessonsPage() {
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)
 
+  const stripFirstNote = (rows: { content: string }[] | null): string | null => {
+    const first = rows?.[0]?.content
+    return first ? stripNoteColors(first) : null
+  }
+
   const lessonsWithCounts = (lessons ?? []).map(({ lesson_notes, ...l }) => ({
     ...l,
-    notes: (lesson_notes as { content: string }[] | null)?.[0]?.content ?? null,
+    notes: stripFirstNote(lesson_notes as { content: string }[] | null),
     itemCount: countMap[l.id] ?? 0,
     previewWord: previewMap[l.id] ?? null,
   }))
