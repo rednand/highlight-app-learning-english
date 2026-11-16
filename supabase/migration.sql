@@ -249,28 +249,23 @@ CREATE INDEX IF NOT EXISTS lesson_notes_lesson_id_idx ON lesson_notes (lesson_id
 
 ALTER TABLE lesson_notes ENABLE ROW LEVEL SECURITY;
 
-DO $$ BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'lesson_notes'
-    AND policyname = 'Users can manage their own lesson notes'
-  ) THEN
-    CREATE POLICY "Users can manage their own lesson notes"
-      ON lesson_notes FOR ALL TO authenticated
-      USING  (auth.uid() = user_id)
-      WITH CHECK (
-        auth.uid() = user_id
-        AND EXISTS (SELECT 1 FROM lessons l WHERE l.id = lesson_id AND l.user_id = auth.uid())
-      );
-  END IF;
-END $$;
+DROP POLICY IF EXISTS lesson_notes_owner ON lesson_notes;
+
+CREATE POLICY lesson_notes_owner ON lesson_notes
+  FOR ALL TO authenticated
+  USING (auth.uid() = user_id)
+  WITH CHECK (
+    auth.uid() = user_id
+    AND EXISTS (SELECT 1 FROM lessons l WHERE l.id = lesson_id AND l.user_id = auth.uid())
+  );
 
 -- Move each lesson's old single note into the list, then clear the old column
--- so lesson_notes is the only source (safe to re-run: moved notes are gone)
+-- so lesson_notes is the only source (safe to re-run)
 INSERT INTO lesson_notes (lesson_id, user_id, content, created_at, updated_at)
 SELECT l.id, l.user_id, l.notes, l.created_at, l.created_at
 FROM lessons l
-WHERE l.notes IS NOT NULL AND btrim(l.notes) <> ''
+WHERE l.notes IS NOT NULL
+  AND length(btrim(l.notes)) > 0
   AND NOT EXISTS (
     SELECT 1 FROM lesson_notes n
     WHERE n.lesson_id = l.id AND n.content = l.notes
