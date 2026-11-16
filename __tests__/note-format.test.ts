@@ -36,14 +36,18 @@ describe("parseNote", () => {
 })
 
 describe("stripNoteColors e hasNoteColors", () => {
-  it("tira todas as marcações", () => {
-    expect(stripNoteColors("use [verde]spend[/verde] e [rosa]isso")).toBe("use spend e isso")
+  it("devolve o texto como aparece na tela", () => {
+    expect(stripNoteColors("use [verde]spend[/verde] e isso")).toBe("use spend e isso")
+  })
+
+  it("marcação sem par continua aparecendo, igual na tela", () => {
+    expect(stripNoteColors("[verde]sem fim")).toBe("[verde]sem fim")
   })
 
   it("diz se há alguma cor aplicada", () => {
-    expect(hasNoteColors("[azul]x[/azul]")).toBe(true)
-    expect(hasNoteColors("[azul]x")).toBe(false)
-    expect(hasNoteColors("nada")).toBe(false)
+    expect(hasNoteColors(parseNote("[azul]x[/azul]"))).toBe(true)
+    expect(hasNoteColors(parseNote("[azul]x"))).toBe(false)
+    expect(hasNoteColors(parseNote("nada"))).toBe(false)
   })
 
   it("reconhece só as cores da paleta", () => {
@@ -52,6 +56,12 @@ describe("stripNoteColors e hasNoteColors", () => {
   })
 })
 
+/** Posição de uma palavra no texto bruto (para simular a seleção no campo). */
+function sel(text: string, word: string): [number, number] {
+  const i = text.indexOf(word)
+  return [i, i + word.length]
+}
+
 describe("applyNoteColor", () => {
   it("pinta o trecho selecionado e mantém a seleção nele", () => {
     const r = applyNoteColor("spend time", 0, 5, "verde")
@@ -59,23 +69,46 @@ describe("applyNoteColor", () => {
     expect(r.text.slice(r.selectionStart, r.selectionEnd)).toBe("spend")
   })
 
-  it("pintar de novo troca a cor em vez de aninhar", () => {
+  it("pintar de novo a mesma palavra troca a cor, sem aninhar", () => {
     const first = applyNoteColor("spend time", 0, 5, "verde")
-    const start = first.selectionStart - "[verde]".length
-    const end = first.selectionEnd + "[/verde]".length
-    const second = applyNoteColor(first.text, start, end, "azul")
+    const second = applyNoteColor(first.text, first.selectionStart, first.selectionEnd, "azul")
     expect(second.text).toBe("[azul]spend[/azul] time")
+    expect(parseNote(second.text)).toEqual([{ text: "spend", color: "azul" }, { text: " time", color: null }])
   })
 
-  it("tira a cor com null", () => {
-    const original = "[rosa]oi[/rosa] tudo"
-    const r = applyNoteColor(original, 0, original.length, null)
+  it("borracha funciona selecionando só a palavra colorida", () => {
+    const text = "[rosa]oi[/rosa] tudo"
+    const r = applyNoteColor(text, ...sel(text, "oi"), null)
     expect(r.text).toBe("oi tudo")
-    expect(r.text.slice(r.selectionStart, r.selectionEnd)).toBe("oi tudo")
+    expect(r.text.slice(r.selectionStart, r.selectionEnd)).toBe("oi")
+  })
+
+  it("pintar metade de um trecho colorido divide sem quebrar a marcação", () => {
+    const text = "[verde]spend time[/verde] now"
+    const [start] = sel(text, "time")
+    const r = applyNoteColor(text, start, text.length, "azul")
+    expect(r.text).toBe("[verde]spend [/verde][azul]time now[/azul]")
+    expect(stripNoteColors(r.text)).toBe("spend time now")
+  })
+
+  it("seleção começando no meio de uma marcação não deixa pedaços de código", () => {
+    const text = "[verde]spend[/verde]"
+    const r = applyNoteColor(text, 3, text.length, "azul")
+    expect(r.text).toBe("[azul]spend[/azul]")
+  })
+
+  it("juntar trechos vizinhos da mesma cor vira um só", () => {
+    const text = "[verde]a[/verde]b"
+    const r = applyNoteColor(text, ...sel(text, "b"), "verde")
+    expect(r.text).toBe("[verde]ab[/verde]")
   })
 
   it("aceita seleção de trás para frente e fora dos limites", () => {
     expect(applyNoteColor("abc", 3, 1, "azul").text).toBe("a[azul]bc[/azul]")
     expect(applyNoteColor("abc", -5, 99, "azul").text).toBe("[azul]abc[/azul]")
+  })
+
+  it("seleção vazia não muda o texto", () => {
+    expect(applyNoteColor("abc", 1, 1, "azul").text).toBe("abc")
   })
 })

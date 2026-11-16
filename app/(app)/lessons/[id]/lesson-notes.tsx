@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef, useState, useTransition } from "react"
+import { useMemo, useRef, useState, useTransition } from "react"
 import { Pencil, Trash2, Plus, StickyNote, Eraser } from "lucide-react"
 import { toast } from "sonner"
 import { addLessonNote, updateLessonNote, deleteLessonNote } from "../../../actions/notes"
-import { applyNoteColor, hasNoteColors, NOTE_COLORS, type NoteColor } from "../../../lib/note-format"
+import { applyNoteColor, hasNoteColors, parseNote, NOTE_COLORS, type NoteColor } from "../../../lib/note-format"
 import ColoredText, { NOTE_COLOR_STYLES } from "../../../../components/notes/colored-text"
 
 export type LessonNote = {
@@ -47,6 +47,7 @@ function NoteEditor({
   const [text, setText] = useState(initial)
   const [isPending, startTransition] = useTransition()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const segments = useMemo(() => parseNote(text), [text])
 
   function paint(color: NoteColor | null) {
     const el = textareaRef.current
@@ -114,11 +115,11 @@ function NoteEditor({
         rows={4}
         className={textareaClass}
       />
-      {hasNoteColors(text) && (
+      {hasNoteColors(segments) && (
         <div className="bg-page border border-white/5 rounded-xl px-4 py-3">
           <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-1">Prévia</p>
           <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">
-            <ColoredText text={text} />
+            <ColoredText segments={segments} />
           </p>
         </div>
       )}

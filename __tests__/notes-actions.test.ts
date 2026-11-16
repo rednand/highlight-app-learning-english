@@ -44,6 +44,19 @@ describe("addLessonNote", () => {
     await expect(addLessonNote("l1", "oi")).rejects.toThrow("Não autenticado")
   })
 
+  it("as marcações de cor não contam no limite de tamanho", async () => {
+    const lessons = makeBuilder({ single: { id: "l1" } })
+    const notes = makeBuilder()
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lessons, lesson_notes: notes }) as never)
+    const text = `[verde]${"a".repeat(4990)}[/verde]`
+    await addLessonNote("l1", text)
+    expect(notes.insert).toHaveBeenCalledWith({ lesson_id: "l1", user_id: "u1", content: text })
+  })
+
+  it("recusa anotação que só tem marcações vazias", async () => {
+    await expect(addLessonNote("l1", "[azul][/azul]")).rejects.toThrow("vazia")
+  })
+
   it("recusa aula que não é do usuário", async () => {
     const lessons = makeBuilder({ single: null })
     const notes = makeBuilder()
