@@ -21,6 +21,12 @@
 
   --color-brand: #facc15;
   --color-brand-strong: #fde047;
+
+  /* Cores que a pessoa usa para pintar trechos das anotações */
+  --color-note-green: #4ade80;
+  --color-note-blue: #7dd3fc;
+  --color-note-pink: #f9a8d4;
+  --color-note-red: #f87171;
 }
 
 * {

@@ -1,9 +1,11 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { Pencil, Trash2, Plus, StickyNote } from "lucide-react"
+import { useMemo, useRef, useState, useTransition } from "react"
+import { Pencil, Trash2, Plus, StickyNote, Eraser } from "lucide-react"
 import { toast } from "sonner"
 import { addLessonNote, updateLessonNote, deleteLessonNote } from "../../../actions/notes"
+import { applyNoteColor, hasNoteColors, parseNote, NOTE_COLORS, type NoteColor } from "../../../lib/note-format"
+import ColoredText, { NOTE_COLOR_STYLES } from "../../../../components/notes/colored-text"
 
 export type LessonNote = {
   id: string
@@ -44,6 +46,24 @@ function NoteEditor({
 }) {
   const [text, setText] = useState(initial)
   const [isPending, startTransition] = useTransition()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const segments = useMemo(() => parseNote(text), [text])
+
+  function paint(color: NoteColor | null) {
+    const el = textareaRef.current
+    if (!el) return
+    if (el.selectionStart === el.selectionEnd) {
+      toast("Selecione um trecho do texto e depois toque na cor")
+      el.focus()
+      return
+    }
+    const result = applyNoteColor(text, el.selectionStart, el.selectionEnd, color)
+    setText(result.text)
+    requestAnimationFrame(() => {
+      el.focus()
+      el.setSelectionRange(result.selectionStart, result.selectionEnd)
+    })
+  }
 
   function submit() {
     if (isPending || !text.trim()) return
@@ -58,7 +78,32 @@ function NoteEditor({
 
   return (
     <div className="space-y-2">
+      <div className="flex items-center gap-2 flex-wrap" role="toolbar" aria-label="Cor do trecho selecionado">
+        <span className="text-[11px] text-fg-dim mr-1">Cor:</span>
+        {NOTE_COLORS.map((color) => (
+          <button
+            key={color}
+            type="button"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => paint(color)}
+            title={NOTE_COLOR_STYLES[color].label}
+            aria-label={`Pintar trecho de ${NOTE_COLOR_STYLES[color].label.toLowerCase()}`}
+            className={`w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 transition-colors ${NOTE_COLOR_STYLES[color].swatch}`}
+          />
+        ))}
+        <button
+          type="button"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => paint(null)}
+          title="Tirar a cor"
+          aria-label="Tirar a cor do trecho selecionado"
+          className="w-7 h-7 rounded-full border-2 border-white/10 hover:border-white/60 flex items-center justify-center text-fg-muted transition-colors"
+        >
+          <Eraser size={13} />
+        </button>
+      </div>
       <textarea
+        ref={textareaRef}
         autoFocus
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -70,6 +115,14 @@ function NoteEditor({
         rows={4}
         className={textareaClass}
       />
+      {hasNoteColors(segments) && (
+        <div className="bg-page border border-white/5 rounded-xl px-4 py-3">
+          <p className="text-[10px] font-bold tracking-wider text-fg-dim uppercase mb-1">Prévia</p>
+          <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">
+            <ColoredText segments={segments} />
+          </p>
+        </div>
+      )}
       <div className="flex items-center justify-end gap-3">
         <button type="button" onClick={onCancel} className="text-xs text-fg-dim hover:text-white transition-colors">
           Cancelar
@@ -127,7 +180,9 @@ function NoteCard({ note, lessonId }: { note: LessonNote; lessonId: string }) {
 
   return (
     <div className={`p-4 bg-surface border border-line rounded-[18px] ${isDeleting ? "opacity-50" : ""}`}>
-      <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">{note.content}</p>
+      <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">
+        <ColoredText text={note.content} />
+      </p>
       <div className="flex items-center justify-between gap-3 mt-3">
         <span className="text-[11px] text-fg-dim" suppressHydrationWarning>
           {formatWhen(note.created_at)}

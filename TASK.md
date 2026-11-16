@@ -126,3 +126,9 @@
 - [x] Endereço canônico em cada página pública (`metadataBase` + `alternates.canonical`) e `noindex` nas telas internas
 - [ ] Recuperar o acesso ao Search Console (verificar a propriedade com a conta certa) e enviar o sitemap
 - [ ] Pedir nova validação do erro "Cópia sem página canônica" no Search Console
+
+## Cores nas anotações
+- [x] Barra de cores no editor (marca-texto, verde, azul, rosa, vermelho e borracha): selecionar um trecho e tocar na cor
+- [x] Marcação curta no texto (`[verde]…[/verde]`), sem HTML; prévia colorida enquanto edita; pintar, trocar e apagar cor funcionam pela seleção do texto visível
+- [x] Anotações salvas mostram só as cores; resumo da lista de aulas sem marcação
+- [ ] Teste manual no celular (selecionar e pintar)

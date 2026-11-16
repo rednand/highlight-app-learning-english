@@ -2,13 +2,19 @@
 
 import { createClient } from "../utils/supabase/server"
 import { revalidatePath } from "next/cache"
+import { stripNoteColors } from "../lib/note-format"
 
 const MAX_LENGTH = 5000
+// As marcações de cor não contam no limite, mas o texto bruto também tem teto.
+const MAX_RAW_LENGTH = 20000
 
 function cleanContent(content: string): string {
   const text = content.trim()
-  if (!text) throw new Error("A anotação está vazia")
-  if (text.length > MAX_LENGTH) throw new Error(`A anotação passa de ${MAX_LENGTH} caracteres`)
+  const visible = stripNoteColors(text).trim()
+  if (!visible) throw new Error("A anotação está vazia")
+  if (visible.length > MAX_LENGTH || text.length > MAX_RAW_LENGTH) {
+    throw new Error(`A anotação passa de ${MAX_LENGTH} caracteres`)
+  }
   return text
 }
 
