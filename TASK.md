@@ -113,3 +113,9 @@
 - [x] Nota digitada ao criar aula/mídia vira a primeira anotação; "Editar" não mexe mais nas notas
 - [x] Lista de aulas mostra a primeira anotação como resumo
 - [ ] Teste manual no celular
+
+## Ícone da lâmpada
+- [x] Ícone novo (R3, minimalista): contorno amarelo da lâmpada com o filamento em forma de "h" branco; cabe no círculo do Android
+- [x] Badge das notificações: silhueta da lâmpada com o "h"
+- [x] Manifest aponta para icon-*-v4.png
+- [ ] Gerar de novo o `.aab` no PWABuilder (mesmo `signing.keystore`)
