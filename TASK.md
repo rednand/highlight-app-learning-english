@@ -107,7 +107,7 @@
 - [ ] Conferir as telas no celular
 
 ## Anotações na aula
-- [x] Tabela `lesson_notes` (seção 16 de `supabase/migration.sql`), copiando a nota atual de cada aula
+- [x] Tabela `lesson_notes` (seção 16 de `supabase/migration.sql`), movendo a nota atual de cada aula para a lista
 - [ ] Rodar a migração no SQL Editor do Supabase ANTES do deploy
 - [x] Seção "Anotações" acima de "Palavras & Expressões": adicionar, editar e apagar cada anotação, com data e hora
 - [x] Nota digitada ao criar aula/mídia vira a primeira anotação; "Editar" não mexe mais nas notas

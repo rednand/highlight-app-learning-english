@@ -265,9 +265,11 @@ DO $$ BEGIN
   END IF;
 END $$;
 
--- Copy each lesson's existing single note into the list (only once)
+-- Move each lesson's old single note into the list, then clear the old column
+-- so lesson_notes is the only source (safe to re-run: moved notes are gone)
 INSERT INTO lesson_notes (lesson_id, user_id, content, created_at, updated_at)
 SELECT l.id, l.user_id, l.notes, l.created_at, l.created_at
 FROM lessons l
-WHERE l.notes IS NOT NULL AND btrim(l.notes) <> ''
-  AND NOT EXISTS (SELECT 1 FROM lesson_notes n WHERE n.lesson_id = l.id);
+WHERE l.notes IS NOT NULL AND btrim(l.notes) <> '';
+
+UPDATE lessons SET notes = NULL WHERE notes IS NOT NULL;

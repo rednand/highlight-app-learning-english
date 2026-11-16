@@ -12,13 +12,18 @@ export type LessonNote = {
   updated_at: string | null
 }
 
+// Fuso fixo para o servidor e o navegador escreverem a mesma coisa.
+const TIME_ZONE = "America/Sao_Paulo"
+
+function dayKey(date: Date): string {
+  return date.toLocaleDateString("en-CA", { timeZone: TIME_ZONE })
+}
+
 function formatWhen(iso: string): string {
   const date = new Date(iso)
-  const today = new Date()
-  const sameDay = date.toDateString() === today.toDateString()
-  const time = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
-  if (sameDay) return `Hoje, ${time}`
-  return `${date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}, ${time}`
+  const time = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TIME_ZONE })
+  if (dayKey(date) === dayKey(new Date())) return `Hoje, ${time}`
+  return `${date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", timeZone: TIME_ZONE })}, ${time}`
 }
 
 const textareaClass =
@@ -41,7 +46,7 @@ function NoteEditor({
   const [isPending, startTransition] = useTransition()
 
   function submit() {
-    if (!text.trim()) return
+    if (isPending || !text.trim()) return
     startTransition(async () => {
       try {
         await onSubmit(text)
@@ -124,7 +129,7 @@ function NoteCard({ note, lessonId }: { note: LessonNote; lessonId: string }) {
     <div className={`p-4 bg-surface border border-line rounded-[18px] ${isDeleting ? "opacity-50" : ""}`}>
       <p className="text-fg-soft text-sm leading-relaxed whitespace-pre-wrap break-words">{note.content}</p>
       <div className="flex items-center justify-between gap-3 mt-3">
-        <span className="text-[11px] text-fg-dim">
+        <span className="text-[11px] text-fg-dim" suppressHydrationWarning>
           {formatWhen(note.created_at)}
           {edited ? " · editada" : ""}
         </span>

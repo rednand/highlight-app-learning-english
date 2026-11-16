@@ -19,6 +19,11 @@ async function requireUser() {
   return { supabase, user }
 }
 
+function revalidateLesson(lessonId: string) {
+  revalidatePath(`/lessons/${lessonId}`)
+  revalidatePath("/lessons")
+}
+
 export async function addLessonNote(lessonId: string, content: string) {
   const text = cleanContent(content)
   const { supabase, user } = await requireUser()
@@ -36,32 +41,38 @@ export async function addLessonNote(lessonId: string, content: string) {
     .insert({ lesson_id: lessonId, user_id: user.id, content: text })
   if (error) throw new Error(error.message)
 
-  revalidatePath(`/lessons/${lessonId}`)
+  revalidateLesson(lessonId)
 }
 
 export async function updateLessonNote(id: string, lessonId: string, content: string) {
   const text = cleanContent(content)
   const { supabase, user } = await requireUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("lesson_notes")
     .update({ content: text, updated_at: new Date().toISOString() })
     .eq("id", id)
+    .eq("lesson_id", lessonId)
     .eq("user_id", user.id)
+    .select("id")
   if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error("Anotação não encontrada. Ela pode ter sido apagada.")
 
-  revalidatePath(`/lessons/${lessonId}`)
+  revalidateLesson(lessonId)
 }
 
 export async function deleteLessonNote(id: string, lessonId: string) {
   const { supabase, user } = await requireUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("lesson_notes")
     .delete()
     .eq("id", id)
+    .eq("lesson_id", lessonId)
     .eq("user_id", user.id)
+    .select("id")
   if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error("Anotação não encontrada. Ela pode ter sido apagada.")
 
-  revalidatePath(`/lessons/${lessonId}`)
+  revalidateLesson(lessonId)
 }

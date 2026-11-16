@@ -10,8 +10,11 @@ import { revalidatePath } from "next/cache"
 const mockCreateClient = vi.mocked(createClient)
 type MockFn = ReturnType<typeof vi.fn>
 
-function makeBuilder(opts: { single?: unknown; error?: { message: string } | null } = {}) {
-  const b: Record<string, MockFn | unknown> & { error: { message: string } | null } = { error: opts.error ?? null }
+function makeBuilder(opts: { single?: unknown; error?: { message: string } | null; rows?: unknown[] } = {}) {
+  const b: Record<string, MockFn | unknown> & { error: { message: string } | null; data: unknown[] } = {
+    error: opts.error ?? null,
+    data: opts.rows ?? [{ id: "n1" }],
+  }
   for (const m of ["select", "eq", "insert", "update", "delete"]) b[m] = vi.fn().mockReturnValue(b)
   b.single = vi.fn().mockResolvedValue({ data: opts.single ?? null, error: null })
   return b as typeof b & Record<"select" | "eq" | "insert" | "update" | "delete" | "single", MockFn>
@@ -105,5 +108,27 @@ describe("deleteLessonNote", () => {
     await expect(deleteLessonNote("n1", "l1")).rejects.toThrow("Não autenticado")
     mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: makeBuilder({ error: { message: "falhou" } }) }) as never)
     await expect(deleteLessonNote("n1", "l1")).rejects.toThrow("falhou")
+  })
+})
+
+describe("anotação que não existe mais", () => {
+  it("editar avisa em vez de fingir que salvou", async () => {
+    const notes = makeBuilder({ rows: [] })
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
+    await expect(updateLessonNote("n1", "l1", "texto")).rejects.toThrow("não encontrada")
+    expect(notes.eq).toHaveBeenCalledWith("lesson_id", "l1")
+  })
+
+  it("apagar avisa quando nada foi apagado", async () => {
+    const notes = makeBuilder({ rows: [] })
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
+    await expect(deleteLessonNote("n1", "l1")).rejects.toThrow("não encontrada")
+  })
+
+  it("revalida também a lista de aulas", async () => {
+    const notes = makeBuilder()
+    mockCreateClient.mockResolvedValue(makeSupabase({ id: "u1" }, { lesson_notes: notes }) as never)
+    await deleteLessonNote("n1", "l1")
+    expect(revalidatePath).toHaveBeenCalledWith("/lessons")
   })
 })

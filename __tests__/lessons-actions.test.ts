@@ -108,6 +108,16 @@ describe("createLesson", () => {
     expect(b.insert).toHaveBeenCalledWith(expect.not.objectContaining({ notes: expect.anything() }))
   })
 
+  it("falha ao salvar a nota não impede a criação da aula", async () => {
+    const lessonBuilder = makeBuilder({ data: { id: "lesson-791" }, error: null })
+    const noteBuilder = makeBuilder({ data: null, error: { message: "sem tabela" } })
+    const supa = makeSupabase({ id: "u1" }, lessonBuilder)
+    supa.from.mockImplementation((table: string) => (table === "lesson_notes" ? noteBuilder : lessonBuilder))
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(createLesson(fd({ title: "Filme", notes: "episódio 3" }))).rejects.toThrow("NEXT_REDIRECT")
+    expect(mockRedirect).toHaveBeenCalledWith("/lessons/lesson-791")
+  })
+
   it("sem nota inicial não cria anotação", async () => {
     const b = makeBuilder({ data: { id: "lesson-790" }, error: null })
     const supa = makeSupabase({ id: "u1" }, b)
