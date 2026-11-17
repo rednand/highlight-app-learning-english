@@ -62,3 +62,17 @@ describe("toggleRoadmapSession", () => {
     expect(supa._builder.eq).toHaveBeenCalledWith("session_key", "A1||Basic||1")
   })
 })
+
+import { temaDisplayName } from "../app/(app)/roadmap/roadmap-data"
+
+describe("temaDisplayName", () => {
+  it("mostra o número e o nome do tema", () => {
+    expect(temaDisplayName("Basic", "Tema 1")).toBe("Tema 1 · Primeiros Passos")
+    expect(temaDisplayName("Intermediate", "Tema 2")).toBe("Tema 2 · Viagem & Compras")
+  })
+
+  it("tema desconhecido fica só com o número", () => {
+    expect(temaDisplayName("Basic", "Tema 99")).toBe("Tema 99")
+    expect(temaDisplayName("Outro", "Tema 1")).toBe("Tema 1")
+  })
+})

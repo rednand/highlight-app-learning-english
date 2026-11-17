@@ -10,6 +10,7 @@ import ItemCard from "./edit-item-form"
 import { DeleteLessonButton } from "./delete-buttons"
 import WatchSessionToggle from "../../../../components/watch-session-toggle"
 import { reviewStateOf } from "../../../lib/words-utils"
+import { temaDisplayName } from "../../roadmap/roadmap-data"
 import LessonNotes, { type LessonNote } from "./lesson-notes"
 import { collectImagePaths, signImageUrls } from "../../../lib/note-images-server"
 
@@ -148,7 +149,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           return (
             <div className="flex items-center gap-1.5 mb-3">
               <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-brand/10 text-brand border border-brand/20">
-                {level} › {tema} › {session}
+                {level} › {temaDisplayName(level, tema)} › {session}
               </span>
             </div>
           )

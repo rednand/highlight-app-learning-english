@@ -52,6 +52,12 @@ export function totalSessions(data: RoadmapData): number {
   return data.temas.reduce((acc, t) => acc + t.sessions.filter(Boolean).length, 0)
 }
 
+/** "Tema 1 · Primeiros Passos" — o número sozinho não diz do que o tema trata. */
+export function temaDisplayName(level: string, tema: string): string {
+  const label = ROADMAP.find((r) => r.level === level)?.temas.find((t) => t.tema === tema)?.label
+  return label ? `${tema} · ${label}` : tema
+}
+
 export function sessionKey(level: RoadmapLevel, tema: string, session: string): string {
   return `${level}||${tema}||${session}`
 }
