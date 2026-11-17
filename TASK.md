@@ -132,3 +132,11 @@
 - [x] Editor que pinta direto (sem código visível); o texto continua salvo como `[verde]…[/verde]`, sem HTML
 - [x] Anotações salvas mostram só as cores; resumo da lista de aulas sem marcação
 - [ ] Teste manual no celular (selecionar e pintar)
+
+## Imagens nas anotações
+- [x] Coluna `lesson_notes.image_paths` e bucket privado `note-images` com regras por pasta da pessoa (seção 17 de `supabase/migration.sql`)
+- [x] Rodar a migração 17 no SQL Editor do Supabase ANTES do deploy
+- [x] Até 6 imagens por anotação, comprimidas no celular (lado maior 1600px, JPEG)
+- [x] Miniaturas na anotação, tela cheia ao tocar; tirar imagem no modo de edição
+- [x] Anotação só com imagens (o servidor confere as imagens salvas); imagens apagadas junto com a anotação, a aula ou a conta
+- [ ] Teste manual no celular (foto da câmera e da galeria)

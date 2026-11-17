@@ -272,3 +272,25 @@ WHERE l.notes IS NOT NULL
   );
 
 UPDATE lessons SET notes = NULL WHERE notes IS NOT NULL;
+
+-- 17. Images attached to lesson notes (private Storage bucket, one folder per user)
+ALTER TABLE lesson_notes ADD COLUMN IF NOT EXISTS image_paths TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
+
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ($$note-images$$, $$note-images$$, false, 5242880, ARRAY[$$image/jpeg$$, $$image/png$$, $$image/webp$$])
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS note_images_read ON storage.objects;
+CREATE POLICY note_images_read ON storage.objects
+  FOR SELECT TO authenticated
+  USING (bucket_id = $$note-images$$ AND (storage.foldername(name))[1] = auth.uid()::text);
+
+DROP POLICY IF EXISTS note_images_insert ON storage.objects;
+CREATE POLICY note_images_insert ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = $$note-images$$ AND (storage.foldername(name))[1] = auth.uid()::text);
+
+DROP POLICY IF EXISTS note_images_delete ON storage.objects;
+CREATE POLICY note_images_delete ON storage.objects
+  FOR DELETE TO authenticated
+  USING (bucket_id = $$note-images$$ AND (storage.foldername(name))[1] = auth.uid()::text);

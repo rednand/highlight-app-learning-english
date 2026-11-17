@@ -2,6 +2,7 @@
 
 import { createClient } from "../utils/supabase/server"
 import { revalidatePath } from "next/cache"
+import { collectImagePaths, removeStoredImages } from "../lib/note-images-server"
 import { redirect } from "next/navigation"
 
 type PendingItem = {
@@ -147,7 +148,11 @@ export async function updateLesson(formData: FormData) {
 
 export async function deleteLesson(id: string) {
   const supabase = await createClient()
-  await supabase.from("lessons").delete().eq("id", id)
+  const { data: notes } = await supabase.from("lesson_notes").select("image_paths").eq("lesson_id", id)
+  const { error } = await supabase.from("lessons").delete().eq("id", id)
+  if (error) throw new Error(error.message)
+  // As anotações saem junto com a aula (cascade); os arquivos de imagem, não.
+  await removeStoredImages(supabase, collectImagePaths(notes as { image_paths: string[] | null }[] | null))
   revalidatePath("/lessons")
   redirect("/lessons")
 }

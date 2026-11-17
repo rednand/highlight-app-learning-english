@@ -245,3 +245,34 @@ describe("createLesson com palavras", () => {
     await expect(createLesson(fd({ title: "Aula", items }))).rejects.toThrow("items error")
   })
 })
+
+describe("deleteLesson e as imagens das anotações", () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  function supaWith(deleteError: { message: string } | null) {
+    const notes = { eq: vi.fn().mockResolvedValue({ data: [{ image_paths: ["u1/n1/a.jpg"] }] }) }
+    const lessons = { eq: vi.fn().mockResolvedValue({ error: deleteError }) }
+    const remove = vi.fn().mockResolvedValue({})
+    return {
+      supa: {
+        from: vi.fn((table: string) => (table === "lesson_notes" ? { select: vi.fn().mockReturnValue(notes) } : { delete: vi.fn().mockReturnValue(lessons) })),
+        storage: { from: vi.fn().mockReturnValue({ remove }) },
+      },
+      remove,
+    }
+  }
+
+  it("apaga os arquivos depois de apagar a aula", async () => {
+    const { supa, remove } = supaWith(null)
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(deleteLesson("lesson-1")).rejects.toThrow("NEXT_REDIRECT")
+    expect(remove).toHaveBeenCalledWith(["u1/n1/a.jpg"])
+  })
+
+  it("se apagar a aula falhar, as imagens ficam", async () => {
+    const { supa, remove } = supaWith({ message: "negado" })
+    mockCreateClient.mockResolvedValue(supa as never)
+    await expect(deleteLesson("lesson-1")).rejects.toThrow("negado")
+    expect(remove).not.toHaveBeenCalled()
+  })
+})
