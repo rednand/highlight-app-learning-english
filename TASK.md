@@ -135,7 +135,7 @@
 
 ## Imagens nas anotações
 - [x] Coluna `lesson_notes.image_paths` e bucket privado `note-images` com regras por pasta da pessoa (seção 17 de `supabase/migration.sql`)
-- [ ] Rodar a migração 17 no SQL Editor do Supabase ANTES do deploy
+- [x] Rodar a migração 17 no SQL Editor do Supabase ANTES do deploy
 - [x] Até 6 imagens por anotação, comprimidas no celular (lado maior 1600px, JPEG)
 - [x] Miniaturas na anotação, tela cheia ao tocar; tirar imagem no modo de edição
 - [x] Anotação só com imagens (o servidor confere as imagens salvas); imagens apagadas junto com a anotação, a aula ou a conta
