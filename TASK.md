@@ -143,3 +143,9 @@
 
 ## Roadmap: nome dos temas
 - [x] Listas de tema (nova aula e Editar aula) e o selo da aula mostram "Tema 1 · Primeiros Passos" em vez de só o número
+
+## Ícone: lâmpada com filamento
+- [x] Lâmpada em formato de pera (alongada), vidro escuro com contorno dourado e o "h" como filamento aceso, preso por dois fios até a base
+- [x] Badge das notificações com a silhueta da nova lâmpada
+- [x] Manifest aponta para icon-*-v5.png
+- [ ] Reinstalar o app no celular para ver o ícone novo; gerar de novo o `.aab` no PWABuilder
