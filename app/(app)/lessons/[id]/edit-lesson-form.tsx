@@ -88,7 +88,7 @@ export default function EditLessonForm({ lesson }: Props) {
           </select>
           <select value={tema} onChange={e => { setTema(e.target.value); setSession("") }} disabled={!level} className={selectClass}>
             <option value="">Tema</option>
-            {temas.map(t => <option key={t.tema} value={t.tema}>{t.tema}</option>)}
+            {temas.map(t => <option key={t.tema} value={t.tema}>{`${t.tema} · ${t.label}`}</option>)}
           </select>
           <select value={session} onChange={e => setSession(e.target.value)} disabled={!tema} className={selectClass}>
             <option value="">Sessão</option>

@@ -140,3 +140,6 @@
 - [x] Miniaturas na anotação, tela cheia ao tocar; tirar imagem no modo de edição
 - [x] Anotação só com imagens (o servidor confere as imagens salvas); imagens apagadas junto com a anotação, a aula ou a conta
 - [ ] Teste manual no celular (foto da câmera e da galeria)
+
+## Roadmap: nome dos temas
+- [x] Listas de tema (nova aula e Editar aula) e o selo da aula mostram "Tema 1 · Primeiros Passos" em vez de só o número
